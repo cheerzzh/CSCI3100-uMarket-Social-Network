@@ -82,7 +82,7 @@ app.use(function(err, req, res, next) {
 });
 
 
-   http.createServer(app).listen(3000, function(){
+   http.createServer(app).listen(process.env.PORT, function(){
      console.log('Express server listening on port ' + 3000);
 });
 
