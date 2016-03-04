@@ -6,6 +6,9 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var errorhandler = require('errorhandler')
 
+var mongo = require('mongodb'); 
+var monk = require('monk'); 
+var db = monk('localhost:27017/nodetest1'); // load db
 
 var http = require('http');
 var app = express();
@@ -34,12 +37,18 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // set public directory
 
-//app.use(errorhandler())
+// Make our db accessible to our router 
+app.use(function(req,res,next){ 
+  req.db = db; 
+  next(); 
+});
 
 // set router handlers
-//app.use('/', routes);
+app.use('/', routes);
 app.use('/users', users);
 app.use('/route1', routes1);
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

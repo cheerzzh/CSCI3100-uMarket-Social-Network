@@ -34,3 +34,5 @@ node_modules
 
 # for webstrom IDE
 .idea
+# folder to place mongo db 
+data 
