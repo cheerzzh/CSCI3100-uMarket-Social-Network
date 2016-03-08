@@ -81,8 +81,9 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
-   http.createServer(app).listen(process.env.PORT, function(){
+var port = process.env.PORT || 3000
+console.log(port)
+http.createServer(app).listen(port, function(){
      console.log('Express server listening on port ' + 3000);
 });
 
