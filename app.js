@@ -8,7 +8,7 @@ var errorhandler = require('errorhandler')
 
 var mongo = require('mongodb'); 
 var monk = require('monk'); 
-var db = monk('localhost:27017/nodetest1'); // load db
+var db = monk('localhost:27017/nodetest2'); // load db
 
 var http = require('http');
 var app = express();
@@ -39,7 +39,7 @@ app.use(express.static(path.join(__dirname, 'public'))); // set public directory
 
 // Make our db accessible to our router 
 app.use(function(req,res,next){ 
-  req.db = db; 
+  req.db = db; // assign db to reg
   next(); 
 });
 
