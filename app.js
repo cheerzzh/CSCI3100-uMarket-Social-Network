@@ -6,6 +6,11 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var errorhandler = require('errorhandler')
 
+var mongoose = require('mongoose');
+var passport = require('passport');
+var session      = require('express-session');
+
+var flash    = require('connect-flash');
 var mongo = require('mongodb'); 
 var monk = require('monk'); 
 var db = monk('localhost:27017/nodetest2'); // load db
@@ -14,30 +19,39 @@ var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 var http = require('http');
 var app = express();
 
+var configDB = require('./config/database.js');
+mongoose.connect(configDB.url); // connect to our database
+require('./config/passport')(passport); // pass passport for configuration
+
+
+// load routers
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var routes1 = require('./routes/routes');
 
-// load config file
-var config = require('./config.json')[app.get('env')]; // choose config for current env
-console.log(config)
-console.log(config.db_host); // 192.168.1.9
-console.log(config.db_user); // myappdb
-console.log(config.db_pass); // !p4ssw0rd#
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views')); 
-app.set('view engine', 'jade');
-app.set('superSecret', '3100uMarket'); // secret variable
+//app.set('view engine', 'jade');
+app.set('view engine', 'ejs'); // set up ejs for templating
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));
-// use middlewares
+
+
 app.use(logger('dev')); // log information to server
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // set public directory
+
+// required for passport
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
+app.use(passport.initialize());
+app.use(passport.session()); // persistent login sessions
+app.use(flash()); // use connect-flash for flash messages stored in session
+
+// routes ======================================================================
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
 // Make our db accessible to our router 
 app.use(function(req,res,next){ 
@@ -45,12 +59,12 @@ app.use(function(req,res,next){
   next(); 
 });
 
+// use middlewares
+
 // set router handlers
-app.use('/', routes);
-app.use('/users', users);
-app.use('/route1', routes1);
-
-
+//app.use('/', routes);
+//app.use('/users', users);
+//app.use('/route1', routes1);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -84,9 +98,8 @@ app.use(function(err, req, res, next) {
 });
 
 var port = process.env.PORT || 3000
-console.log(port)
 http.createServer(app).listen(port, function(){
-     console.log('Express server listening on port ' + 3000);
+     console.log('Express server listening on port ' + port);
 });
 
 

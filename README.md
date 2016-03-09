@@ -6,3 +6,8 @@ Course project for CSCI 3100, CUHK
 mongod --dbpath data
 
 mongo // open mongo shell
+
+
+## Run app with nodemon
+npm install -g nodemon
+nodemon app.js
