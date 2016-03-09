@@ -9,6 +9,7 @@ var errorhandler = require('errorhandler')
 var mongo = require('mongodb'); 
 var monk = require('monk'); 
 var db = monk('localhost:27017/nodetest2'); // load db
+var jwt    = require('jsonwebtoken'); // used to create, sign, and verify tokens
 
 var http = require('http');
 var app = express();
@@ -27,6 +28,7 @@ console.log(config.db_pass); // !p4ssw0rd#
 // view engine setup
 app.set('views', path.join(__dirname, 'views')); 
 app.set('view engine', 'jade');
+app.set('superSecret', '3100uMarket'); // secret variable
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(__dirname + '/public/favicon.ico'));

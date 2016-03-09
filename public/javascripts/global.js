@@ -14,6 +14,9 @@ $(document).ready(function() {
 
     // Delete User link click
     $('#userList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+
+    // update User link click
+    $('#userList table tbody').on('click', 'td a.linkupdateuser', updateUser);
 });
 
 // fill table with data
@@ -32,6 +35,7 @@ function populateTable() {
 			tableContent += '<td><a href="#" class="linkshowuser" rel="' + this.username + '">' + this.username + '</a></td>';
 			tableContent += '<td>' + this.email + '</td>';
 			tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
+			tableContent += '<td><a href="#" class="linkupdateuser" rel="' + this._id + '">update</a></td>';
 			tableContent += '</tr>';
 		});
 
@@ -164,3 +168,32 @@ function deleteUser(event) {
     }
 
 };
+
+
+// update user info - can be used to update post info
+function updateUser(event){
+
+	console.log('Update user for ' + $(this).attr('rel'));
+
+	event.preventDefault();
+
+	// first fill in original value
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
