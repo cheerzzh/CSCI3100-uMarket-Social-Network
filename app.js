@@ -45,6 +45,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // set public directory
 
 // required for passport
+// use express-sessoon to session-handling
 app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); // session secret
 app.use(passport.initialize());
 app.use(passport.session()); // persistent login sessions
