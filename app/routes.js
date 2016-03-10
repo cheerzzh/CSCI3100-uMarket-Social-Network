@@ -15,7 +15,7 @@ module.exports = function(app, passport) {
     app.get('/login', function(req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('login.ejs', { message: req.flash('loginMessage') }); 
+        res.render('index3.ejs', { message: req.flash('loginMessage') }); 
     });
 
     // process the login form
@@ -57,6 +57,7 @@ module.exports = function(app, passport) {
         });
     });
 
+    // routers after user logged in
     app.get('/testlogin',isLoggedIn,function(req,res){
 
         res.send('Hey, you\'ve logged in, ' + req.user.local.email);
