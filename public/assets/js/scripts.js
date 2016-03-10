@@ -6,7 +6,7 @@ jQuery(document).ready(function() {
     */
     //$.backstretch("assets/img/backgrounds/1.jpg");
     //$.backstretch("images/background-1.jpg");
-    $.backstretch("images/2.jpg");
+    $.backstretch("images/3.jpg");
     /*
         Form validation
     */
