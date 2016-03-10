@@ -1,95 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
-
     <head>
-
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap Login Form Template</title>
-
+        <title>uMarket</title>
         <!-- CSS -->
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-		<link rel="stylesheet" href="assets/css/form-elements.css">
+        <link rel="stylesheet" href="assets/css/form-elements.css">
         <link rel="stylesheet" href="assets/css/style.css">
-
         <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
         <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
         <!--[if lt IE 9]>
-            <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-            <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
         <![endif]-->
-
         <!-- Favicon and touch icons -->
         <link rel="shortcut icon" href="assets/ico/favicon.png">
         <link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
         <link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
         <link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
-
     </head>
-
     <body>
 
+    <div class="navbar navbar-default"> 
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">uMarket</a>
+                </div>
+                <!--
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right  ">
+                        
+                        <li><a href="#"><i class="fa fa-list"></i> Timeline</a></li>
+                        <li><a href="#about"><i class="fa fa-heart"></i> Wishlist</a></li>
+                        <li><a href="/profile"><i class="fa fa-user"></i> Profile</a></li>
+                        <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                        
+                    </ul>
+                </div>
+                -->
+
+            </div>
+    </div>
+    <!-- NAVBAR CODE END -->
         <!-- Top content -->
-        <div class="top-content">
-        	
+        <div class="top-content" >
+            
             <div class="inner-bg">
                 <div class="container">
                     <div class="row">
-                         
-                        <div class="col-sm-8 col-sm-offset-2 text">
-                            <h1><strong>uMarket</strong></h1>
-                            <div class="description">
-                            	<p>
-	                            	
-                            	</p>
-                            </div>
-                        </div>
-                    </div>
+                    <div class="col-lg-6 landing-text" align="left" style="margin-top: 50px;color:#fff">
+                    <h1 style="color:#fff"><b>uMarket</b></h1>
+                    <h2 style="color:#fff"><b>The marketplace for U</b></h2>
+                    <span class="sub-text">SubCaption</span><br>
+                    <p>Content Description</p>
+                    <br><br><br>
+                  </div>
+
+                  <div class="col-lg-4 col-lg-offset-2">
                     <div class="row">
-                        <div class="col-sm-6 col-sm-offset-3 form-box">
+                            <!--login form-->
                             <div class="form-box" id = "login-form" style = "display:block">
-                        	<div class="form-top">
-                        		<div class="form-top-left">
-                        			<h3>Login to your <strong>amazing marketplace</strong></h3>
-                            		<p>Enter your username and password to log on:</p>
-
-
-                        		</div>
-
-                        		<div class="form-top-right">
-                        			<i class="fa fa-key"></i>
-                        		</div>
-
-
+                                <div class="form-top">
+                                    <div class="form-top-left">
+                                        <h3>Login to your <strong>amazing marketplace</strong></h3>
+                                        <p>Enter your username and password to log on:</p>
+                                    </div>
+                                    <div class="form-top-right">
+                                        <i class="fa fa-key"></i>
+                                    </div>
+                                </div>
+                                <div class="form-bottom">
+                                    <form role="form" action="/login" method="post" class="login-form">
+                                        <% if (message.length > 0) { %>
+                                        <div class="alert alert-danger"><%= message %></div>
+                                        <% } %>
+                                        <div class="form-group">
+                                            <label class="sr-only" for="form-username">Email</label>
+                                            <input type="text"  name="email" placeholder="Email..." class="form-username form-control" id="form-username">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="sr-only" for="form-password">Password</label>
+                                            <input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
+                                        </div>
+                                        <button type="submit" class="btn">Log in!</button>
+                                        <br>
+                                        <p>Need an account? <a href="#" onclick = "switchToRegistration()">Signup</a></p>
+                                    </form>
+                                </div>
                             </div>
 
-                            <div class="form-bottom">
-			                    <form role="form" action="/login" method="post" class="login-form">
-                                <% if (message.length > 0) { %>
-                                    <div class="alert alert-danger"><%= message %></div>
-                                <% } %>
-			                    	<div class="form-group">
-			                    		<label class="sr-only" for="form-username">Email</label>
-			                        	<input type="text"  name="email" placeholder="Email..." class="form-username form-control" id="form-username">
-			                        </div>
-			                        <div class="form-group">
-			                        	<label class="sr-only" for="form-password">Password</label>
-			                        	<input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
-			                        </div>
-			                        <button type="submit" class="btn">Log in!</button>
-                                    <br>
-                                   <p>Need an account? <a href="#" onclick = "switchToRegistration()">Signup</a></p>
-			                    </form>
-		                    </div>
-                        </div>
-
-
-
-                        <div class="form-box" id = "register-form" style = "display:none">
+                             <!--sign up form-->
+                            <div class="form-box" id = "register-form" style = "display:none">
                                 <div class="form-top" >
                                     <div class="form-top-left">
                                         <h3>Sign up now</h3>
@@ -116,52 +127,49 @@
                                             <input type="text" name="email" placeholder="Email..." class="form-email form-control" id="form-email">
                                         </div>
                                         <div class="form-group">
-                                        <label class="sr-only" for="form-password">Password</label>
-                                        <input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
-                                    </div>
+                                            <label class="sr-only" for="form-password">Password</label>
+                                            <input type="password" name="password" placeholder="Password..." class="form-password form-control" id="form-password">
+                                        </div>
                                         <button type="submit" class="btn">Sign me up!</button>
                                         <p>Already has an account? <a href="#" onclick = "switchToLogin()">Signup</a></p>
                                     </form>
                                 </div>
-                    </div> <!-- end of sign up form-->
+                                </div> <!-- end of sign up form-->
+                            
                     </div>
-                    </div>
-
 
                     <div class="row">
                         <div class="col-sm-6 col-sm-offset-3 social-login">
-                        	<h3>...or login with:</h3>
-                        	<div class="social-login-buttons">
-                            <!--
-	                        	<a class="btn btn-link-1 btn-link-1-facebook" href="#">
-	                        		<i class="fa fa-facebook"></i> Facebook
-	                        	</a>
-	                        	<a class="btn btn-link-1 btn-link-1-twitter" href="#">
-	                        		<i class="fa fa-twitter"></i> Twitter
-	                        	</a>
-                            -->
-	                        	<a class="btn btn-link-1 btn-link-1-google-plus" href="/auth/google" >
-	                        		<i class="fa fa-google-plus"></i> Google
-	                        	</a>
-                        	</div>
+                            <h4>...or login with:</h4>
+                            <div class="social-login-buttons">
+                                <!--
+                                        <a class="btn btn-link-1 btn-link-1-facebook" href="#">
+                                                <i class="fa fa-facebook"></i> Facebook
+                                        </a>
+                                        <a class="btn btn-link-1 btn-link-1-twitter" href="#">
+                                                <i class="fa fa-twitter"></i> Twitter
+                                        </a>
+                                -->
+                                <a class="btn btn-link-1 btn-link-1-google-plus" href="/auth/google" >
+                                    <i class="fa fa-google-plus"></i> Google
+                                </a>
+                            </div>
                         </div>
+                    </div>
+                    </div>
                     </div>
                 </div>
             </div>
-            
+                
         </div>
-
-
-        <!-- Javascript -->
-        <script src="assets/js/jquery-1.11.1.min.js"></script>
-        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-        <script src="assets/js/jquery.backstretch.min.js"></script>
-        <script src="assets/js/scripts.js"></script>
-        
-        <!--[if lt IE 10]>
+            <!-- Javascript -->
+            <script src="assets/js/jquery-1.11.1.min.js"></script>
+            <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+            <script src="assets/js/jquery.backstretch.min.js"></script>
+            <script src="assets/js/scripts.js"></script>
+            
+            <!--[if lt IE 10]>
             <script src="assets/js/placeholder.js"></script>
-        <![endif]-->
-
-    </body>
-
-</html>
+            <![endif]-->
+        </body>
+    </html>

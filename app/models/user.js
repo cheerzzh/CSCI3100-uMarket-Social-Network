@@ -31,7 +31,9 @@ var userSchema = mongoose.Schema({
     },
     personalInfo     :{
         username:String,
-        
+        university:Number,
+        university_mail:String,
+        verified:Boolean
     }
 
 });

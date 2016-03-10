@@ -4,8 +4,9 @@ jQuery(document).ready(function() {
     /*
         Fullscreen background
     */
-    $.backstretch("assets/img/backgrounds/1.jpg");
-    
+    //$.backstretch("assets/img/backgrounds/1.jpg");
+    //$.backstretch("images/background-1.jpg");
+    $.backstretch("images/2.jpg");
     /*
         Form validation
     */
