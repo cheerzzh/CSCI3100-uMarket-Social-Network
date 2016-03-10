@@ -5,7 +5,8 @@ module.exports = function(app, passport) {
     // HOME PAGE (with login links) ========
     // =====================================
     app.get('/', function(req, res) {
-        res.render('index3.ejs'); // load the index.ejs file
+        //res.render('index3.ejs'); // load the index.ejs file
+        res.render('index3.ejs', { message: req.flash('loginMessage') }); 
     });
 
     // =====================================
@@ -40,8 +41,9 @@ module.exports = function(app, passport) {
     // process the signup form
     // app.post('/signup', do all our passport stuff here);
     app.post('/signup', passport.authenticate('local-signup', {
-        successRedirect : '/profile', // redirect to the secure profile section
-        failureRedirect : '/signup', // redirect back to the signup page if there is an error
+        //successRedirect : '/profile', // redirect to the secure profile section
+        successRedirect : '/filluserinfo', // redirect to the secure profile section
+        failureRedirect : '/', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
 
@@ -64,8 +66,12 @@ module.exports = function(app, passport) {
     });
 
     // after sign up, propmt user to complete personal info
+    app.get('/filluserinfo',isLoggedIn,function(req,res){
 
-    
+        res.send('Hey, you\'ve logged in, ' + req.user.local.email + '\nPlease fill more user info');
+
+    });
+
 
     // =====================================
     // LOGOUT ==============================
