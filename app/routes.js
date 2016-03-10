@@ -63,6 +63,10 @@ module.exports = function(app, passport) {
         res.send('Hey, you\'ve logged in, ' + req.user.local.email);
     });
 
+    // after sign up, propmt user to complete personal info
+
+    
+
     // =====================================
     // LOGOUT ==============================
     // =====================================
