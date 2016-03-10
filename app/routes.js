@@ -42,7 +42,7 @@ module.exports = function(app, passport) {
     // app.post('/signup', do all our passport stuff here);
     app.post('/signup', passport.authenticate('local-signup', {
         //successRedirect : '/profile', // redirect to the secure profile section
-        successRedirect : '/filluserinfo', // redirect to the secure profile section
+        successRedirect : '/updateProfile', // redirect to the secure profile section
         failureRedirect : '/', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
@@ -65,10 +65,13 @@ module.exports = function(app, passport) {
         res.send('Hey, you\'ve logged in, ' + req.user.local.email);
     });
 
-    // after sign up, propmt user to complete personal info
-    app.get('/filluserinfo',isLoggedIn,function(req,res){
+    // after sign up, propmt user to updatePersonal info
+    app.get('/updateProfile',isLoggedIn,function(req,res){
 
-        res.send('Hey, you\'ve logged in, ' + req.user.local.email + '\nPlease fill more user info');
+        //res.send('Hey, you\'ve logged in, ' + req.user.local.email + '\nPlease fill more user info');
+        res.render('updateProfile.ejs', {
+            user : req.user // get the user out of session and pass to template
+        });
 
     });
 
