@@ -2,10 +2,15 @@
 <html>
 <head>
     <title>uMarket</title>
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="stylesheets/include/paper.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheets/timeline.css">
 </head>
-<body>
+<body style=" padding-top: 70px; ">
+
+<!--
 <div class="navbar navbar-default"> 
         <div class="container">
             <div class="navbar-header">
@@ -26,7 +31,96 @@
             </div>
         </div>
 </div>
+-->
 <!-- NAVBAR CODE END -->
+  <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a id="logo" class="navbar-brand" href="/">uMarket</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a id="notification" href="#" class="dropdown-toggle navbar-icons" data-toggle="dropdown">
+              <i class="fa fa-bell-o"></i>
+            </a>
+            <ul id="notifications" class="dropdown-menu" role="menu">
+              <script id="notifications-template" type="text/x-handlebars-template">
+                <li class="dropdown-title">
+                  <h5><b>Notifications</b></h5>
+                </li>
+                {{#each notifications}}
+                <li>
+                  <a href="#">
+                    <h5><b>{{title}}</b></h5>
+                    {{{post}}}
+                  </a>
+                </li>
+                {{/each}}
+                <li>
+                  <a href="#" class="text-center">
+                    <span><b><i class="fa fa-bars"></i> More</b></span>
+                  </a>
+                </li>
+              </script>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a id="inbox" href="#" class="dropdown-toggle navbar-icons" data-toggle="dropdown">
+              <i class="fa fa-inbox"></i>
+            </a>
+            <ul id="messages" class="dropdown-menu" role="menu">
+              <script id="messages-template" type="text/x-handlebars-template">
+                <li class="dropdown-title">
+                  <h5><b>Messages</b></h5>
+                </li>
+                {{#each messages}}
+                <li>
+                  <a href="#">
+                    <h6><b>{{user}}</b></h6>
+                    {{{message}}}
+                  </a>
+                </li>
+                {{/each}}
+                <li>
+                  <a href="#" class="text-center">
+                    <span><b><i class="fa fa-bars">bar</i> More</b></span>
+                  </a>
+                </li>
+              </script>
+            </ul>
+          </li>
+          
+           <li><a href="/timeline" class="navbar-icons"><i class="fa fa-home"></i></a></li>
+          <li><a href="#" class="navbar-icons"><i class="fa fa-heart"></i></a></li>
+          <li><a href="/logout" class="navbar-icons"><i class="fa fa-sign-out"></i></a></li>
+  
+          <!-- name and pic get from ajax call-->
+          <li>
+            <a href="/profile"><img class="navbar-avatar" src="https://en.gravatar.com/userimage/23763355/e7bbf514106dc2fd9ddb4e8160a72e8c.png" alt="Profile"> sudharti </a>
+          </li>
+          
+          
+
+
+        </ul>
+        <form class="navbar-form navbar-right" role="search">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search">
+              <div class="input-group-addon"><i class="fa fa-search"></i></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </nav>
 
 <div class="container">
 
@@ -88,105 +182,19 @@
       </div>
       <!--/panel-->
     </div>
-    <div class="row">
 
-        <!-- LOCAL INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3><span class="fa fa-user"></span> Local</h3>
+   
 
-                <% if (user.local.email) { %>
-                    <p>
-                        <strong>id</strong>: <%= user._id %><br>
-                        <strong>email</strong>: <%= user.local.email %><br>
-                        <strong>password</strong>: <%= user.local.password %>
-                    </p>
-                    
-                    <a href="/unlink/local" class="btn btn-default">Unlink</a>
-                <% } else { %>
-                    <a href="/connect/local" class="btn btn-default">Connect Local</a>
-                <% } %>
 
-            </div>
-        </div>
 
-        <!-- FACEBOOK INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3 class="text-primary"><span class="fa fa-facebook"></span> Facebook</h3>
-
-                <!-- check if the user has this token (is the user authenticated with this social account) -->
-                <% if (user.facebook.token) { %>
-                    <p>
-                        <strong>id</strong>: <%= user.facebook.id %><br>
-                        <strong>token</strong>: <%= user.facebook.token %><br>
-                        <strong>email</strong>: <%= user.facebook.email %><br>
-                        <strong>name</strong>: <%= user.facebook.name %><br>
-                    </p>
-
-                    <a href="/unlink/facebook" class="btn btn-primary">Unlink</a>
-                <% } else { %>
-                    <a href="/connect/facebook" class="btn btn-primary">Connect Facebook</a>
-                <% } %>
-
-            </div>
-        </div>
-    </div>
-    <div class="row">
-
-        <!-- TWITTER INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3 class="text-info"><span class="fa fa-twitter"></span> Twitter</h3>
-
-                <% if (user.twitter.token) { %>
-                    <p>
-                        <strong>id</strong>: <%= user.twitter.id %><br>
-                        <strong>token</strong>: <%= user.twitter.token %><br>
-                        <strong>display name</strong>: <%= user.twitter.displayName %><br>
-                        <strong>username</strong>: <%= user.twitter.username %>
-                    </p>
-
-                    <a href="/unlink/twitter" class="btn btn-info">Unlink</a>
-                <% } else { %>
-                    <a href="/connect/twitter" class="btn btn-info">Connect Twitter</a>
-                <% } %>
-
-            </div>
-        </div>
-
-        <!-- GOOGLE INFORMATION -->
-        <div class="col-sm-6">
-            <div class="well">
-                <h3 class="text-danger"><span class="fa fa-google-plus"></span> Google+</h3>
-                <!--if user has linked with goolge, show google info-->
-                <% if (user.google.token) { %>
-                    <p>
-                        <strong>id</strong>: <%= user.google.id %><br>
-                        <strong>token</strong>: <%= user.google.token %><br>
-                        <strong>email</strong>: <%= user.google.email %><br>
-                        <strong>name</strong>: <%= user.google.name %>
-                    </p>
-
-                    <a href="/unlink/google" class="btn btn-danger">Unlink</a>
-                <% } else { %>
-                    <a href="/connect/google" class="btn btn-danger">Connect Google</a>
-                <% } %>
-
-            </div>
-        </div>
-    </div>
-
-    <div class="text-center">
-        <p>A demo by <a href="http://scotch.io">Scotch</a>.</p>
-        <p>Visit the <a href="http://scotch.io/tutorials/javascript/easy-node-authentication-setup-and-local">tutorial</a>.</p>
-    </div>
 
 </div>
 
 <!-- Javascript -->
-        <script src="assets/js/jquery-1.11.1.min.js"></script>
-        <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+          <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+      <script type="text/javascript" src="javascripts/include/paper.min.js"></script>
+      <script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
+       <script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
         <script src="assets/js/jquery.backstretch.min.js"></script>
         <script src="assets/js/script-profile.js"></script>
 </body>

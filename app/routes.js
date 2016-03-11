@@ -72,6 +72,7 @@ module.exports = function(app, passport) {
     app.get('/updateProfile',isLoggedIn,function(req,res){
 
         //res.send('Hey, you\'ve logged in, ' + req.user.local.email + '\nPlease fill more user info');
+        req.flash()
         res.render('updateProfile.ejs', {
             user : req.user // get the user out of session and pass to template
         });
@@ -82,7 +83,7 @@ module.exports = function(app, passport) {
 
         //res.send('Hey, you\'ve logged in, ' + req.user.local.email + '\nPlease fill more user info');
         res.render('timeline.ejs', {
-            user : req.user // get the user out of session and pass to template
+            user : req.flash(req.user)// get the user out of session and pass to template
         });
 
     });

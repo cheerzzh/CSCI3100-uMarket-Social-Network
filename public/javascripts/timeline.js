@@ -1,5 +1,14 @@
 $(document).ready(function(){
 
+  /*
+  var user = <%- user %>
+  if(user.local.email)
+  {
+    console.log(user.local.email);
+  }
+  */
+  // use ajx call to get user, notification, message, post, trend .....
+
   var source, template;
 
   //$.backstretch('../assets/images/background-4.jpg', {speed: 1000});
