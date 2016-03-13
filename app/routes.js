@@ -1,4 +1,7 @@
 // app/routes.js
+var User            = require('../app/models/user');
+var Item = require('../app/models/item');
+
 module.exports = function(app, passport) {
 
     // =====================================
@@ -99,6 +102,30 @@ module.exports = function(app, passport) {
 
 
     // =====================================
+    // ADMIN FUNCTION ======================
+    // =====================================
+    app.get('/admin',function(req,res){
+
+        User.find({}, function(err, user) {
+
+            res.send(user)
+        
+        });
+    });
+
+
+
+    // ========= Handle ajax call, return data =====
+    app.get('/ajax',function(req,res){
+
+        res.render('ajax.ejs');
+    })
+
+    app.get('/search', function(req, res){ 
+        res.send("WHEEE"); 
+    });
+
+    // =====================================
     // GOOGLE ROUTES =======================
     // =====================================
     // send to google to do the authentication
@@ -184,3 +211,6 @@ function isLoggedIn(req, res, next) {
     //test purpose, not require login
     //return next();
 }
+
+
+

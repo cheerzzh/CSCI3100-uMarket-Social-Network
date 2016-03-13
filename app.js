@@ -54,11 +54,49 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 // routes ======================================================================
 require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
+// =============== Testing ================
+/*
+var User            = require('./app/models/user');
+var Item = require('./app/models/item');
+
+// maunally insert item here
+// create a new user called chris
+var chris = new User()
+chris.local.email = 'Chris@test.com' + Date()
+chris.local.password = chris.generateHash('password');
+
+// call the built-in save method to save to the database
+chris.save(function(err) {
+  if (err) throw err;
+
+  console.log('User saved successfully!');
+});
+
+// find a user
+User.find({'local.email': 'test1@test.com'},function(err,user){
+  if(err) throw err;
+
+  console.log(user)
+
+})
+var newItem = new Item()
+newItem.userID = 'testuserid'
+newItem.createDate = Date()
+newItem.save(function(err) {
+  if (err) throw err;
+})
+
+Item.find({},function(err,item){
+  if(err) throw  err
+  console.log(item)
+})
+// ========================================
 // Make our db accessible to our router 
 app.use(function(req,res,next){ 
   req.db = db; // assign db to reg
   next(); 
 });
+*/
 
 // use middlewares
 

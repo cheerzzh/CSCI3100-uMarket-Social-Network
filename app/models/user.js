@@ -34,7 +34,19 @@ var userSchema = mongoose.Schema({
         university:Number,
         university_mail:String,
         verified:Boolean
-    }
+    },
+
+    admin: Boolean,
+    location: String,
+    meta: {
+        age: Number,
+        website: String
+    },
+    created_at: Date,
+    updated_at: Date,
+
+    followeeList : [String],
+    followerList : [String]
 
 });
 
