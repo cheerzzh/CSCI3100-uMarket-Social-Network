@@ -21,13 +21,23 @@ var app = express();
 
 var configDB = require('./config/database.js');
 mongoose.connect(configDB.url); // connect to our database
+
+app.use(logger('dev')); // log information to server
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser());
+app.use(express.static(path.join(__dirname, 'public'))); // set public directory
+
+
 require('./config/passport')(passport); // pass passport for configuration
 
 
 // load routers
+/*
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var routes1 = require('./routes/routes');
+*/
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views')); 
@@ -38,11 +48,6 @@ app.set('view engine', 'ejs'); // set up ejs for templating
 //app.use(favicon(__dirname + '/public/favicon.ico'));
 
 
-app.use(logger('dev')); // log information to server
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public'))); // set public directory
 
 // required for passport
 // use express-sessoon to session-handling

@@ -1,18 +1,47 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+  <title>Bootstrap Example</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script   src="https://code.jquery.com/ui/1.12.0-beta.1/jquery-ui.min.js"   integrity="sha256-WyjlLy3rvVSitHOXMctYkMCOU6GAletPg+qniNKLCQM="   crossorigin="anonymous"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+  <script src="javascripts/ajax.js"></script>
 </head>
 <body>
 
-<h1>My First Heading</h1>
+<div class="container">
+	<div id='results'></div>
+	<div id='userInfo'></div>
+	<div id="userItemList"></div>
 
-<p>My first paragraph.</p>
-<div id='results'></div>
+
+  <h2>Post Item</h2>
+  <form role="form" action="/postItem" method="post">
+    <div class="form-group ">
+      <label for="email">Item name:</label>
+      <input type="text" class="form-control" name="itemName" placeholder="Enter item name">
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="text" class="form-control" name="pwd" placeholder="Enter password">
+    </div>
+    <div class="form-group">
+	  <label for="comment">Comment:</label>
+	  <textarea class="form-control" rows="5" name="discription"></textarea>
+	</div>
+
+    <div class="checkbox">
+      <label><input type="checkbox" name='checkBox'> Remember me</label>
+    </div>
+    <button type="submit" class="btn btn-default" >Submit</button>
+  </form>
 
 
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
-	<script src="javascripts/ajax.js"></script>
+</div>
+
 </body>
 </html>

@@ -7,12 +7,15 @@ var mongoose = require('mongoose');
 var itemSchema = mongoose.Schema({
 
     userID : String,
+    itemName : String,
     createDate : Date,
     updateDate : Date,
     imageLinks : [String],
     buy : Boolean,
     free : Boolean,
     price : Number,
+    discription : String,
+    condition : Number,
 
 
 

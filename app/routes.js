@@ -122,9 +122,34 @@ module.exports = function(app, passport) {
     })
 
     app.get('/search', function(req, res){ 
-        res.send("WHEEE"); 
+
+        // test authenticated
+        if (req.isAuthenticated())
+            res.send('User authenticated: ' + req.user.local.email)
+        else
+            res.send("Guest"); 
     });
 
+    app.get('/userInfo', function(req, res){ 
+
+        // test authenticated
+        if (req.isAuthenticated())
+            res.send(req.user)
+        else
+            res.send("Guest"); 
+    });
+
+     app.post('/postItem', function(req,res){
+        console.log('postItem request recieved')
+        console.log(req.body)
+        res.redirect('/ajax')
+     })
+
+    app.post('/test', function(req,res){
+        console.log('postItem request recieved')
+        console.log(req.body)
+        res.redirect('/ajax')
+     })
     // =====================================
     // GOOGLE ROUTES =======================
     // =====================================
