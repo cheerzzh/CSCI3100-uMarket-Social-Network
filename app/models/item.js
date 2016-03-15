@@ -14,7 +14,7 @@ var itemSchema = mongoose.Schema({
     buy : Boolean,
     free : Boolean,
     price : Number,
-    discription : String,
+    description : String,
     condition : Number,
 
 

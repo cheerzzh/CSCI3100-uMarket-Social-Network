@@ -2,7 +2,7 @@
 var User            = require('../app/models/user');
 var Item = require('../app/models/item');
 
-module.exports = function(app, passport) {
+module.exports = function(app, passport,upload) {
 
     // =====================================
     // HOME PAGE (with login links) ========
@@ -139,15 +139,38 @@ module.exports = function(app, passport) {
             res.send("Guest"); 
     });
 
-     app.post('/postItem', function(req,res){
+    app.get('/allItem', function(req, res){ 
+
+        Item.find({}, function(err, items) {
+              if (err) throw err;
+
+              // object of all the users
+              //console.log(items);
+              res.send(items)
+        });
+    });
+    app.post('/postItem', isLoggedIn,upload.array('photos', 12),function(req,res){
         console.log('postItem request recieved')
         console.log(req.body)
+        console.log(req.files);
+
+        var newItem = new Item()
+        newItem.userID = req.user.local.email
+        newItem.itemName = req.body.itemName
+        newItem.description = req.body.description
+        newItem.createDate = Date()
+        newItem.updateDate = Date()
+        newItem.save(function(err) {
+          if (err) throw err;
+        })
+
         res.redirect('/ajax')
      })
 
     app.post('/test', function(req,res){
         console.log('postItem request recieved')
         console.log(req.body)
+
         res.redirect('/ajax')
      })
     // =====================================
