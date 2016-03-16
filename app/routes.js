@@ -154,6 +154,8 @@ module.exports = function(app, passport,upload) {
         console.log(req.body)
         console.log(req.files);
 
+        // store image for each object in req.files: path
+
         var newItem = new Item()
         newItem.userID = req.user.local.email
         newItem.itemName = req.body.itemName

@@ -4,8 +4,22 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+var crypto = require('crypto');
+var mime = require('mime')
 var multer  = require('multer')
-var upload = multer({ dest: 'public/uploads/' })
+// rename uploaded images
+var storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'public/uploads/')
+  },
+  filename: function (req, file, cb) {
+    crypto.pseudoRandomBytes(16, function (err, raw) {
+      cb(null, raw.toString('hex') + Date.now() + '.' + mime.extension(file.mimetype));
+    });
+  }
+});
+
+var upload = multer({storage: storage})
 var errorhandler = require('errorhandler')
 
 var mongoose = require('mongoose');
