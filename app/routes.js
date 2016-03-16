@@ -149,10 +149,10 @@ module.exports = function(app, passport,upload) {
               res.send(items)
         });
     });
-    app.post('/postItem', isLoggedIn,function(req,res){
+    app.post('/postItem', isLoggedIn,upload.array('images', 5),function(req,res){
         console.log('postItem request recieved')
         console.log(req.body)
-        console.log(req.file);
+        console.log(req.files);
 
         var newItem = new Item()
         newItem.userID = req.user.local.email
