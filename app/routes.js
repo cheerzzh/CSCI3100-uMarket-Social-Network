@@ -28,7 +28,8 @@ module.exports = function(app, passport,upload) {
     // process the login form
     // app.post('/login', do all our passport stuff here);
     app.post('/login', passport.authenticate('local-login', {
-        successRedirect : '/timeline', // redirect to the secure profile section
+        //successRedirect : '/timeline', // redirect to the secure profile section
+        successRedirect : '/ajax', // redirect to the secure profile section
         failureRedirect : '/', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
@@ -149,23 +150,34 @@ module.exports = function(app, passport,upload) {
               res.send(items)
         });
     });
+
     app.post('/postItem', isLoggedIn,upload.array('images', 5),function(req,res){
         console.log('postItem request recieved')
         console.log(req.body)
-        console.log(req.files);
+        //console.log(req.files);
 
         // store image for each object in req.files: path
-
         var newItem = new Item()
-        newItem.userID = req.user.local.email
+        req.files.forEach(function(fileEntry){
+            console.log(fileEntry)
+            //imageLinks.push('uplaods/' + fileEntry.filename)
+            newItem.attachImageLink('uplaods/' + fileEntry.filename)
+        })
+
+        
+        newItem.userEmail = req.user.local.email
+        newItem.userID = req.user._id
         newItem.itemName = req.body.itemName
         newItem.description = req.body.description
+        newItem.refLink = req.body.refLink
         newItem.createDate = Date()
         newItem.updateDate = Date()
+
         newItem.save(function(err) {
           if (err) throw err;
         })
 
+        // direct to successful page
         res.redirect('/ajax')
      })
 
@@ -175,6 +187,27 @@ module.exports = function(app, passport,upload) {
 
         res.redirect('/ajax')
     })
+
+    // return all item posted by a specific user
+    app.get('/userItem', function(req, res){ 
+
+        // check auth
+        if (req.isAuthenticated())
+        {
+            Item.find({'userID':req.user._id}, function(err, items) {
+              if (err) throw err;
+
+              // object of all the users
+              //console.log(items);
+              res.send(items)
+            });
+        }
+        else
+        {
+            res.send(null);
+        }
+
+    });
 
 
     // =====================================

@@ -7,6 +7,7 @@ var mongoose = require('mongoose');
 var itemSchema = mongoose.Schema({
 
     userID : String,
+    userEmail : String,
     itemName : String,
     createDate : Date,
     updateDate : Date,
@@ -16,6 +17,7 @@ var itemSchema = mongoose.Schema({
     price : Number,
     description : String,
     condition : Number,
+    refLink : String,
 
 
 
@@ -33,7 +35,7 @@ itemSchema.methods.validPassword = function(password) {
     return bcrypt.compareSync(password, this.local.password);
 };
 
-itemSchema.methods.attach = function(imageID){
+itemSchema.methods.attachImageLink = function(imageID){
 
     this.imageLinks.push(imageID);
 }
