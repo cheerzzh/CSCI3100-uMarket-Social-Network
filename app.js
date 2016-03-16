@@ -60,7 +60,13 @@ app.use(flash()); // use connect-flash for flash messages stored in session
 
 // routes ======================================================================
 require('./app/routes.js')(app, passport,upload); // load our routes and pass in our app and fully configured passport
+app.post('/test', function(req,res){
+    console.log('postItem request recieved')
+    console.log(req.body)
+    console.log(req.file)
 
+    res.redirect('/ajax')
+ })
 // =============== Testing ================
 /*
 var User            = require('./app/models/user');

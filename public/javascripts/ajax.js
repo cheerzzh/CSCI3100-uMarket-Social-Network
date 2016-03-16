@@ -22,12 +22,6 @@ $(document).ready(function(){
         allowedFileExtensions: ["jpg", "gif", "png"]
     });
 
-    $("#input-24").fileinput({
-        
-        maxFileCount: 5,
-        allowedFileExtensions: ["jpg", "gif", "png"],
-        initialCaption: "The Moon and the Earth"
-    });
 
 	console.log('hi')
 	$.get( '/search',1, function(data) { 

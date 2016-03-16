@@ -149,10 +149,10 @@ module.exports = function(app, passport,upload) {
               res.send(items)
         });
     });
-    app.post('/postItem', isLoggedIn,upload.array('photos', 12),function(req,res){
+    app.post('/postItem', isLoggedIn,function(req,res){
         console.log('postItem request recieved')
         console.log(req.body)
-        console.log(req.files);
+        console.log(req.file);
 
         var newItem = new Item()
         newItem.userID = req.user.local.email
@@ -167,12 +167,14 @@ module.exports = function(app, passport,upload) {
         res.redirect('/ajax')
      })
 
-    app.post('/test', function(req,res){
-        console.log('postItem request recieved')
-        console.log(req.body)
+    app.post('/postPic',function(req,res){
+        console.log('postPic request recieved')
+        console.log(req);
 
         res.redirect('/ajax')
-     })
+    })
+
+
     // =====================================
     // GOOGLE ROUTES =======================
     // =====================================
