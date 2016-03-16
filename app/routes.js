@@ -161,7 +161,7 @@ module.exports = function(app, passport,upload) {
         req.files.forEach(function(fileEntry){
             console.log(fileEntry)
             //imageLinks.push('uplaods/' + fileEntry.filename)
-            newItem.attachImageLink('uplaods/' + fileEntry.filename)
+            newItem.attachImageLink('uploads/' + fileEntry.filename)
         })
 
         
