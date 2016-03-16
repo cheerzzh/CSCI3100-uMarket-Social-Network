@@ -6,7 +6,8 @@ jQuery(document).ready(function() {
     */
     //$.backstretch("assets/img/backgrounds/1.jpg");
     //$.backstretch("images/background-1.jpg");
-    $.backstretch("images/3.jpg");
+    $.backstretch(
+        ["images/index/3.jpg","images/index/1.jpg","images/index/2.jpg"],{duration: 2500, fade: 1500});
     /*
         Form validation
     */
