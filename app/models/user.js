@@ -46,7 +46,11 @@ var userSchema = mongoose.Schema({
     updated_at: Date,
 
     followeeList : [String],
-    followerList : [String]
+    followerList : [String],
+
+    avatarImageLink : String,
+    wishList : [String], // store id of item entries interested
+
 
 });
 

@@ -170,15 +170,19 @@ module.exports = function(app, passport,upload) {
         newItem.itemName = req.body.itemName
         newItem.description = req.body.description
         newItem.refLink = req.body.refLink
+        newItem.status = 0
+        newItem.condition = req.body.condition
         newItem.createDate = Date()
         newItem.updateDate = Date()
 
         newItem.save(function(err) {
-          if (err) throw err;
+            if (err) throw err;
+
+            // direct to successful page
+            res.redirect('/ajax')
         })
 
-        // direct to successful page
-        res.redirect('/ajax')
+        
      })
 
     app.post('/postPic',function(req,res){
@@ -187,6 +191,41 @@ module.exports = function(app, passport,upload) {
 
         res.redirect('/ajax')
     })
+
+    // ======= update posted item 
+    app.post('/updateItem', isLoggedIn,function(req,res){
+
+        // fetch item ID from req
+
+        // fetch parameters from req
+
+        // update item entry in db
+
+        // send back success info
+
+    })
+
+    // === user want to buy item : user can send a message to the seller
+    app.post('/whatToBuy',isLoggedIn, function(req,res){
+
+        // make sure user can not buy items posted by it self
+
+        // check item status: if is wait for confirm/ confirmed/ withdrawed, send back message
+
+        // add user to item's waiting list
+
+        // send message to seller
+        // req.body.message
+
+        // send back success info
+
+    });
+
+
+
+
+    // ==== user add item to wishlist
+
 
     // return all item posted by a specific user
     app.get('/userItem', function(req, res){ 

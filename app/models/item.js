@@ -18,6 +18,10 @@ var itemSchema = mongoose.Schema({
     description : String,
     condition : Number,
     refLink : String,
+    waitingList : [String], // store id of users who what to buy
+    status : Number, // 0: in progess 1: wait for confirm  2: withdrawed 3: withdrawed
+    confirmedCounterParty : String, // id of counterParty
+
 
 
 
