@@ -151,6 +151,10 @@ module.exports = function(app, passport,upload) {
         });
     });
 
+
+    // =====================================
+    // Item  ======================
+    // =====================================
     app.post('/postItem', isLoggedIn,upload.array('images', 5),function(req,res){
         console.log('postItem request recieved')
         console.log(req.body)
@@ -185,12 +189,6 @@ module.exports = function(app, passport,upload) {
         
      })
 
-    app.post('/postPic',function(req,res){
-        console.log('postPic request recieved')
-        console.log(req);
-
-        res.redirect('/ajax')
-    })
 
     // ======= update posted item 
     app.post('/updateItem', isLoggedIn,function(req,res){
@@ -205,6 +203,19 @@ module.exports = function(app, passport,upload) {
 
     })
 
+    app.get('/withDrawItem',isLoggedIn,function(req,res){
+
+        // get item id
+        // check user id
+
+        // update status
+
+        // send back status
+    });
+
+    // =====================================
+    // buy  ======================
+    // =====================================
     // === user want to buy item : user can send a message to the seller
     app.post('/whatToBuy',isLoggedIn, function(req,res){
 
@@ -223,12 +234,34 @@ module.exports = function(app, passport,upload) {
 
 
 
-
+    // =====================================
+    // wishlist  ======================
+    // =====================================
     // ==== user add item to wishlist
+    app.get('/addToWishList',isLoggedIn,function(req,res){
+
+
+
+    });
+
+     // ==== user remove item to wishlist
+    app.get('/removeFromWishList',isLoggedIn,function(req,res){
+
+
+
+    });
+
+    // === user retrieve wishlist
+    app.get('/getWishList',isLoggedIn,function(req,res){
+
+
+
+    });
+
 
 
     // return all item posted by a specific user
-    app.get('/userItem', function(req, res){ 
+    app.get('/getMyItem', isLoggedIn,function(req, res){ 
 
         // check auth
         if (req.isAuthenticated())
@@ -247,6 +280,22 @@ module.exports = function(app, passport,upload) {
         }
 
     });
+
+    app.get('/getUserItem',function(req,res){
+
+        // return all the items posted by a user
+        // user id passed in 
+    });
+
+    // =====================================
+    // Timeline  =======================
+    // =====================================
+
+
+    // =====================================
+    // Recommadation =======================
+    // =====================================
+
 
 
     // =====================================

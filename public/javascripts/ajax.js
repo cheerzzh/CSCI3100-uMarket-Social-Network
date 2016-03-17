@@ -28,7 +28,7 @@ $(document).ready(function(){
 		//$('#userInfo').html(data.local.email); 
 	});
 
-	$.get( '/userItem',1, function(data) { 
+	$.get( '/getMyItem',1, function(data) { 
 		console.log(data)
 		//$('#userInfo').html(data.local.email); 
 	});
