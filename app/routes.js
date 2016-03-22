@@ -122,13 +122,12 @@ module.exports = function(app, passport,upload) {
         res.render('uploadItem.ejs');
     })
 
-    app.get('/search', function(req, res){ 
+    app.post('/search', isLoggedIn,function(req, res){ 
 
-        // test authenticated
-        if (req.isAuthenticated())
-            res.send('User authenticated: ' + req.user.local.email)
-        else
-            res.send("Guest"); 
+        // get search key
+        console.log(req.body)
+        // redirect to searh result page with data
+        //res.redirect('/')
     });
 
     app.get('/userInfo', function(req, res){ 

@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+	$.backstretch('../images/3.jpg', {speed: 1000});
 	/*
 	$("#input-21").fileinput({
 		overwriteInitial: false,
@@ -35,10 +36,7 @@ $(document).ready(function(){
 		img.appendTo('#imagediv');
 	})
 
-	$.get( '/search',1, function(data) { 
-		//console.log(data)
-		$('#results').html(data); 
-	});
+
 
 	$.get( '/userInfo',1, function(data) { 
 		//console.log(data)
