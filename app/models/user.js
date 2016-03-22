@@ -29,27 +29,26 @@ var userSchema = mongoose.Schema({
         email        : String,
         name         : String
     },
-    personalInfo     :{
-        username:String,
-        university:Number,
-        university_mail:String,
-        verified:Boolean
-    },
+  
+    userName:String,
+    university:String,
+    university_mail:String,
+    verified:Boolean,
+    age:Number,
+    birthDate : Date,
+    
 
     admin: Boolean,
     location: String,
-    meta: {
-        age: Number,
-        website: String
-    },
-    created_at: Date,
-    updated_at: Date,
+    createdDate: Date,
+    updatedDate: Date,
 
     followeeList : [String],
     followerList : [String],
 
-    avatarImageLink : String,
+    avatarLink : String,
     wishList : [String], // store id of item entries interested
+    statement : String,
 
 
 });

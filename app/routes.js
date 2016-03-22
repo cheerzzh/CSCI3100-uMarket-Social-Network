@@ -29,7 +29,7 @@ module.exports = function(app, passport,upload) {
     // app.post('/login', do all our passport stuff here);
     app.post('/login', passport.authenticate('local-login', {
         //successRedirect : '/timeline', // redirect to the secure profile section
-        successRedirect : '/uploadItem', // redirect to the secure profile section
+        successRedirect : '/updateProfile', // redirect to the secure profile section
         failureRedirect : '/', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
@@ -82,6 +82,54 @@ module.exports = function(app, passport,upload) {
         });
 
     });
+
+    app.post('/updateProfile', isLoggedIn,upload.single('avatar'),function(req,res){
+
+        console.log('updateProfile post  request recieved')
+        console.log(req.body)
+        // fetch item ID from req
+        // fetch parameters from req
+
+        // update item entry in db
+
+        // send back success info
+        console.log(req.user._id)
+        User.findById(req.user._id, function(err, user) {
+
+            if (err) 
+            {   
+                // send back error
+                //res.redirect()
+                throw err;
+            }
+
+            // update field
+            user.updateDate = Date()
+            user.statement = req.body.statement
+            user.userName = req.body.userName
+            user.university = req.body.university
+            user.birthDate = req.body.birthDate
+
+            //console.log(req.file)
+            //imageLinks.push('uplaods/' + fileEntry.filename)
+            if(req.file)
+            {
+                user.avatarLink = 'uploads/' + req.file.filename
+            }
+            
+        
+            // save the user
+            user.save(function(err) {
+            if (err) throw err;
+
+            console.log('User profile successfully updated!');
+            // redirect to user page, flash successful message
+            //res.redirect('/profile',{message:"Profile updated!"})
+            res.redirect('/profile')
+            
+            });
+        });
+    })
 
     app.get('/timeline',isLoggedIn,function(req,res){
 
