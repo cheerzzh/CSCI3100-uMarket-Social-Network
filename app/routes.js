@@ -29,7 +29,7 @@ module.exports = function(app, passport,upload) {
     // app.post('/login', do all our passport stuff here);
     app.post('/login', passport.authenticate('local-login', {
         //successRedirect : '/timeline', // redirect to the secure profile section
-        successRedirect : '/ajax', // redirect to the secure profile section
+        successRedirect : '/uploadItem', // redirect to the secure profile section
         failureRedirect : '/', // redirect back to the signup page if there is an error
         failureFlash : true // allow flash messages
     }));
@@ -116,10 +116,10 @@ module.exports = function(app, passport,upload) {
 
 
 
-    // ========= Handle ajax call, return data =====
-    app.get('/ajax',isLoggedIn,function(req,res){
+    // ========= Handle uploadItem call, return data =====
+    app.get('/uploadItem',isLoggedIn,function(req,res){
 
-        res.render('ajax.ejs');
+        res.render('uploadItem.ejs');
     })
 
     app.get('/search', function(req, res){ 
@@ -184,7 +184,7 @@ module.exports = function(app, passport,upload) {
             if (err) throw err;
 
             // direct to item showing page
-            res.redirect('/ajax')
+            res.redirect('/uploadItem')
         })
 
         
@@ -264,7 +264,7 @@ module.exports = function(app, passport,upload) {
 
             console.log('User successfully updated!');
             // redirect to item page, flash successful message
-            res.redirect('/ajax')
+            res.redirect('/uploadItem')
             
             });
         });
