@@ -117,7 +117,7 @@ module.exports = function(app, passport,upload) {
 
 
     // ========= Handle ajax call, return data =====
-    app.get('/ajax',function(req,res){
+    app.get('/ajax',isLoggedIn,function(req,res){
 
         res.render('ajax.ejs');
     })
@@ -173,6 +173,7 @@ module.exports = function(app, passport,upload) {
         newItem.userID = req.user._id
         newItem.itemName = req.body.itemName
         newItem.description = req.body.description
+        newItem.price = req.body.price
         newItem.refLink = req.body.refLink
         newItem.status = 0
         newItem.condition = req.body.condition
@@ -182,7 +183,7 @@ module.exports = function(app, passport,upload) {
         newItem.save(function(err) {
             if (err) throw err;
 
-            // direct to successful page
+            // direct to item showing page
             res.redirect('/ajax')
         })
 
@@ -190,16 +191,72 @@ module.exports = function(app, passport,upload) {
      })
 
 
+    // update page
+    app.get('/updateItem/:itemid',isLoggedIn,function(req,res){
+
+        console.log(req.params.itemid)
+
+        // check item ID and user ID
+        Item.findById(req.params.itemid, function(err, item) {
+
+            if (err) 
+            {   
+                // redirect to item page
+                //res.redirect()
+                throw err;
+                res.redirect('/')
+            }
+
+            // check user ID 
+            //console.log(item)
+            if(req.user._id == item.userID)
+            {
+                res.render('updateItem.ejs',{data:item});
+            }
+            else
+            {   
+
+                res.redirect('/')
+            }
+
+        });
+
+        
+    })
+
     // ======= update posted item 
     app.post('/updateItem', isLoggedIn,function(req,res){
 
+        console.log('updateItem request recieved')
+        console.log(req.body)
         // fetch item ID from req
+
+        var itemID = req.body.itemID
 
         // fetch parameters from req
 
         // update item entry in db
 
         // send back success info
+        Item.findById(req.body.itemID, function(err, item) {
+
+            if (err) 
+            {   
+                // send back error
+                //res.redirect()
+                throw err;
+            }
+
+            // save the item
+            item.save(function(err) {
+            if (err) throw err;
+
+            console.log('User successfully updated!');
+            // redirect to item page
+            
+            });
+
+        });
 
     })
 
@@ -240,7 +297,8 @@ module.exports = function(app, passport,upload) {
     // ==== user add item to wishlist
     app.get('/addToWishList',isLoggedIn,function(req,res){
 
-
+        // item id not owned by user
+        // should be controlled in front end
 
     });
 
@@ -276,7 +334,7 @@ module.exports = function(app, passport,upload) {
         }
         else
         {
-            res.send(null);
+            res.send("Please logged in!");
         }
 
     });
@@ -287,10 +345,15 @@ module.exports = function(app, passport,upload) {
         // user id passed in 
     });
 
+
     // =====================================
     // Timeline  =======================
     // =====================================
+    app.get('/getTimelinePost',function(req,res){
 
+        // return all the items posted by a user
+        // user id passed in 
+    });
 
     // =====================================
     // Recommadation =======================

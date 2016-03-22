@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+	/*
 	$("#input-21").fileinput({
 		overwriteInitial: false,
         browseClass: "btn btn-success",
@@ -14,24 +15,33 @@ $(document).ready(function(){
         maxFileCount: 5,
         allowedFileExtensions: ["jpg", "gif", "png"]
     });
-
+    */
+	console.log(targetItem)
+	// add value for item
+	/*
+	$("#itemName").val(targetItem.itemName)
+	$("#description").val(targetItem.description)
+	$("#price").val(targetItem.price)
+	$("#condition").val(targetItem.condition)
+	$("#refLink").val(targetItem.refLink)
+	*/
 
 	$.get( '/search',1, function(data) { 
-		console.log(data)
+		//console.log(data)
 		$('#results').html(data); 
 	});
 
 	$.get( '/userInfo',1, function(data) { 
-		console.log(data)
+		//console.log(data)
 		//$('#userInfo').html(data.local.email); 
 	});
 
 	$.get( '/getMyItem',1, function(data) { 
-		console.log(data)
+		//console.log(data)
 		//$('#userInfo').html(data.local.email); 
 
 		data.forEach( function(element, index) {
-			console.log(element)
+			//console.log(element)
 			$('#userItemList').append('<li><a href='+'/updateItem/'+ element._id+'>'+element.itemName+'</a></li>')
 		});
 	});
