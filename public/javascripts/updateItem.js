@@ -18,13 +18,22 @@ $(document).ready(function(){
     */
 	console.log(targetItem)
 	// add value for item
-	/*
+	
 	$("#itemName").val(targetItem.itemName)
 	$("#description").val(targetItem.description)
 	$("#price").val(targetItem.price)
 	$("#condition").val(targetItem.condition)
+	showValue(targetItem.condition)
 	$("#refLink").val(targetItem.refLink)
-	*/
+	$("#itemID").val(targetItem._id)	
+
+	// append images for target item
+	targetItem.imageLinks.forEach(function(link){
+
+		var img = $('<img class="img-thumbnail">'); //Equivalent: $(document.createElement('img'))
+		img.attr('src', '../'+link);
+		img.appendTo('#imagediv');
+	})
 
 	$.get( '/search',1, function(data) { 
 		//console.log(data)

@@ -220,12 +220,15 @@ module.exports = function(app, passport,upload) {
             }
 
         });
+    })
 
-        
+    app.get('/updateItem',isLoggedIn,function(req,res){
+
+        res.redirect('/')
     })
 
     // ======= update posted item 
-    app.post('/updateItem', isLoggedIn,function(req,res){
+    app.post('/updateItemPost', isLoggedIn,upload.array('images', 5),function(req,res){
 
         console.log('updateItem request recieved')
         console.log(req.body)
@@ -247,18 +250,26 @@ module.exports = function(app, passport,upload) {
                 throw err;
             }
 
+            // update field
+            item.itemName = req.body.itemName
+            item.description = req.body.description
+            item.price = req.body.price
+            item.refLink = req.body.refLink
+            item.condition = req.body.condition
+            item.updateDate = Date()
+
             // save the item
             item.save(function(err) {
             if (err) throw err;
 
             console.log('User successfully updated!');
-            // redirect to item page
+            // redirect to item page, flash successful message
+            res.redirect('/ajax')
             
             });
-
         });
-
     })
+
 
     app.get('/withDrawItem',isLoggedIn,function(req,res){
 

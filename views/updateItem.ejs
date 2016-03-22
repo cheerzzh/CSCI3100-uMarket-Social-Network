@@ -32,16 +32,16 @@
 	<div id='results'></div>
 	<div id='userInfo'></div>
 	<div i>
-  <h2>Your items</h2>
+  <h2>Click to update Your item</h2>
   <ol id="userItemList"></ol>
   </div>
 
 
   <h2>Update</h2>
-  <form role="form" action="/updateItem" method="post" enctype="multipart/form-data">
+  <form role="form" action="/updateItemPost" method="post" enctype="multipart/form-data">
     <div class="form-group ">
       <label for="email">Item name * :</label>
-      <input type="text" class="form-control" name="itemName"  placeholder="Enter item name" required>
+      <input type="text" class="form-control" name="itemName"  id="itemName" placeholder="Enter item name" required>
     </div>
     <div class="form-group">
 	  <label for="comment">Description * :</label>
@@ -63,10 +63,15 @@
       <input type="url" class="form-control" name="refLink"  id="refLink" placeholder="May be from amazon ?">
     </div>
 
+    <input type="hidden" name="itemID" id="itemID">
+
+
+
     <button type="submit" class="btn btn-default" >Update ~</button>
   </form>
+  
+  <div id="imagediv"></div>
 
-  <!--show list of item if exists-->
   
 
 
