@@ -2,6 +2,7 @@
 // load the things we need
 
 var mongoose = require('mongoose');
+var random = require('mongoose-random');
 
 // define the schema for our item model
 var itemSchema = mongoose.Schema({
@@ -19,14 +20,14 @@ var itemSchema = mongoose.Schema({
     condition : Number,
     refLink : String,
     waitingList : [String], // store id of users who what to buy
-    status : Number, // 0: in progess 1: wait for confirm  2: withdrawed 3: withdrawed
+    status : Number, // 0: in progess 1: wait for confirm  2: confirmed 3: withdrawed
     confirmedCounterParty : String, // id of counterParty
 
 
 
 
 });
-
+itemSchema.plugin(random, { path: 'r' }); 
 
 // methods ======================
 // generating a hash

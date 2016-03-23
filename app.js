@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var crypto = require('crypto');
 var mime = require('mime')
 var multer  = require('multer')
+var random = require('mongoose-random');
 // rename uploaded images
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -44,6 +45,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // set public directory
 app.use("/upDateItem", express.static(__dirname + "/public"));
+app.use("/user", express.static(__dirname + "/public"));
 
 
 require('./config/passport')(passport); // pass passport for configuration

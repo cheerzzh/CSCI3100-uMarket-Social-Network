@@ -415,10 +415,59 @@ module.exports = function(app, passport,upload) {
         // user id passed in 
     });
 
+    app.get('/getAllUser',function(req,res){
+
+        User.find({}, function(err, users) {
+              if (err) throw err;
+
+              // object of all the users
+              //console.log(users);
+              res.send(users)
+        });
+    })
+
+    // view user profile
+    app.get('/user/:userid',isLoggedIn,function(req,res){
+
+        //console.log(req.params.itemid)
+        // if targetID == current user, redirect to his own profile
+        if(req.params.userid == req.user._id){
+            res.redirect('/profile')
+        }
+        else{
+            // check item ID and user ID
+            User.findById(req.params.userid, function(err, targetUser) {
+
+                if (err) 
+                {   
+                    // redirect to item page
+                    //res.redirect()
+                    throw err;
+                    res.redirect('/')
+                }
+
+                // check user ID 
+                //console.log(item)
+                // send user page, flush 2 users
+                res.send(targetUser)
+
+            });
+        }
+        
+    })
     // =====================================
     // Recommadation =======================
     // =====================================
 
+    // randomly return items with status = 0
+    //  use: mongoose-random
+    app.get('/explore',isLoggedIn,function(req,res){
+
+        Item.findRandom().limit(2).exec(function (err, items) {
+            console.log(items);
+        });
+        
+    })
 
 
     // =====================================
