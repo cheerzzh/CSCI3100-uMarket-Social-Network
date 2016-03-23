@@ -26,15 +26,9 @@ $(document).ready(function(){
 	$("#statement").val(targetUser.statement)
 	$("#birthDate").val(targetUser.birthDate.split("T")[0])
 
-	// update user info
-	// show avatar
-	$("#avatar-nav").attr("src",targetUser.avatarLink);
-	$("#avatar-cover").attr("src",targetUser.avatarLink);
-
-	$("#username-nav").append(targetUser.userName)
-	$("#username-cover").text(targetUser.userName)
-	$("#email-cover").text(targetUser.local.email)
-	$("#statement-cover").text(targetUser.statement)
-	$("#university-cover").append(targetUser.university)
+	// ======= fill user info for navbar
+	fillUserInfo_Navbar(targetUser)
+	fillUserInfo_cover(targetUser)
 
 });
+

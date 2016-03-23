@@ -20,6 +20,9 @@ $(document).ready(function(){
     'images/img-4.jpg',
     ], {duration: 2500, fade: 1500});
 
+  fillUserInfo_Navbar(targetUser)
+  fillUserInfo_cover(targetUser)
+  
   $('#new-micropost textarea').autosize();
 
   var notifications = {

@@ -135,7 +135,7 @@ module.exports = function(app, passport,upload) {
 
         //res.send('Hey, you\'ve logged in, ' + req.user.local.email + '\nPlease fill more user info');
         res.render('timeline.ejs', {
-            user : req.flash(req.user)// get the user out of session and pass to template
+            user : req.user// get the user out of session and pass to template
         });
 
     });
@@ -167,7 +167,9 @@ module.exports = function(app, passport,upload) {
     // ========= Handle uploadItem call, return data =====
     app.get('/uploadItem',isLoggedIn,function(req,res){
 
-        res.render('uploadItem.ejs');
+        res.render('uploadItem.ejs',{
+            user : req.user // get the user out of session and pass to template
+        });
     })
 
     app.post('/search', isLoggedIn,function(req, res){ 
@@ -258,7 +260,7 @@ module.exports = function(app, passport,upload) {
             //console.log(item)
             if(req.user._id == item.userID)
             {
-                res.render('updateItem.ejs',{data:item});
+                res.render('updateItem.ejs',{data:item, user : req.user});
             }
             else
             {   

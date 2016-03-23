@@ -2,6 +2,11 @@ $(document).ready(function(){
 
 	$.backstretch('images/3.jpg', {speed: 1000});
 
+	// ======= fill user info for navbar
+	fillUserInfo_Navbar(targetUser)
+	fillUserInfo_cover(targetUser)
+
+
 	$("#input-21").fileinput({
 		overwriteInitial: false,
         browseClass: "btn btn-success",

@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	$.backstretch('../images/3.jpg', {speed: 1000});
+	$.backstretch('/images/3.jpg', {speed: 1000});
 	/*
 	$("#input-21").fileinput({
 		overwriteInitial: false,
@@ -17,8 +17,12 @@ $(document).ready(function(){
         allowedFileExtensions: ["jpg", "gif", "png"]
     });
     */
-	console.log(targetItem)
+	//console.log(targetItem)
 	// add value for item
+
+	// ======= fill user info for navbar
+	fillUserInfo_Navbar(targetUser)
+	fillUserInfo_cover(targetUser)
 	
 	$("#itemName").val(targetItem.itemName)
 	$("#description").val(targetItem.description)
@@ -32,7 +36,7 @@ $(document).ready(function(){
 	targetItem.imageLinks.forEach(function(link){
 
 		var img = $('<img class="img-thumbnail">'); //Equivalent: $(document.createElement('img'))
-		img.attr('src', '../'+link);
+		img.attr('src', link);
 		img.appendTo('#imagediv');
 	})
 

@@ -43,6 +43,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // set public directory
+app.use("/upDateItem", express.static(__dirname + "/public"));
 
 
 require('./config/passport')(passport); // pass passport for configuration
