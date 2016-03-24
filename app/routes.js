@@ -206,7 +206,7 @@ module.exports = function(app, passport,upload) {
     // =====================================
     app.post('/postItem', isLoggedIn,upload.array('images', 5),function(req,res){
         console.log('postItem request recieved')
-        console.log(req.body)
+        //console.log(req.body)
         //console.log(req.files);
 
         // store image for each object in req.files: path
@@ -228,6 +228,8 @@ module.exports = function(app, passport,upload) {
         newItem.condition = req.body.condition
         newItem.createDate = Date()
         newItem.updateDate = Date()
+        console.log(req.user._id)
+        newItem._creator = req.user._id // reference to creator
 
         newItem.save(function(err) {
             if (err) throw err;
@@ -384,7 +386,9 @@ module.exports = function(app, passport,upload) {
         // check auth
         if (req.isAuthenticated())
         {
-            Item.find({'userID':req.user._id}, function(err, items) {
+            Item.find({'userID':req.user._id})
+            .populate('_creator')
+            .exec(function(err, items) {
               if (err) throw err;
 
               // object of all the users
@@ -409,10 +413,24 @@ module.exports = function(app, passport,upload) {
     // =====================================
     // Timeline  =======================
     // =====================================
-    app.get('/getTimelinePost',function(req,res){
+    app.get('/getTimelinePost',isLoggedIn,function(req,res){
 
-        // return all the items posted by a user
-        // user id passed in 
+        // first just return first 5 items not belongs to users
+        //console.log(req.user._id)
+        // .select('displayName email profileImageURL') // choose fields
+        Item.find({_id: {'$ne':req.user._id },status:0})
+        .limit(10)
+        .populate('_creator')
+        .exec(function(err, items) {
+            if(err)
+            {
+                throw err;
+            }
+
+            res.send(items)
+        });
+        
+
     });
 
     app.get('/getAllUser',function(req,res){
@@ -465,7 +483,7 @@ module.exports = function(app, passport,upload) {
     app.get('/getUserSuggestion',isLoggedIn,function(req,res){
 
         // first just get first 5
-        console.log(req.user._id)
+        //console.log(req.user._id)
         // .select('displayName email profileImageURL') // choose fields
         User.find({_id: {'$ne':req.user._id }}).limit(5).exec(function(err, users) {
             if(err)

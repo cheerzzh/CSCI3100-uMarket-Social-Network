@@ -23,6 +23,8 @@ var itemSchema = mongoose.Schema({
     status : Number, // 0: in progess 1: wait for confirm  2: confirmed 3: withdrawed
     confirmedCounterParty : String, // id of counterParty
 
+    _creator : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+
 
 
 

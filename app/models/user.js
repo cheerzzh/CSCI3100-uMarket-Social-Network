@@ -50,6 +50,8 @@ var userSchema = mongoose.Schema({
     wishList : [String], // store id of item entries interested
     statement : String,
 
+    items : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
+
 
 });
 

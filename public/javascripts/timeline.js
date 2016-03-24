@@ -79,6 +79,7 @@ $(document).ready(function(){
   template = Handlebars.compile(source); 
   $("#messages").html(template(messages));
 
+  /*
   var microposts = {
     microposts: [
     {
@@ -160,6 +161,7 @@ $(document).ready(function(){
   source = $("#microposts-template").html();
   template = Handlebars.compile(source); 
   $("#microposts").html(template(microposts));
+  */
 
   var trends = {
     trends: [
@@ -227,11 +229,49 @@ $(document).ready(function(){
       suggestionEntry.university = '@' +userEntry.university
       userSuggestion.suggestions.push(suggestionEntry)
     })
-    console.log(userSuggestion)
+    //console.log(userSuggestion)
     source = $("#suggestions-template").html();
     template = Handlebars.compile(source);
     $("#suggestions").html(template(userSuggestion));
 
   });
 
+   $.get('/getTimelinePost',1, function(data) { 
+
+    console.log(data)
+
+    var itemPosts = {}
+    itemPosts.microposts = []
+
+    data.forEach(function(itemEntry){
+
+      var postEntry = {}
+      postEntry.avatar = itemEntry._creator.avatarLink
+      postEntry.name = itemEntry._creator.userName
+      postEntry.post = itemEntry.itemName
+      postEntry.description = itemEntry.description
+      postEntry.userLink = '/user/' + itemEntry._creator._id
+      postEntry.itemLink = '/item/' + itemEntry._id
+      if(itemEntry.imageLinks.length > 0)
+      {
+        postEntry.itemImageLink = itemEntry.imageLinks[0]
+      }
+      var postDate = new Date(itemEntry.updateDate)
+      postEntry.time = postDate.toISOString().slice(0,10) // adjust time format
+      //console.log(Date(itemEntry.updateDate))
+      itemPosts.microposts.push(postEntry)
+    })
+
+    source = $("#microposts-template").html();
+    template = Handlebars.compile(source); 
+    $("#microposts").html(template(itemPosts));
+  })
+
 });
+
+
+
+
+
+
+

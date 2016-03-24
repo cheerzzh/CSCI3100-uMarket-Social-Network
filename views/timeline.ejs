@@ -136,6 +136,7 @@
         </div>
         
         <div class="col-lg-6 col-md-5">
+        <!--
           <div class="panel panel-default">
             <div id="new-micropost" class="panel-body">
               <form role="form">
@@ -148,22 +149,30 @@
               </form>
             </div>
           </div>
+          -->
+
           <div id="microposts" class="feed">
             <script id="microposts-template" type="text/x-handlebars-template">
             {{#each microposts}}
             <div class="micropost">
               <div class="content">
+              <div class="left-content">
                 <div class="avatar-content">
-                  <img src={{avatar}} alt={{avatar}}>
+                  <a href={{userLink}}><img src={{avatar}} alt={{avatar}}></a>
+                </div>
                 </div>
                 <div class="post-content">
-                  <span class="name">{{name}}</span>
-                  <span class="username">{{username}}</span>
-                  <div class="post">{{{post}}}</div>
+                  <span class="name"><b>{{name}}</b></span>
+                  <span class="username">{{time}}</span>
+                  <div class="post"><a href={{itemLink}}><b>{{{post}}}</b></a></div>
+                  <div class="post">{{{description}}}</div>
                 </div>
+                
                 <div class="right-content">
-                  <span>{{time}}</span>
+                  <img class="img-responsive img-rounded" src={{itemImageLink}}>
+    
                 </div>
+                
               </div>
               <div class="actions">
                 <div class="actions-content">
