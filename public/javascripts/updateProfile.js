@@ -24,7 +24,11 @@ $(document).ready(function(){
 	$("#userName").val(targetUser.userName)
 	$("#university").val(targetUser.university)
 	$("#statement").val(targetUser.statement)
-	$("#birthDate").val(targetUser.birthDate.split("T")[0])
+	if(targetUser.birthDate)
+	{
+		$("#birthDate").val(targetUser.birthDate.split("T")[0])
+	}
+	
 
 	// ======= fill user info for navbar
 	fillUserInfo_Navbar(targetUser)

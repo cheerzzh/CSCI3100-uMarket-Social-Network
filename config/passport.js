@@ -69,6 +69,7 @@ module.exports = function(passport) {
                 // set the user's local credentials
                 newUser.local.email    = email;
                 newUser.local.password = newUser.generateHash(password);
+                newUser.avatarLink = '/images/avatar-default.png'
                 newUser. createdDate = Date()
                 newUser.updatedDate = Date()
 
