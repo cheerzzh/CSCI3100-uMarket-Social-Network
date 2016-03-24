@@ -426,6 +426,7 @@ module.exports = function(app, passport,upload) {
         });
     })
 
+
     // view user profile
     app.get('/user/:userid',isLoggedIn,function(req,res){
 
@@ -459,6 +460,23 @@ module.exports = function(app, passport,upload) {
     // Recommadation =======================
     // =====================================
 
+    // GOAL: return user array suggested: 
+    // first from user's following's following who he is not following now
+    app.get('/getUserSuggestion',isLoggedIn,function(req,res){
+
+        // first just get first 5
+        console.log(req.user._id)
+        // .select('displayName email profileImageURL') // choose fields
+        User.find({_id: {'$ne':req.user._id }}).limit(5).exec(function(err, users) {
+            if(err)
+            {
+                throw err;
+            }
+
+            res.send(users)
+        });
+        
+    })
     // randomly return items with status = 0
     //  use: mongoose-random
     app.get('/explore',isLoggedIn,function(req,res){

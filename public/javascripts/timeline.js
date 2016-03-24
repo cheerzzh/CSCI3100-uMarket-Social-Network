@@ -175,6 +175,7 @@ $(document).ready(function(){
   template = Handlebars.compile(source); 
   $("#trends").html(template(trends));
 
+  /*
   var suggestions = {
     suggestions: [
     {
@@ -204,9 +205,33 @@ $(document).ready(function(){
     }
     ]
   };
+  */
 
+  /*
   source = $("#suggestions-template").html();
   template = Handlebars.compile(source);
   $("#suggestions").html(template(suggestions));
+  */
+
+  $.get('/getUserSuggestion',1, function(data) { 
+    //console.log(data)
+    // create user suggestion array
+    var userSuggestion = {}
+    userSuggestion.suggestions = []
+
+    data.forEach(function(userEntry){
+
+      var suggestionEntry = {}
+      suggestionEntry.avatar = userEntry.avatarLink
+      suggestionEntry.name = userEntry.userName
+      suggestionEntry.university = '@' +userEntry.university
+      userSuggestion.suggestions.push(suggestionEntry)
+    })
+    console.log(userSuggestion)
+    source = $("#suggestions-template").html();
+    template = Handlebars.compile(source);
+    $("#suggestions").html(template(userSuggestion));
+
+  });
 
 });
