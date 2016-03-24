@@ -418,7 +418,7 @@ module.exports = function(app, passport,upload) {
         // first just return first 5 items not belongs to users
         //console.log(req.user._id)
         // .select('displayName email profileImageURL') // choose fields
-        Item.find({_id: {'$ne':req.user._id },status:0})
+        Item.find({_creator: {'$ne':req.user._id },status:0})
         .limit(10)
         .populate('_creator')
         .exec(function(err, items) {
