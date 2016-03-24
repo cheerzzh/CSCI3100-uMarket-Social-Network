@@ -240,6 +240,7 @@ $(document).ready(function(){
 
     console.log(data)
 
+    descriptionLimit = 200
     var itemPosts = {}
     itemPosts.microposts = []
 
@@ -249,7 +250,15 @@ $(document).ready(function(){
       postEntry.avatar = itemEntry._creator.avatarLink
       postEntry.name = itemEntry._creator.userName
       postEntry.post = itemEntry.itemName
-      postEntry.description = itemEntry.description
+      if(itemEntry.description.length > descriptionLimit)
+      {
+        postEntry.description = itemEntry.description.substr(1, 200) + " ...";
+      }
+      else
+      {
+        postEntry.description = itemEntry.description
+      }
+      
       postEntry.userLink = '/user/' + itemEntry._creator._id
       postEntry.itemLink = '/item/' + itemEntry._id
       if(itemEntry.imageLinks.length > 0)
