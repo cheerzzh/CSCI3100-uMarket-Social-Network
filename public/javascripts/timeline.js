@@ -266,7 +266,7 @@ $(document).ready(function(){
         postEntry.itemImageLink = itemEntry.imageLinks[0]
       }
       var postDate = new Date(itemEntry.updateDate)
-      postEntry.time = postDate.toISOString().slice(0,10) // adjust time format
+      postEntry.time = postDate.toISOString().slice(0,10) + " " + postDate.toISOString().slice(12,19)// adjust time format
       //console.log(Date(itemEntry.updateDate))
       itemPosts.microposts.push(postEntry)
     })

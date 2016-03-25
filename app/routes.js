@@ -172,10 +172,39 @@ module.exports = function(app, passport,upload) {
         });
     })
 
-    app.post('/search', isLoggedIn,function(req, res){ 
+    // given a query key: return related item list and user list
+    app.get('/search', isLoggedIn,function(req, res){ 
 
         // get search key
-        console.log(req.body)
+        console.log(req.query)
+
+        var re = new RegExp('^.*' + req.query.searchKey + '.*$', 'i');
+        var returnData = {}
+
+        Item.find()
+        .or([{ 'itemName': { $regex: re }}, { 'description': { $regex: re }}])
+        .and({_creator: {'$ne':req.user._id }}) // not search own items?
+        .sort({'updateDate': -1}).exec(function(err, items) {
+
+            if(err)
+            {
+                throw err
+            }
+
+            // send search display page with data
+            returnData.items = items;
+            User.find()
+            .or([{ 'userName': { $regex: re }}, { 'university': { $regex: re }}])
+            .and({_id: {'$ne':req.user._id }}) // not search own items?
+            .sort({'updateDate': -1}).exec(function(err, users) {
+                if(err) throw err
+
+                returnData.users = users
+                res.send(returnData)
+            })
+        });
+
+        
         // redirect to searh result page with data
         //res.redirect('/')
     });
@@ -420,6 +449,7 @@ module.exports = function(app, passport,upload) {
         // .select('displayName email profileImageURL') // choose fields
         Item.find({_creator: {'$ne':req.user._id },status:0})
         .limit(10)
+        .sort({updateDate: -1})
         .populate('_creator')
         .exec(function(err, items) {
             if(err)
@@ -474,6 +504,31 @@ module.exports = function(app, passport,upload) {
         }
         
     })
+
+    app.get('/item/:itemid',isLoggedIn,function(req,res){
+
+        //console.log(req.params.itemid)
+        Item.findById(req.params.itemid)
+        .populate('_creator')
+        .exec(function(err, targetItem) {
+
+            if (err) 
+            {   
+                // redirect to item page
+                //res.redirect()
+                throw err;
+                res.redirect('/')
+            }
+
+            // check user ID 
+            //console.log(item)
+            // send user page, flush 2 users
+            res.send(targetItem)
+
+        });
+        
+        
+    })
     // =====================================
     // Recommadation =======================
     // =====================================
@@ -485,7 +540,9 @@ module.exports = function(app, passport,upload) {
         // first just get first 5
         //console.log(req.user._id)
         // .select('displayName email profileImageURL') // choose fields
-        User.find({_id: {'$ne':req.user._id }}).limit(5).exec(function(err, users) {
+        User.find({_id: {'$ne':req.user._id }})
+        .limit(5)
+        .exec(function(err, users) {
             if(err)
             {
                 throw err;

@@ -46,6 +46,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public'))); // set public directory
 app.use("/upDateItem", express.static(__dirname + "/public"));
 app.use("/user", express.static(__dirname + "/public"));
+app.use("/item", express.static(__dirname + "/public"));
 
 
 require('./config/passport')(passport); // pass passport for configuration
