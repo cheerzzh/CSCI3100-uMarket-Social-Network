@@ -52,6 +52,7 @@ var userSchema = mongoose.Schema({
 
     itemList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
     followingList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    followerList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 
 
 });

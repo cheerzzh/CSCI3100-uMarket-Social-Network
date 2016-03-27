@@ -510,13 +510,17 @@ module.exports = function(app, passport,upload) {
                 //save
                 user.save(function(err) {
                     if (err) throw err;
-                    res.send(true)
+
+                    // add user to follower list of targetUser
+                    targetUser.followerList.push(user._id)
+                    targetUser.save(function(err){
+                        if (err) throw err;
+                        res.send(true)
+                    })
+                    
                 })
             })
-
         })
-
-       
     })
 
     // view user profile
