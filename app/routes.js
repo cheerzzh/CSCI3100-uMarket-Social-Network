@@ -264,12 +264,18 @@ module.exports = function(app, passport,upload) {
             if (err) throw err;
 
             // add item ref to uploader
+            User.findById(req.user._id, function(err, user) {
 
+                user.itemList.push(newItem)
 
-            // direct to item showing page
-            res.redirect('/uploadItem')
+                user.save(function(err){
+                    if (err) throw err;
+
+                    // direct to item showing page
+                    res.redirect('/uploadItem')
+                })
+            })
         })
-
 
      })
 
