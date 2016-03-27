@@ -12,7 +12,7 @@ module.exports = function(app, passport,upload) {
         if (req.isAuthenticated())
              res.redirect('/timeline');
         else
-            res.render('index3.ejs', { message: req.flash('loginMessage') }); 
+            res.render('index3.ejs', { message: req.flash('loginMessage') });
     });
 
     // =====================================
@@ -22,7 +22,7 @@ module.exports = function(app, passport,upload) {
     app.get('/login', function(req, res) {
 
         // render the page and pass in any flash data if it exists
-        res.render('index3.ejs', { message: req.flash('loginMessage') }); 
+        res.render('index3.ejs', { message: req.flash('loginMessage') });
     });
 
     // process the login form
@@ -86,18 +86,18 @@ module.exports = function(app, passport,upload) {
     app.post('/updateProfile', isLoggedIn,upload.single('avatar'),function(req,res){
 
         console.log('updateProfile post  request recieved')
-        console.log(req.body)
+        //console.log(req.body)
         // fetch item ID from req
         // fetch parameters from req
 
         // update item entry in db
 
         // send back success info
-        console.log(req.user._id)
+        //console.log(req.user._id)
         User.findById(req.user._id, function(err, user) {
 
-            if (err) 
-            {   
+            if (err)
+            {
                 // send back error
                 //res.redirect()
                 throw err;
@@ -116,8 +116,8 @@ module.exports = function(app, passport,upload) {
             {
                 user.avatarLink = 'uploads/' + req.file.filename
             }
-            
-        
+
+
             // save the user
             user.save(function(err) {
             if (err) throw err;
@@ -126,7 +126,7 @@ module.exports = function(app, passport,upload) {
             // redirect to user page, flash successful message
             //res.redirect('/profile',{message:"Profile updated!"})
             res.redirect('/profile')
-            
+
             });
         });
     })
@@ -158,7 +158,7 @@ module.exports = function(app, passport,upload) {
         User.find({}, function(err, user) {
 
             res.send(user)
-        
+
         });
     });
 
@@ -173,7 +173,7 @@ module.exports = function(app, passport,upload) {
     })
 
     // given a query key: return related item list and user list
-    app.get('/search', isLoggedIn,function(req, res){ 
+    app.get('/search', isLoggedIn,function(req, res){
 
         // get search key
         console.log(req.query)
@@ -204,21 +204,21 @@ module.exports = function(app, passport,upload) {
             })
         });
 
-        
+
         // redirect to searh result page with data
         //res.redirect('/')
     });
 
-    app.get('/userInfo', function(req, res){ 
+    app.get('/userInfo', function(req, res){
 
         // test authenticated
         if (req.isAuthenticated())
             res.send(req.user)
         else
-            res.send("Guest"); 
+            res.send("Guest");
     });
 
-    app.get('/allItem', function(req, res){ 
+    app.get('/allItem', function(req, res){
 
         Item.find({}, function(err, items) {
               if (err) throw err;
@@ -246,7 +246,7 @@ module.exports = function(app, passport,upload) {
             newItem.attachImageLink('uploads/' + fileEntry.filename)
         })
 
-        
+
         newItem.userEmail = req.user.local.email
         newItem.userID = req.user._id
         newItem.itemName = req.body.itemName
@@ -257,17 +257,20 @@ module.exports = function(app, passport,upload) {
         newItem.condition = req.body.condition
         newItem.createDate = Date()
         newItem.updateDate = Date()
-        console.log(req.user._id)
+        //console.log(req.user._id)
         newItem._creator = req.user._id // reference to creator
 
         newItem.save(function(err) {
             if (err) throw err;
 
+            // add item ref to uploader
+
+
             // direct to item showing page
             res.redirect('/uploadItem')
         })
 
-        
+
      })
 
 
@@ -279,22 +282,22 @@ module.exports = function(app, passport,upload) {
         // check item ID and user ID
         Item.findById(req.params.itemid, function(err, item) {
 
-            if (err) 
-            {   
+            if (err)
+            {
                 // redirect to item page
                 //res.redirect()
                 throw err;
                 res.redirect('/')
             }
 
-            // check user ID 
+            // check user ID
             //console.log(item)
             if(req.user._id == item.userID)
             {
                 res.render('updateItem.ejs',{data:item, user : req.user});
             }
             else
-            {   
+            {
 
                 res.redirect('/')
             }
@@ -307,7 +310,7 @@ module.exports = function(app, passport,upload) {
         res.redirect('/')
     })
 
-    // ======= update posted item 
+    // ======= update posted item
     app.post('/updateItemPost', isLoggedIn,upload.array('images', 5),function(req,res){
 
         console.log('updateItem request recieved')
@@ -323,8 +326,8 @@ module.exports = function(app, passport,upload) {
         // send back success info
         Item.findById(req.body.itemID, function(err, item) {
 
-            if (err) 
-            {   
+            if (err)
+            {
                 // send back error
                 //res.redirect()
                 throw err;
@@ -345,7 +348,7 @@ module.exports = function(app, passport,upload) {
             console.log('User successfully updated!');
             // redirect to item page, flash successful message
             res.redirect('/uploadItem')
-            
+
             });
         });
     })
@@ -410,7 +413,7 @@ module.exports = function(app, passport,upload) {
 
 
     // return all item posted by a specific user
-    app.get('/getMyItem', isLoggedIn,function(req, res){ 
+    app.get('/getMyItem', isLoggedIn,function(req, res){
 
         // check auth
         if (req.isAuthenticated())
@@ -435,7 +438,7 @@ module.exports = function(app, passport,upload) {
     app.get('/getUserItem',function(req,res){
 
         // return all the items posted by a user
-        // user id passed in 
+        // user id passed in
     });
 
 
@@ -459,7 +462,7 @@ module.exports = function(app, passport,upload) {
 
             res.send(items)
         });
-        
+
 
     });
 
@@ -475,6 +478,41 @@ module.exports = function(app, passport,upload) {
     })
 
 
+    // user want to add another user to his own following list
+    app.get('/toFollowUser',function(req,res){
+
+        var targetUserID = req.query.targetUserID
+
+        // check userID
+
+        // first find request user
+        User.findById(req.user._id, function(err, user) {
+
+            if(err) throw err;
+
+            User.findById(targetUserID, function(err, targetUser) {
+
+                if(err) throw err;
+                console.log("insert into following list")
+                //console.log(user)
+                //console.log(targetUser)
+                // check whether is in list
+
+                user.followingList.push(targetUser)
+                user.followingIDList.push(targetUser._id)
+
+                //save
+                user.save(function(err) {
+                    if (err) throw err;
+                    res.send(true)
+                })
+            })
+
+        })
+
+       
+    })
+
     // view user profile
     app.get('/user/:userid',isLoggedIn,function(req,res){
 
@@ -487,22 +525,22 @@ module.exports = function(app, passport,upload) {
             // check item ID and user ID
             User.findById(req.params.userid, function(err, targetUser) {
 
-                if (err) 
-                {   
+                if (err)
+                {
                     // redirect to item page
                     //res.redirect()
                     throw err;
                     res.redirect('/')
                 }
 
-                // check user ID 
+                // check user ID
                 //console.log(item)
                 // send user page, flush 2 users
                 res.send(targetUser)
 
             });
         }
-        
+
     })
 
     app.get('/item/:itemid',isLoggedIn,function(req,res){
@@ -512,35 +550,38 @@ module.exports = function(app, passport,upload) {
         .populate('_creator')
         .exec(function(err, targetItem) {
 
-            if (err) 
-            {   
+            if (err)
+            {
                 // redirect to item page
                 //res.redirect()
                 throw err;
                 res.redirect('/')
             }
 
-            // check user ID 
+            // check user ID
             //console.log(item)
             // send user page, flush 2 users
             res.send(targetItem)
 
         });
-        
-        
+
+
     })
     // =====================================
     // Recommadation =======================
     // =====================================
 
-    // GOAL: return user array suggested: 
+    // GOAL: return user array suggested:
     // first from user's following's following who he is not following now
     app.get('/getUserSuggestion',isLoggedIn,function(req,res){
 
         // first just get first 5
         //console.log(req.user._id)
         // .select('displayName email profileImageURL') // choose fields
-        User.find({_id: {'$ne':req.user._id }})
+        console.log('')
+        User.find()
+        .and({_id:{'$nin':req.user.followingList}}) // not return user in following list
+        .and({_id: {'$ne':req.user._id }}) // not return user himself
         .limit(5)
         .exec(function(err, users) {
             if(err)
@@ -548,9 +589,10 @@ module.exports = function(app, passport,upload) {
                 throw err;
             }
 
+            // filter there
             res.send(users)
         });
-        
+
     })
     // randomly return items with status = 0
     //  use: mongoose-random
@@ -559,7 +601,7 @@ module.exports = function(app, passport,upload) {
         Item.findRandom().limit(2).exec(function (err, items) {
             console.log(items);
         });
-        
+
     })
 
 
@@ -569,7 +611,7 @@ module.exports = function(app, passport,upload) {
     // send to google to do the authentication
     // profile gets us their basic information including their name
     // email gets their emails
-    
+
     app.get('/auth/google', passport.authenticate('google', { scope : ['profile', 'email'] }));
 
     // the callback after google has authenticated the user
@@ -633,13 +675,13 @@ module.exports = function(app, passport,upload) {
         });
     });
 
-    
+
 };
 
 // route middleware to make sure a user is logged in
 function isLoggedIn(req, res, next) {
 
-    // if user is authenticated in the session, carry on 
+    // if user is authenticated in the session, carry on
     if (req.isAuthenticated())
         return next();
 

@@ -15,19 +15,19 @@ $(document).ready(function(){
   $.backstretch('images/3.jpg', {speed: 1000});
   $('.cover-pic').backstretch([
     'images/img-1.jpg',
-    'images/img-2.jpg', 
+    'images/img-2.jpg',
     'images/img-3.jpg',
     'images/img-4.jpg',
     ], {duration: 2500, fade: 1500});
 
   fillUserInfo_Navbar(targetUser)
   fillUserInfo_cover(targetUser)
-  
+
   $('#new-micropost textarea').autosize();
 
   var notifications = {
     notifications: [
-    { 
+    {
       title: 'New Post',
       post: '<span class="mention">@rails_freak</span> shared a new micropost<br>' +
       'Ruby on Rails is Awesome! <span class="link">p.co/RoRawsme</span>' +
@@ -49,7 +49,7 @@ $(document).ready(function(){
     }
     ]
   };
-  
+
   source = $("#notifications-template").html();
   template = Handlebars.compile(source);
   $("#notifications").html(template(notifications));
@@ -76,7 +76,7 @@ $(document).ready(function(){
   };
 
   source = $("#messages-template").html();
-  template = Handlebars.compile(source); 
+  template = Handlebars.compile(source);
   $("#messages").html(template(messages));
 
   /*
@@ -159,7 +159,7 @@ $(document).ready(function(){
   };
 
   source = $("#microposts-template").html();
-  template = Handlebars.compile(source); 
+  template = Handlebars.compile(source);
   $("#microposts").html(template(microposts));
   */
 
@@ -174,7 +174,7 @@ $(document).ready(function(){
   };
 
   source = $("#trends-template").html();
-  template = Handlebars.compile(source); 
+  template = Handlebars.compile(source);
   $("#trends").html(template(trends));
 
   /*
@@ -215,7 +215,7 @@ $(document).ready(function(){
   $("#suggestions").html(template(suggestions));
   */
 
-  $.get('/getUserSuggestion',1, function(data) { 
+  $.get('/getUserSuggestion',1, function(data) {
     //console.log(data)
     // create user suggestion array
     var userSuggestion = {}
@@ -226,7 +226,9 @@ $(document).ready(function(){
       var suggestionEntry = {}
       suggestionEntry.avatar = userEntry.avatarLink
       suggestionEntry.name = userEntry.userName
+      suggestionEntry.userID = userEntry._id
       suggestionEntry.university = '@' +userEntry.university
+      suggestionEntry.followButtonID = "followButton_" + userEntry._id
       userSuggestion.suggestions.push(suggestionEntry)
     })
     //console.log(userSuggestion)
@@ -234,11 +236,33 @@ $(document).ready(function(){
     template = Handlebars.compile(source);
     $("#suggestions").html(template(userSuggestion));
 
+    $('.followButton').click(function(){
+      var targetUserID = $(this).attr('value')
+      console.log(targetUserID)
+
+      // ajax get request
+      $.ajax({
+        url: "/toFollowUser",
+        data: {"targetUserID":targetUserID},
+        success: function(response) {
+            //Do Something
+            console.log('Follow' + targetUserID + " success!")
+
+            // remove button
+            $("#followButton_"+targetUserID).remove()
+        },
+        error: function(xhr) {
+            //Do Something to handle error
+        }
+      });
+
+    });
+
   });
 
-   $.get('/getTimelinePost',1, function(data) { 
+   $.get('/getTimelinePost',1, function(data) {
 
-    console.log(data)
+    //console.log(data)
 
     descriptionLimit = 200
     var itemPosts = {}
@@ -258,7 +282,7 @@ $(document).ready(function(){
       {
         postEntry.description = itemEntry.description
       }
-      
+
       postEntry.userLink = '/user/' + itemEntry._creator._id
       postEntry.itemLink = '/item/' + itemEntry._id
       if(itemEntry.imageLinks.length > 0)
@@ -272,11 +296,20 @@ $(document).ready(function(){
     })
 
     source = $("#microposts-template").html();
-    template = Handlebars.compile(source); 
+    template = Handlebars.compile(source);
     $("#microposts").html(template(itemPosts));
+
+
+
   })
 
+
+
+
 });
+
+
+
 
 
 
