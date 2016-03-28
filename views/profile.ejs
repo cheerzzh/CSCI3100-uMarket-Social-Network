@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="stylesheets/timeline.css">
   </head>
   <body style=" padding-top: 100px; ">
-
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -97,76 +96,115 @@
         </div>
       </div>
     </nav>
-
     <div class="container">
       <div class="row">
-        
-        
-        <div class="well panel panel-default">
-          <div class="panel-body">
-            <div class="row">
-              <div class="col-xs-12 col-sm-4 text-center">
-                <img src="#" alt="" class="center-block img-circle img-thumbnail img-responsive" id="avatar-profile" >
-                <ul class="list-inline ratings text-center" title="Ratings">
-                  <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                  <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                  <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                  <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                  <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                </ul>
+        <div class="col-lg-12 ">
+          <div class="card">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-4 col-sm-4 text-center">
+                  <img src="#" alt="" class="center-block img-circle img-thumbnail img-responsive" id="avatar-profile" >
+                  <ul class="list-inline ratings text-center" title="Ratings">
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                  </ul>
+                </div>
+                
+                <div class="col-xs-12 col-sm-8">
+                  <h2 id = "username-profile"></h2>
+                  <p id = "email-profile"></p>
+                  <p id = "university-profile"></p>
+                  <p id = "description-profile"></p>
+                  <p><strong>Interests: </strong>
+                    <span class="label label-info tags">html5</span>
+                    <span class="label label-info tags">css3</span>
+                    <span class="label label-info tags">jquery</span>
+                    <span class="label label-info tags">bootstrap3</span>
+                  </p>
+                </div>
+                
+                <div class="clearfix"></div>
+
+                <div class="col-xs-12 col-sm-4">
+                  <h2 id = "followerNumber"><strong></strong></h2>
+                  <p><small>Followers</small></p>
+                  <!--<button class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> Follow </button>-->
+
+
+                </div>
+                
+                <div class="col-xs-12 col-sm-4">
+                  <h2 id = "followingNumber"><strong></strong></h2>
+                  <p><small>Following</small></p>
+                  <!--<button class="btn btn-info btn-block"><span class="fa fa-user"></span> View Profile </button>-->
+                  <a type="button" href="/updateProfile" class="btn btn-primary btn-block"><span class="fa fa-gear"></span>Update Profile</a>
+                </div>
+                
+                <div class="col-xs-12 col-sm-4">
+                  <h2 id = "itemNumber"><strong></strong></h2>
+                  <p><small>Posted items</small></p>
+                </div>
               </div>
-              <!--/col-->
-              <div class="col-xs-12 col-sm-8">
-                <h2>Jane Doe</h2>
-                <p><strong>About: </strong> Web Designer / UI Expert. </p>
-                <p><strong>Hobbies: </strong> Read, out with friends, listen to music, draw and learn new things. </p>
-                <p><strong>Skills: </strong>
-                  <span class="label label-info tags">html5</span>
-                  <span class="label label-info tags">css3</span>
-                  <span class="label label-info tags">jquery</span>
-                  <span class="label label-info tags">bootstrap3</span>
-                </p>
-              </div>
-              <!--/col-->
-              <div class="clearfix"></div>
-              <div class="col-xs-12 col-sm-4">
-                <h2><strong> 20,7K </strong></h2>
-                <p><small>Followers</small></p>
-                <button class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> Follow </button>
-              </div>
-              <!--/col-->
-              <div class="col-xs-12 col-sm-4">
-                <h2><strong>245</strong></h2>
-                <p><small>Following</small></p>
-                <button class="btn btn-info btn-block"><span class="fa fa-user"></span> View Profile </button>
-              </div>
-              <!--/col-->
-              <div class="col-xs-12 col-sm-4">
-                <h2><strong>43</strong></h2>
-                <p><small>Snippets</small></p>
-                <button type="button" class="btn btn-primary btn-block"><span class="fa fa-gear"></span> Options </button>
-              </div>
-              <!--/col-->
+              
+              
             </div>
-            <!--/row-->
           </div>
-          <!--/panel-body-->
         </div>
-        <!--/panel-->
       </div>
-      
+      <br>
+      <div class="row">
+        <div class="col-lg-4 col-md-4">
+          <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title"><b>Your Items</b></h3>
+            </div>
+            <div class="panel-body">
+              <ul id="trends" class="panel-list">
+              <ul id="userItemList"></ul>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-4">
+        <div class="panel panel-default">
+          <div class="panel-heading">
+            <h3 class="panel-title"><b>Followers</b></h3>
+          </div>
+          <div class="panel-body">
+            <ul id="trends" class="panel-list">
+            <ul id="followerList"></ul>
+          </ul>
+        </div>
+      </div>
     </div>
-    <!-- Javascript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
-    <script type="text/javascript" src="javascripts/include/paper.min.js"></script>
-    <script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
-    <script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
-    <script src="assets/js/jquery.backstretch.min.js"></script>
-    <script type='text/javascript'>
-        var targetUser =<%-JSON.stringify(user)%> // get item from server
-        // console.log(item)
-        </script>
-        <script src="javascripts/fillUserInfo.js"></script>
-        <script src="javascripts/profile.js"></script>
-  </body>
+    <div class="col-lg-4 col-md-4">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><b>Followings</b></h3>
+        </div>
+        <div class="panel-body">
+          <ul id="trends" class="panel-list">
+          <ul id="followingList"></ul>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- Javascript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+<script type="text/javascript" src="javascripts/include/paper.min.js"></script>
+<script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
+<script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
+<script src="assets/js/jquery.backstretch.min.js"></script>
+<script type='text/javascript'>
+var targetUser =<%-JSON.stringify(user)%> // get item from server
+// console.log(item)
+</script>
+<script src="javascripts/fillUserInfo.js"></script>
+<script src="javascripts/profile.js"></script>
+</body>
 </html>

@@ -7,7 +7,18 @@ jQuery(document).ready(function() {
 
     fillUserInfo_Navbar(targetUser)
 	//fillUserInfo_cover(targetUser)
+	console.log(targetUser)
 	$("#avatar-profile").attr("src",targetUser.avatarLink);
+	$("#username-profile").text(targetUser.userName);
+	$("#email-profile").text(targetUser.local.email);
+	$("#description-profile").html('<strong>Statement: </strong>' + targetUser.statement);
+	$("#university-profile").html('<strong>university: </strong>' + targetUser.university);
+	$("#followerNumber").text(targetUser.followerList.length);	
+	$("#followingNumber").text(targetUser.followingList.length);	
+	$("#itemNumber").text(targetUser.itemList.length);	
+
+	$("#followerList").text(targetUser.followerList)
+	$("#followingList").text(targetUser.followingList)
 
     /*
 	for notification
@@ -69,6 +80,16 @@ jQuery(document).ready(function() {
 	template = Handlebars.compile(source); 
 	$("#messages").html(template(messages));
 
+
+	$.get( '/getMyItem',1, function(data) { 
+		console.log(data)
+		//$('#userInfo').html(data.local.email); 
+
+		data.forEach( function(element, index) {
+			console.log(element)
+			$('#userItemList').append('<li><a href='+'/updateItem/'+ element._id+'>'+element.itemName+'</a></li>')
+		});
+	});
     
     
 });
