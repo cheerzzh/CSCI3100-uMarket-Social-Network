@@ -83,6 +83,11 @@ module.exports = function(app, passport,upload) {
 
     });
 
+    app.get('/xwtest',isLoggedIn,function(req,res){
+        req.flash()
+        res.render('xwtest.ejs');
+    });
+    
     app.post('/updateProfile', isLoggedIn,upload.single('avatar'),function(req,res){
 
         console.log('updateProfile post  request recieved')
