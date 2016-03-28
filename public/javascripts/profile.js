@@ -17,6 +17,8 @@ jQuery(document).ready(function() {
 	$("#followingNumber").text(targetUser.followingList.length);	
 	$("#itemNumber").text(targetUser.itemList.length);	
 
+
+	// need to query follower and following list and fill in
 	$("#followerList").text(targetUser.followerList)
 	$("#followingList").text(targetUser.followingList)
 
