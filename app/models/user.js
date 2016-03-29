@@ -43,8 +43,8 @@ var userSchema = mongoose.Schema({
     createdDate: Date,
     updatedDate: Date,
 
-    followingIDList : [String],
-    followerIDList : [String],
+    //followingIDList : [String],
+    //followerIDList : [String],
 
     avatarLink : String,
     wishList : [String], // store id of item entries interested

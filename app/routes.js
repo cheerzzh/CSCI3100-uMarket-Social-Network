@@ -512,7 +512,7 @@ module.exports = function(app, passport,upload) {
                 if(!include(user.followingList, targetUser._id))
                 {
                     user.followingList.push(targetUser)
-                    user.followingIDList.push(targetUser._id)
+                    //user.followingIDList.push(targetUser._id)
 
                     //save
                     user.save(function(err) {
@@ -534,6 +534,48 @@ module.exports = function(app, passport,upload) {
                 
 
 
+            })
+        })
+    })
+
+    // user want to add another user to his own following list
+    app.get('/toUnFollowUser',function(req,res){
+
+        var targetUserID = req.query.targetUserID
+
+        // check userID
+
+        // first find request user
+        User.findById(req.user._id, function(err, user) {
+
+            if(err) throw err;
+
+            User.findById(targetUserID, function(err, targetUser) {
+
+                if(err) throw err;
+                console.log("remove from following list")
+                //console.log(user)
+                //console.log(targetUser)
+                // check whether is in list
+                var index = user.followingList.indexOf(targetUser._id);
+                if(index > -1){ // found
+                    user.followingList.splice(index,1)
+                }
+
+                //save
+                user.save(function(err) {
+                    if (err) throw err;
+
+                    // remove user to follower list of targetUser
+                    var index = targetUser.followerList.indexOf(user._id);
+                    if(index > -1){
+                        targetUser.followerList.splice(index,1)
+                    }
+                    targetUser.save(function(err){
+                        if (err) throw err;
+                        res.send(true)
+                    })
+                })
             })
         })
     })
