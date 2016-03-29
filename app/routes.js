@@ -2,6 +2,10 @@
 var User            = require('../app/models/user');
 var Item = require('../app/models/item');
 
+function include(arr,obj) {
+    return (arr.indexOf(obj) != -1);
+}
+
 module.exports = function(app, passport,upload) {
 
     // =====================================
@@ -448,6 +452,8 @@ module.exports = function(app, passport,upload) {
     });
 
 
+
+
     // =====================================
     // Timeline  =======================
     // =====================================
@@ -503,24 +509,70 @@ module.exports = function(app, passport,upload) {
                 //console.log(user)
                 //console.log(targetUser)
                 // check whether is in list
+                if(!include(user.followingList, targetUser._id))
+                {
+                    user.followingList.push(targetUser)
+                    user.followingIDList.push(targetUser._id)
 
-                user.followingList.push(targetUser)
-                user.followingIDList.push(targetUser._id)
-
-                //save
-                user.save(function(err) {
-                    if (err) throw err;
-
-                    // add user to follower list of targetUser
-                    targetUser.followerList.push(user._id)
-                    targetUser.save(function(err){
+                    //save
+                    user.save(function(err) {
                         if (err) throw err;
-                        res.send(true)
+
+                        // add user to follower list of targetUser
+                        targetUser.followerList.push(user._id)
+                        targetUser.save(function(err){
+                            if (err) throw err;
+                            res.send(true)
+                        })
+                        
                     })
-                    
-                })
+                }
+                else
+                {
+                    res.send(false)
+                }
+                
+
+
             })
         })
+    })
+
+
+    // return list of following information
+    app.get('/getDetailFollowingList',isLoggedIn,function(req,res){
+
+        User.findById(req.user._id)
+        .populate('followingList')
+        .exec(function(err, userObject) {
+
+            if (err)
+            {
+                throw err;
+                
+            }
+            // sned back data
+            res.send(userObject)
+
+        });
+    })
+
+    // return list of follower information
+    app.get('/getDetailFollowerList',isLoggedIn,function(req,res){
+
+        User.findById(req.user._id)
+        .populate('followerList')
+        .exec(function(err, userObject) {
+
+            if (err)
+            {
+                throw err;
+                
+            }
+            // sned back data
+            res.send(userObject)
+
+        });
     })
 
     // view user profile

@@ -79,89 +79,6 @@ $(document).ready(function(){
   template = Handlebars.compile(source);
   $("#messages").html(template(messages));
 
-  /*
-  var microposts = {
-    microposts: [
-    {
-      avatar: 'images/avatar.png',
-      name: 'Blogaholic',
-      username: '@blogaholic',
-      post: 'Building a Bootstrap Theme - Awesome post by <span class="mention">@uiux_</span>' +
-      '<a href="#">p.co/btstrpThm</a>' +
-      '<span class="hashtags">#Theme #Bootstrap</span>',
-      time: '4 mins'
-    },
-    {
-      avatar: 'images/avatar_2.png',
-      name: 'UI UX Guy',
-      username: '@uiux_',
-      post: 'Published my post on Building a Bootstrap Theme <a href="#">p.co/btstrpThm</a>',
-      time: '7 mins'
-    },
-    {
-      avatar: 'images/avatar_3.png',
-      name: 'Rails Freak',
-      username: '@rails_freak',
-      post: 'Ruby on Rails is Awesome! <a href="#">p.co/RoRawsme</a> <span class="hashtags">#Rails</span>',
-      time: '9 mins'
-    },
-    {
-      avatar: 'images/avatar_4.png',
-      name: 'Developer',
-      username: '@Dev',
-      post: 'Websockets are future tech - We aren\'t there yet!' +
-      '<span class="hashtags">#Websockets #Javascript</span>',
-      time: '13 mins'
-    },
-    {
-      avatar: 'https://en.gravatar.com/userimage/23763355/e7bbf514106dc2fd9ddb4e8160a72e8c.png',
-      name: 'Sudharsanan M',
-      username: '@sudharti',
-      post: 'Why should you do Side Projects <a href="#">p.co/wsydSPr</a>',
-      time: '14 mins'
-    },
-    {
-      avatar: 'images/avatar_4.png',
-      name: 'Developer',
-      username: '@Dev',
-      post: 'Awesome Read - How maintaining a Blog saved my ass' +
-      '<a href="#">p.co/hmBsAs</a> <span class="hashtags">#Blog</span>',
-      time: '15 mins'
-    },
-    {
-      avatar: 'images/avatar_2.png',
-      name: 'UI UX Guy',
-      username: '@uiux_',
-      post: 'Medium\'s theme is so f**cking good.' +
-      '<a href="#">p.co/mdmThfg</a>' +
-      '<span class="hashtags">#Medium #CSS</span>',
-      time: '18 mins'
-    },
-    {
-      avatar: 'images/avatar_3.png',
-      name: 'Rails Freak',
-      username: '@rails_freak',
-      post: 'RT <span class="mention">@sudharti</span>' +
-      'Front-End Javascript frameworks are clearly the future!' +
-      '<span class="hashtags">#Javascript</span>',
-      time: '19 mins'
-    },
-    {
-      avatar: 'images/avatar.png',
-      name: 'Blogaholic',
-      username: '@blogaholic',
-      post: 'How maintaining a Blog saved my ass' +
-      '<a href="#">p.co/hmBsAs</a>' +
-      '<span class="hashtags">#Blog</span>',
-      time: '20 mins'
-    },
-    ]
-  };
-
-  source = $("#microposts-template").html();
-  template = Handlebars.compile(source);
-  $("#microposts").html(template(microposts));
-  */
 
   var trends = {
     trends: [
@@ -177,90 +94,10 @@ $(document).ready(function(){
   template = Handlebars.compile(source);
   $("#trends").html(template(trends));
 
-  /*
-  var suggestions = {
-    suggestions: [
-    {
-      avatar: 'images/avatar.png',
-      name: 'Bootstrap',
-      username: '@bootstrap',
-    },
-    {
-      avatar: 'images/avatar_4.png',
-      name: 'Dev',
-      username: '@dev_',
-    },
-    {
-      avatar: 'images/avatar_2.png',
-      name: 'User123',
-      username: '@user123',
-    },
-    {
-      avatar: 'images/avatar_3.png',
-      name: 'Rails',
-      username: '@rails',
-    },
-    {
-      avatar: 'images/avatar_3.png',
-      name: 'Ruby User',
-      username: '@ruby',
-    }
-    ]
-  };
-  */
+  fillUserSuggestionPanel()
+  
 
-  /*
-  source = $("#suggestions-template").html();
-  template = Handlebars.compile(source);
-  $("#suggestions").html(template(suggestions));
-  */
-
-  $.get('/getUserSuggestion',1, function(data) {
-    //console.log(data)
-    // create user suggestion array
-    var userSuggestion = {}
-    userSuggestion.suggestions = []
-
-    data.forEach(function(userEntry){
-
-      var suggestionEntry = {}
-      suggestionEntry.avatar = userEntry.avatarLink
-      suggestionEntry.name = userEntry.userName
-      suggestionEntry.userID = userEntry._id
-      suggestionEntry.university = '@' +userEntry.university
-      suggestionEntry.followButtonID = "followButton_" + userEntry._id
-      userSuggestion.suggestions.push(suggestionEntry)
-    })
-    //console.log(userSuggestion)
-    source = $("#suggestions-template").html();
-    template = Handlebars.compile(source);
-    $("#suggestions").html(template(userSuggestion));
-
-    $('.followButton').click(function(){
-      var targetUserID = $(this).attr('value')
-      console.log(targetUserID)
-
-      // ajax get request
-      $.ajax({
-        url: "/toFollowUser",
-        data: {"targetUserID":targetUserID},
-        success: function(response) {
-            //Do Something
-            console.log('Follow' + targetUserID + " success!")
-
-            // remove button
-            $("#followButton_"+targetUserID).remove()
-        },
-        error: function(xhr) {
-            //Do Something to handle error
-        }
-      });
-
-    });
-
-  });
-
-   $.get('/getTimelinePost',1, function(data) {
+  $.get('/getTimelinePost',1, function(data) {
 
     //console.log(data)
 
@@ -309,7 +146,58 @@ $(document).ready(function(){
 });
 
 
+function fillUserSuggestionPanel(){
 
+  $.get('/getUserSuggestion',1, function(data) {
+    console.log(data)
+    // create user suggestion array
+    var userSuggestion = {}
+    userSuggestion.suggestions = []
+
+    data.forEach(function(userEntry){
+
+      var suggestionEntry = {}
+      suggestionEntry.avatar = userEntry.avatarLink
+      suggestionEntry.name = userEntry.userName
+      suggestionEntry.userID = userEntry._id
+      suggestionEntry.university = '@' +userEntry.university
+      suggestionEntry.followButtonID = "followButton_" + userEntry._id
+      suggestionEntry.userSuggestionID = "userSuggestionID_" + userEntry._id
+      suggestionEntry.userLink = "/user/" + userEntry._id
+      userSuggestion.suggestions.push(suggestionEntry)
+    })
+    //console.log(userSuggestion)
+    source = $("#suggestions-template").html();
+    template = Handlebars.compile(source);
+    $("#suggestions").html(template(userSuggestion));
+
+    $('.followButton').click(function(){
+      var targetUserID = $(this).attr('value')
+      console.log(targetUserID)
+
+      // ajax get request
+      // request to follow user
+      $.ajax({
+        url: "/toFollowUser",
+        data: {"targetUserID":targetUserID},
+        success: function(response) {
+            //Do Something
+            console.log('Follow' + targetUserID + " success!")
+
+            // remove button
+            $("#followButton_"+targetUserID).remove()
+            // delete entry
+            $("#userSuggestionID_" + targetUserID).remove()
+        },
+        error: function(xhr) {
+            //Do Something to handle error
+        }
+      });
+
+    });
+
+  });
+}
 
 
 

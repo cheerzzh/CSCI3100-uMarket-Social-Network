@@ -19,12 +19,149 @@ jQuery(document).ready(function() {
 
 
 	// need to query follower and following list and fill in
-	$("#followerList").text(targetUser.followerList)
-	$("#followingList").text(targetUser.followingList)
+
+	//$("#followerList").text(targetUser.followerList)
+	//$("#followingList").text(targetUser.followingList)
 
     /*
 	for notification
     */
+	$.ajax({
+        url: "/getDetailFollowingList",
+        success: function(data) {
+            //Do Something
+            followingList = data.followingList
+            console.log(followingList)
+
+            // attach to panel
+            var followingUsers = {}
+		    followingUsers.followingUser = []
+
+		    followingList.forEach(function(userEntry){
+
+		      var suggestionEntry = {}
+		      suggestionEntry.avatar = userEntry.avatarLink
+		      suggestionEntry.name = userEntry.userName
+		      suggestionEntry.userID = userEntry._id
+		      suggestionEntry.university = '@' +userEntry.university
+		      suggestionEntry.unfollowButtonID = "unfollowButton_" + userEntry._id
+		      suggestionEntry.followingUserID = "followingUserID_" + userEntry._id
+		      suggestionEntry.userLink = "/user/" + userEntry._id
+		      followingUsers.followingUser.push(suggestionEntry)
+		    })
+		    //console.log(followingUsers)
+		    source = $("#followingUser-template").html();
+		    template = Handlebars.compile(source);
+		    $("#followingUser").html(template(followingUsers));
+
+		    // attach unfollow button
+		    $('.unfollowButton').click(function(){
+				var targetUserID = $(this).attr('value')
+				console.log(targetUserID)
+
+				// ajax get request
+				// request to follow user
+				$.ajax({
+				url: "/toUnFollowUser",
+				data: {"targetUserID":targetUserID},
+				success: function(response) {
+				    //Do Something
+				    console.log('unFollow' + targetUserID + " success!")
+
+				    // remove button
+				    $("#unfollowButton_"+targetUserID).remove()
+				    // delete entry
+				    $("#followingUserID_" + targetUserID).remove()
+				},
+				error: function(xhr) {
+				    //Do Something to handle error
+				}
+			});
+
+    	});
+
+    },
+        error: function(xhr) {
+            //Do Something to handle error
+        }
+    });
+
+
+	$.ajax({
+        url: "/getDetailFollowerList",
+        success: function(data) {
+            //Do Something
+
+            
+            followerList = data.followerList
+            console.log(followerList)
+
+            
+            // attach to panel
+            var followerUsers = {}
+		    followerUsers.followerUser = []
+
+		    followerList.forEach(function(userEntry){
+
+		      var suggestionEntry = {}
+		      suggestionEntry.avatar = userEntry.avatarLink
+		      suggestionEntry.name = userEntry.userName
+		      suggestionEntry.userID = userEntry._id
+		      suggestionEntry.university = '@' +userEntry.university
+		      suggestionEntry.followButtonID = "followButton_" + userEntry._id
+		      suggestionEntry.followingUserID = "followerUserID_" + userEntry._id
+		      suggestionEntry.userLink = "/user/" + userEntry._id
+		      followerUsers.followerUser.push(suggestionEntry)
+		    })
+		    //console.log(followerUsers)
+		    source = $("#followerUser-template").html();
+		    template = Handlebars.compile(source);
+		    $("#followerUser").html(template(followerUsers));
+
+		    // attach unfollow button
+		    $('.followButton').click(function(){
+				var targetUserID = $(this).attr('value')
+				console.log(targetUserID)
+
+				// ajax get request
+				// request to follow user
+				$.ajax({
+				url: "/toFollowUser",
+				data: {"targetUserID":targetUserID},
+				success: function(response) {
+				    //Do Something
+				    console.log('unFollow' + targetUserID + " success!")
+
+				    // remove button
+				    $("#followButton_"+targetUserID).remove()
+				    // delete entry
+				    //$("#followerUserID_" + targetUserID).remove()
+				},
+				error: function(xhr) {
+				    //Do Something to handle error
+				}
+				});
+
+    		});
+
+    		// remove following button
+    		followerList.forEach(function(userEntry){
+    			//console.log(include(targetUser.followingList, userEntry._id))
+
+    			// if followr is in my following list, remove follow button
+    			if(include(targetUser.followingList, userEntry._id)){
+    				console.log('remove ' +"#followButton_"+userEntry._id )
+    				$("#followButton_"+userEntry._id).remove()
+    			}
+    		})
+    		
+
+    },
+        error: function(xhr) {
+            //Do Something to handle error
+        }
+    });
+
 
 	$('#new-micropost textarea').autosize();
 
@@ -82,16 +219,21 @@ jQuery(document).ready(function() {
 	template = Handlebars.compile(source); 
 	$("#messages").html(template(messages));
 
-
+	// ajax get user item list and attach 
 	$.get( '/getMyItem',1, function(data) { 
-		console.log(data)
+		//console.log(data)
 		//$('#userInfo').html(data.local.email); 
 
 		data.forEach( function(element, index) {
-			console.log(element)
+			//console.log(element)
 			$('#userItemList').append('<li><a href='+'/updateItem/'+ element._id+'>'+element.itemName+'</a></li>')
 		});
 	});
     
     
 });
+
+
+function include(arr,obj) {
+    return (arr.indexOf(obj) != -1);
+}

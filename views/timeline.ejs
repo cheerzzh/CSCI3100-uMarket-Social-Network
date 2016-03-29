@@ -203,14 +203,14 @@
               <ul id="suggestions" class="panel-list">
                 <script id="suggestions-template" type="text/x-handlebars-template">
                 {{#each suggestions}}
-                <li>
-                  <a href="#">
-                    <div class="row">
+                <li id={{userSuggestionID}}>
+                 
+                    <div class="row" >
                       <div class="col-lg-3 col-md-3 col-xs-2">
                         <img src={{avatar}} alt="" class="avatar">
                       </div>
                       <div class="col-lg-5 col-md-5 col-xs-3">
-                        <span class="name">{{name}}</span><br>
+                        <a href={{userLink}}><span class="name">{{name}}</span></a><br>
                         <span class="username">{{university}}</span>
                       </div>
                       <div class="col-lg-4 col-md-4 col-md-offset-0 col-xs-4 col-xs-offset-3">
@@ -219,9 +219,9 @@
                         </button>
                       </div>
                     </div>
-                  </a>
+                  
                 </li>
-                
+
                 {{/each}}
                 </script>
               </ul>
