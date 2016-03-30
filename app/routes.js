@@ -482,8 +482,15 @@ module.exports = function(app, passport,upload) {
     });
 
     // === user retrieve wishlist
-    app.get('/getWishList',isLoggedIn,function(req,res){
+    app.get('/wishList',isLoggedIn,function(req,res){
 
+        // find user
+        User.findById(req.user._id)
+        .populate('wishList')
+        .exec(function(err, user) {
+            if(err) throw err
+            res.send(user.wishList)
+        })
 
 
     });
