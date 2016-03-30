@@ -182,10 +182,10 @@
                   <a href="#">
                     <i class="fa fa-retweet"></i>
                   </a>
-                  <a href="#">
-                    <i class="fa fa-heart" style="color:#FE2E64;"></i>
+                  <a class="heartButton" id = {{heartID}} value={{itemID}}>
+                    <i class="fa fa-heart" style="{{heartStyle}}" ></i>
                   </a>
-                  16
+                  <font color="grey">{{wishedCount}} people wished</font>
                 </div>
               </div>
               <hr class="divider">
@@ -248,7 +248,7 @@
     <script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
     <script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
     <script type='text/javascript'>
-    var targetUser =<%-JSON.stringify(user)%> // get item from server
+    window.targetUser =<%-JSON.stringify(user)%> // get item from server
     // console.log(item)
     </script>
     <script src="javascripts/fillUserInfo.js"></script>

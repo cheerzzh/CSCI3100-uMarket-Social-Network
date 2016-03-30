@@ -1,13 +1,10 @@
+var timelinePostSource, timelinePostTemplate
+
 $(document).ready(function(){
 
-  /*
-  var user = <%- user %>
-  if(user.local.email)
-  {
-    console.log(user.local.email);
-  }
-  */
-  // use ajx call to get user, notification, message, post, trend .....
+
+  timelinePostSource = $("#microposts-template").html();
+  timelinePostTemplate = Handlebars.compile(timelinePostSource);
 
   var source, template;
 
@@ -20,8 +17,8 @@ $(document).ready(function(){
     'images/img-4.jpg',
     ], {duration: 2500, fade: 1500});
 
-  fillUserInfo_Navbar(targetUser)
-  fillUserInfo_cover(targetUser)
+  fillUserInfo_Navbar(window.targetUser)
+  fillUserInfo_cover(window.targetUser)
 
   $('#new-micropost textarea').autosize();
 
@@ -95,8 +92,17 @@ $(document).ready(function(){
   $("#trends").html(template(trends));
 
   fillUserSuggestionPanel()
-  
+  fillTimeLinePanel(timelinePostTemplate,window.targetUser.wishList)
 
+
+
+
+
+
+});
+
+
+function fillTimeLinePanel(template,currentWishList){
   $.get('/getTimelinePost',1, function(data) {
 
     //console.log(data)
@@ -122,6 +128,23 @@ $(document).ready(function(){
 
       postEntry.userLink = '/user/' + itemEntry._creator._id
       postEntry.itemLink = '/item/' + itemEntry._id
+      // depends on whether in list
+      
+      if(!include(currentWishList, itemEntry._id)){
+
+        // in wishlist, gray, add to wishlist
+        //postEntry.wishlistLink = '/addToWishList?itemID=' + itemEntry._id
+        postEntry.heartStyle = "color:grey;"
+
+      }
+      else
+      {
+        //postEntry.wishlistLink = '/removeFromWishList?itemID=' + itemEntry._id
+        postEntry.heartStyle = "color:red;"
+      }
+      postEntry.wishedCount = itemEntry.wishedList.length
+      postEntry.heartID = "heart_" + itemEntry._id
+      postEntry.itemID = itemEntry._id
       if(itemEntry.imageLinks.length > 0)
       {
         postEntry.itemImageLink = itemEntry.imageLinks[0]
@@ -132,19 +155,56 @@ $(document).ready(function(){
       itemPosts.microposts.push(postEntry)
     })
 
-    source = $("#microposts-template").html();
-    template = Handlebars.compile(source);
     $("#microposts").html(template(itemPosts));
 
+    //paginate()
+    // attach heart function
+    $('.heartButton').click(function(){
+      var itemID = $(this).attr('value')
+      console.log("click heart: " + itemID)
 
+      if(!include(currentWishList, itemID)){
+        $.ajax({
+          url: "/addToWishList",
+          data: {"itemID":itemID},
+          success: function(data) {
+              //Do Something
+            console.log("add to wishlist succeed")
+            window.targetUser = data.tergetUser
+
+            // refresh whole timeline?
+            fillTimeLinePanel(timelinePostTemplate,data.targetUser.wishList)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+      }else{
+
+        $.ajax({
+          url: "/removeFromWishList",
+          data: {"itemID":itemID},
+          success: function(data) {
+              //Do Something
+            console.log("remove from wishlist succeed")
+            window.targetUser = data.tergetUser
+
+            // refresh whole timeline?
+            fillTimeLinePanel(timelinePostTemplate,data.targetUser.wishList)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+
+      }
+
+
+    });
+  
 
   })
-
-
-
-
-});
-
+}
 
 function fillUserSuggestionPanel(){
 
@@ -200,6 +260,34 @@ function fillUserSuggestionPanel(){
 }
 
 
+function paginate(){
+    $('#microposts').each(function() {
+    var currentPage = 0;
+    var numPerPage = 3;
+    var $table = $(this);
+    $table.bind('repaginate', function() {
+        $table.find('micropost').hide().slice(currentPage * numPerPage, (currentPage + 1) * numPerPage).show();
+    });
+    $table.trigger('repaginate');
+    var numRows = $table.find('micropost').length;
+    var numPages = Math.ceil(numRows / numPerPage);
+    var $pager = $('<div class="pager"></div>');
+    for (var page = 0; page < numPages; page++) {
+        $('<span class="page-number"></span>').text(page + 1).bind('click', {
+            newPage: page
+        }, function(event) {
+            currentPage = event.data['newPage'];
+            $table.trigger('repaginate');
+            $(this).addClass('active').siblings().removeClass('active');
+        }).appendTo($pager).addClass('clickable');
+    }
+      $pager.insertBefore($table).find('span.page-number:first').addClass('active');
+  });
+}
+
+function include(arr,obj) {
+    return (arr.indexOf(obj) != -1);
+}
 
 
 

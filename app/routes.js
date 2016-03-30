@@ -404,10 +404,78 @@ module.exports = function(app, passport,upload) {
         // item id not owned by user
         // should be controlled in front end
 
+        var userID = req.user._id
+        var itemID = req.query.itemID
+
+        // add to current user's wish list
+        User.findById(userID, function(err, user) {
+            if(err) throw err
+
+            console.log(user.wishList)
+            if(!include(user.wishList, itemID)){
+                user.wishList.push(itemID)
+            }
+
+            user.save(function(err){
+                if (err) throw  err
+
+                // append to item wishedList
+                Item.findById(itemID, function(err, item) {
+                    if(err) throw  err
+                    if(!include(item.wishedList, userID)){
+                        item.wishedList.push(userID)
+                        item.save(function(err){
+                            if(err) throw err
+                            res.send({targetUser:user})
+                        })
+                    }
+                })
+            })
+        })
+
+        // append to item's wished list
+
     });
 
      // ==== user remove item to wishlist
     app.get('/removeFromWishList',isLoggedIn,function(req,res){
+
+        //console.log('receive removeFromWishList')
+        var userID = req.user._id
+        var itemID = req.query.itemID
+
+        User.findById(userID, function(err, user) {
+
+            if(err) throw err;
+
+            Item.findById(itemID, function(err, item) {
+
+                if(err) throw err;
+                console.log("remove from wish list")
+                //console.log(user)
+                //console.log(targetUser)
+                // check whether is in list
+                var index = user.wishList.indexOf(itemID);
+                if(index > -1){ // found
+                    user.wishList.splice(index,1)
+                }
+
+                //save
+                user.save(function(err) {
+                    if (err) throw err;
+
+                    // remove user to follower list of targetUser
+                    var index = item.wishedList.indexOf(userID);
+                    if(index > -1){
+                        item.wishedList.splice(index,1)
+                    }
+                    item.save(function(err){
+                        if (err) throw err;
+                        res.send({targetUser:user})
+                    })
+                })
+            })
+        })
 
 
 

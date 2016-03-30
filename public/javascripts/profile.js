@@ -108,11 +108,6 @@ jQuery(document).ready(function() {
 });
 
 
-function include(arr,obj) {
-    return (arr.indexOf(obj) != -1);
-}
-
-
 function fillFollwerList(template){
 
 	$.ajax({
@@ -164,7 +159,7 @@ function fillFollwerList(template){
 				    // delete entry
 				    //$("#followerUserID_" + targetUserID).remove()
 				    //fillFollwerList(followerListTemplate)
-					//fillFollwingList(followingListTemplate)
+					fillFollwingList(followingListTemplate)
 
 
 				},
@@ -261,5 +256,9 @@ function fillFollwingList(template){
     });
 }
 
+
+function include(arr,obj) {
+    return (arr.indexOf(obj) != -1);
+}
 
 

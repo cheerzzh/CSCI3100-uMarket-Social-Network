@@ -24,6 +24,7 @@ var itemSchema = mongoose.Schema({
     confirmedCounterParty : String, // id of counterParty
 
     _creator : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    wishedList : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}], 
 
 
 
