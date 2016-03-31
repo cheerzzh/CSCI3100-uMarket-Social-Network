@@ -8,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="stylesheets/include/paper.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    <link rel="stylesheet" href="stylesheets/demo.css">
+    
     <link rel="stylesheet" href="stylesheets/timeline.css">
   </head>
   <body style=" padding-top: 100px; ">
@@ -77,7 +77,7 @@
             </li>
             
             <li><a href="/uploadItem" class="navbar-icons"><i class="fa fa-upload"></i></a></li>
-            <li><a href="#" class="navbar-icons"><i class="fa fa-heart"></i></a></li>
+            <li><a href="/wishList" class="navbar-icons"><i class="fa fa-heart"></i></a></li>
             <li><a href="#" class="navbar-icons"><i class="fa fa-cog"></i></a></li>
             <li><a href="/logout" class="navbar-icons"><i class="fa fa-sign-out"></i></a></li>
             
@@ -152,6 +152,7 @@
           -->
 
           <div id="microposts" class="feed">
+          
             <script id="microposts-template" type="text/x-handlebars-template">
             {{#each microposts}}
             <div class="micropost">
@@ -182,10 +183,10 @@
                   <a href="#">
                     <i class="fa fa-retweet"></i>
                   </a>
-                  <a href="#">
-                    <i class="fa fa-heart" style="color:#FE2E64;"></i>
+                  <a class="heartButton" id = {{heartID}} value={{itemID}}>
+                    <i class="fa fa-heart" style="{{heartStyle}}" ></i>
                   </a>
-                  16
+                  <font color="grey">{{wishedCount}} people wished</font>
                 </div>
               </div>
               <hr class="divider">
@@ -203,14 +204,14 @@
               <ul id="suggestions" class="panel-list">
                 <script id="suggestions-template" type="text/x-handlebars-template">
                 {{#each suggestions}}
-                <li>
-                  <a href="#">
-                    <div class="row">
+                <li id={{userSuggestionID}}>
+                 
+                    <div class="row" >
                       <div class="col-lg-3 col-md-3 col-xs-2">
                         <img src={{avatar}} alt="" class="avatar">
                       </div>
                       <div class="col-lg-5 col-md-5 col-xs-3">
-                        <span class="name">{{name}}</span><br>
+                        <a href={{userLink}}><span class="name">{{name}}</span></a><br>
                         <span class="username">{{university}}</span>
                       </div>
                       <div class="col-lg-4 col-md-4 col-md-offset-0 col-xs-4 col-xs-offset-3">
@@ -219,9 +220,9 @@
                         </button>
                       </div>
                     </div>
-                  </a>
+                  
                 </li>
-                
+
                 {{/each}}
                 </script>
               </ul>
@@ -248,7 +249,7 @@
     <script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
     <script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
     <script type='text/javascript'>
-    var targetUser =<%-JSON.stringify(user)%> // get item from server
+    window.targetUser =<%-JSON.stringify(user)%> // get item from server
     // console.log(item)
     </script>
     <script src="javascripts/fillUserInfo.js"></script>

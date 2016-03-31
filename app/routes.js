@@ -2,6 +2,15 @@
 var User            = require('../app/models/user');
 var Item = require('../app/models/item');
 
+function include(arr,obj) {
+    return (arr.indexOf(obj) != -1);
+}
+
+Array.prototype.extend = function (other_array) {
+    /* you should include a test to check whether other_array really is an array */
+    other_array.forEach(function(v) {this.push(v)}, this);    
+}
+
 module.exports = function(app, passport,upload) {
 
     // =====================================
@@ -221,6 +230,7 @@ module.exports = function(app, passport,upload) {
 
         Item.find()
         .or([{ 'itemName': { $regex: re }}, { 'description': { $regex: re }}])
+        .populate('_creator')
         .and({_creator: {'$ne':req.user._id }}) // not search own items?
         .sort({'updateDate': -1}).exec(function(err, items) {
 
@@ -238,7 +248,12 @@ module.exports = function(app, passport,upload) {
                 if(err) throw err
 
                 returnData.users = users
-                res.send(returnData)
+                //res.send(returnData)
+                res.render('search.ejs', {
+                    user : req.user, // get the user out of session and pass to template
+                    searchResult : returnData,
+                    searchKey: req.query.searchKey
+                });
             })
         });
 
@@ -438,22 +453,100 @@ module.exports = function(app, passport,upload) {
         // item id not owned by user
         // should be controlled in front end
 
+        var userID = req.user._id
+        var itemID = req.query.itemID
+
+        // add to current user's wish list
+        User.findById(userID, function(err, user) {
+            if(err) throw err
+
+            console.log(user.wishList)
+            if(!include(user.wishList, itemID)){
+                user.wishList.push(itemID)
+            }
+
+            user.save(function(err){
+                if (err) throw  err
+
+                // append to item wishedList
+                Item.findById(itemID, function(err, item) {
+                    if(err) throw  err
+                    if(!include(item.wishedList, userID)){
+                        item.wishedList.push(userID)
+                        item.save(function(err){
+                            if(err) throw err
+                            res.send({targetUser:user})
+                        })
+                    }
+                })
+            })
+        })
+
+        // append to item's wished list
+
     });
 
      // ==== user remove item to wishlist
     app.get('/removeFromWishList',isLoggedIn,function(req,res){
+
+        //console.log('receive removeFromWishList')
+        var userID = req.user._id
+        var itemID = req.query.itemID
+
+        User.findById(userID, function(err, user) {
+
+            if(err) throw err;
+
+            Item.findById(itemID, function(err, item) {
+
+                if(err) throw err;
+                console.log("remove from wish list")
+                //console.log(user)
+                //console.log(targetUser)
+                // check whether is in list
+                var index = user.wishList.indexOf(itemID);
+                if(index > -1){ // found
+                    user.wishList.splice(index,1)
+                }
+
+                //save
+                user.save(function(err) {
+                    if (err) throw err;
+
+                    // remove user to follower list of targetUser
+                    var index = item.wishedList.indexOf(userID);
+                    if(index > -1){
+                        item.wishedList.splice(index,1)
+                    }
+                    item.save(function(err){
+                        if (err) throw err;
+                        res.send({targetUser:user})
+                    })
+                })
+            })
+        })
 
 
 
     });
 
     // === user retrieve wishlist
-    app.get('/getWishList',isLoggedIn,function(req,res){
+    app.get('/wishList',isLoggedIn,function(req,res){
 
+        // find user
+        User.findById(req.user._id)
+        .populate('wishList')
+        .exec(function(err, user) {
+            if(err) throw err
+            res.send(user.wishList)
+        })
 
 
     });
 
+    app.get('/test',function(req,res){
+        res.render('xx.ejs');
+    })
 
 
     // return all item posted by a specific user
@@ -486,6 +579,8 @@ module.exports = function(app, passport,upload) {
     });
 
 
+
+
     // =====================================
     // Timeline  =======================
     // =====================================
@@ -494,18 +589,38 @@ module.exports = function(app, passport,upload) {
         // first just return first 5 items not belongs to users
         //console.log(req.user._id)
         // .select('displayName email profileImageURL') // choose fields
-        Item.find({_creator: {'$ne':req.user._id },status:0})
-        .limit(10)
-        .sort({updateDate: -1})
-        .populate('_creator')
-        .exec(function(err, items) {
-            if(err)
-            {
-                throw err;
-            }
+        // _id:{'$nin':req.user.wishList}
+        // search for things 
+        // find user object and populate its following to get their wish list
+        var itemID_infollowingWishList = []
+        User.findById(req.user._id)
+        .populate('followingList')
+        .exec(function(err,user){
+            if(err) throw err
+            user.followingList.forEach(function(followingUser){
+                itemID_infollowingWishList.extend(followingUser.wishList)
+            })
 
-            res.send(items)
-        });
+            //console.log(itemID_infollowingWishList)
+            Item.find({_creator: {'$ne':req.user._id },status:0,})
+            //.and({_id:{'$nin':req.user.wishList}})
+            .or({_creator:{'$in':req.user.followingList}}) // item posted by those who user has followed
+            .or({_id:{'$in':itemID_infollowingWishList}}) // item liked by those who user has followed
+            .limit(10)
+            .sort({updateDate: -1})
+            .populate('_creator')
+            .exec(function(err, items) {
+                if(err)
+                {
+                    throw err;
+                }
+
+                res.send(items)
+            });
+
+        })
+
+
 
 
     });
@@ -541,24 +656,112 @@ module.exports = function(app, passport,upload) {
                 //console.log(user)
                 //console.log(targetUser)
                 // check whether is in list
+                if(!include(user.followingList, targetUser._id))
+                {
+                    user.followingList.push(targetUser)
+                    //user.followingIDList.push(targetUser._id)
 
-                user.followingList.push(targetUser)
-                user.followingIDList.push(targetUser._id)
+                    //save
+                    user.save(function(err) {
+                        if (err) throw err;
+
+                        // add user to follower list of targetUser
+                        targetUser.followerList.push(user._id)
+                        targetUser.save(function(err){
+                            if (err) throw err;
+                            res.send(true)
+                        })
+                        
+                    })
+                }
+                else
+                {
+                    res.send(false)
+                }
+                
+
+
+            })
+        })
+    })
+
+    // user want to add another user to his own following list
+    app.get('/toUnFollowUser',function(req,res){
+
+        var targetUserID = req.query.targetUserID
+
+        // check userID
+
+        // first find request user
+        User.findById(req.user._id, function(err, user) {
+
+            if(err) throw err;
+
+            User.findById(targetUserID, function(err, targetUser) {
+
+                if(err) throw err;
+                console.log("remove from following list")
+                //console.log(user)
+                //console.log(targetUser)
+                // check whether is in list
+                var index = user.followingList.indexOf(targetUser._id);
+                if(index > -1){ // found
+                    user.followingList.splice(index,1)
+                }
 
                 //save
                 user.save(function(err) {
                     if (err) throw err;
 
-                    // add user to follower list of targetUser
-                    targetUser.followerList.push(user._id)
+                    // remove user to follower list of targetUser
+                    var index = targetUser.followerList.indexOf(user._id);
+                    if(index > -1){
+                        targetUser.followerList.splice(index,1)
+                    }
                     targetUser.save(function(err){
                         if (err) throw err;
                         res.send(true)
                     })
-                    
                 })
             })
         })
+    })
+
+
+    // return list of following information
+    app.get('/getDetailFollowingList',isLoggedIn,function(req,res){
+
+        User.findById(req.user._id)
+        .populate('followingList')
+        .exec(function(err, userObject) {
+
+            if (err)
+            {
+                throw err;
+                
+            }
+            // sned back data
+            res.send(userObject)
+
+        });
+    })
+
+    // return list of follower information
+    app.get('/getDetailFollowerList',isLoggedIn,function(req,res){
+
+        User.findById(req.user._id)
+        .populate('followerList')
+        .exec(function(err, userObject) {
+
+            if (err)
+            {
+                throw err;
+                
+            }
+            // sned back data
+            res.send(userObject)
+
+        });
     })
 
     // view user profile

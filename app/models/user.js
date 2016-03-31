@@ -43,16 +43,17 @@ var userSchema = mongoose.Schema({
     createdDate: Date,
     updatedDate: Date,
 
-    followingIDList : [String],
-    followerIDList : [String],
+    //followingIDList : [String],
+    //followerIDList : [String],
 
     avatarLink : String,
-    wishList : [String], // store id of item entries interested
+    
     statement : String,
 
     itemList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
     followingList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     followerList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    wishList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }], // store id of item entries interested,
 
 
 });
