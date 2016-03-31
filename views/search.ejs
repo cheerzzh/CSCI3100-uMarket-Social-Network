@@ -112,14 +112,14 @@
                 {{#each itemEntry}}
                 <article class="search-result row">
                   <div class="col-xs-12 col-sm-12 col-md-3">
-                    <a href="#" title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
+                    <a href={{userLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-2">
                     <ul class="meta-search">
                       <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
                       <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
                       <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
-                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}}" ></i>
+                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i>
                       <!--<font color="grey">{{wishedCount}} wished</font>--></span></li>
                     </ul>
                   </div>

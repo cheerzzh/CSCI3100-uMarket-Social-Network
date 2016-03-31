@@ -6,6 +6,11 @@ function include(arr,obj) {
     return (arr.indexOf(obj) != -1);
 }
 
+Array.prototype.extend = function (other_array) {
+    /* you should include a test to check whether other_array really is an array */
+    other_array.forEach(function(v) {this.push(v)}, this);    
+}
+
 module.exports = function(app, passport,upload) {
 
     // =====================================
@@ -546,18 +551,38 @@ module.exports = function(app, passport,upload) {
         // first just return first 5 items not belongs to users
         //console.log(req.user._id)
         // .select('displayName email profileImageURL') // choose fields
-        Item.find({_creator: {'$ne':req.user._id },status:0})
-        .limit(10)
-        .sort({updateDate: -1})
-        .populate('_creator')
-        .exec(function(err, items) {
-            if(err)
-            {
-                throw err;
-            }
+        // _id:{'$nin':req.user.wishList}
+        // search for things 
+        // find user object and populate its following to get their wish list
+        var itemID_infollowingWishList = []
+        User.findById(req.user._id)
+        .populate('followingList')
+        .exec(function(err,user){
+            if(err) throw err
+            user.followingList.forEach(function(followingUser){
+                itemID_infollowingWishList.extend(followingUser.wishList)
+            })
 
-            res.send(items)
-        });
+            //console.log(itemID_infollowingWishList)
+            Item.find({_creator: {'$ne':req.user._id },status:0,})
+            //.and({_id:{'$nin':req.user.wishList}})
+            .or({_creator:{'$in':req.user.followingList}}) // item posted by those who user has followed
+            .or({_id:{'$in':itemID_infollowingWishList}}) // item liked by those who user has followed
+            .limit(10)
+            .sort({updateDate: -1})
+            .populate('_creator')
+            .exec(function(err, items) {
+                if(err)
+                {
+                    throw err;
+                }
+
+                res.send(items)
+            });
+
+        })
+
+
 
 
     });
