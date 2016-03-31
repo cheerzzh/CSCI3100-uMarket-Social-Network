@@ -83,9 +83,42 @@ module.exports = function(app, passport,upload) {
 
     });
 
-    app.get('/xwtest',isLoggedIn,function(req,res){
-        req.flash()
-        res.render('xwtest.ejs');
+    app.get('/xwtest', isLoggedIn,function(req, res){
+
+        // get search key
+        console.log(req.query)
+
+        var re = new RegExp('^.*' + req.query.searchKey + '.*$', 'i');
+        var returnData = {}
+
+        Item.find()
+        .or([{ 'itemName': { $regex: re }}, { 'description': { $regex: re }}])
+        .and({_creator: {'$ne':req.user._id }}) // not search own items?
+        .sort({'updateDate': -1}).exec(function(err, items) {
+
+            if(err)
+            {
+                throw err
+            }
+
+            // send search display page with data
+            returnData.items = items;
+            User.find()
+            .or([{ 'userName': { $regex: re }}, { 'university': { $regex: re }}])
+            .and({_id: {'$ne':req.user._id }}) // not search own items?
+            .sort({'updateDate': -1}).exec(function(err, users) {
+                if(err) throw err
+
+                returnData.users = users
+                res.render('xwtest.ejs',{
+                    data : returnData
+                })
+            })
+        });
+
+
+        // redirect to searh result page with data
+        //res.redirect('/')
     });
     
     app.post('/updateProfile', isLoggedIn,upload.single('avatar'),function(req,res){
