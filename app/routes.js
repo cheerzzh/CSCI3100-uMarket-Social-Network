@@ -187,6 +187,7 @@ module.exports = function(app, passport,upload) {
 
         Item.find()
         .or([{ 'itemName': { $regex: re }}, { 'description': { $regex: re }}])
+        .populate('_creator')
         .and({_creator: {'$ne':req.user._id }}) // not search own items?
         .sort({'updateDate': -1}).exec(function(err, items) {
 
@@ -204,7 +205,12 @@ module.exports = function(app, passport,upload) {
                 if(err) throw err
 
                 returnData.users = users
-                res.send(returnData)
+                //res.send(returnData)
+                res.render('search.ejs', {
+                    user : req.user, // get the user out of session and pass to template
+                    searchResult : returnData,
+                    searchKey: req.query.searchKey
+                });
             })
         });
 
@@ -495,6 +501,9 @@ module.exports = function(app, passport,upload) {
 
     });
 
+    app.get('/test',function(req,res){
+        res.render('xx.ejs');
+    })
 
 
     // return all item posted by a specific user

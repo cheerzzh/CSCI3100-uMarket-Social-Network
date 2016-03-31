@@ -170,7 +170,7 @@ function fillTimeLinePanel(template,currentWishList){
           success: function(data) {
               //Do Something
             console.log("add to wishlist succeed")
-            window.targetUser = data.tergetUser
+            window.targetUser = data.targetUser
 
             // refresh whole timeline?
             fillTimeLinePanel(timelinePostTemplate,data.targetUser.wishList)
@@ -187,7 +187,7 @@ function fillTimeLinePanel(template,currentWishList){
           success: function(data) {
               //Do Something
             console.log("remove from wishlist succeed")
-            window.targetUser = data.tergetUser
+            window.targetUser = data.targetUser
 
             // refresh whole timeline?
             fillTimeLinePanel(timelinePostTemplate,data.targetUser.wishList)
@@ -209,7 +209,7 @@ function fillTimeLinePanel(template,currentWishList){
 function fillUserSuggestionPanel(){
 
   $.get('/getUserSuggestion',1, function(data) {
-    console.log(data)
+    //console.log(data)
     // create user suggestion array
     var userSuggestion = {}
     userSuggestion.suggestions = []
