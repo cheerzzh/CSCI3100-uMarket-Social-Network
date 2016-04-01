@@ -1,0 +1,316 @@
+<!doctype html>
+<html>
+  <head>
+    <title>uMarket</title>
+    
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+    <link rel="stylesheet" href="stylesheets/include/paper.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="stylesheets/timeline.css">
+    <link rel="stylesheet" href="stylesheets/search.css">
+  </head>
+  <body style=" padding-top: 100px; ">
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          </button>
+          <a id="logo" class="navbar-brand" href="/">uMarket</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+          <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+              <a id="notification" href="#" class="dropdown-toggle navbar-icons" data-toggle="dropdown">
+                <i class="fa fa-bell-o"></i>
+              </a>
+              <ul id="notifications" class="dropdown-menu" role="menu">
+                <script id="notifications-template" type="text/x-handlebars-template">
+                <li class="dropdown-title">
+                  <h5><b>Notifications</b></h5>
+                </li>
+                {{#each notifications}}
+                <li>
+                  <a href="#">
+                    <h5><b>{{title}}</b></h5>
+                    {{{post}}}
+                  </a>
+                </li>
+                {{/each}}
+                <li>
+                  <a href="#" class="text-center">
+                    <span><b><i class="fa fa-bars"></i> More</b></span>
+                  </a>
+                </li>
+                </script>
+              </ul>
+            </li>
+            <li class="dropdown">
+              <a id="inbox" href="#" class="dropdown-toggle navbar-icons" data-toggle="dropdown">
+                <i class="fa fa-inbox"></i>
+              </a>
+              <ul id="messages" class="dropdown-menu" role="menu">
+                <script id="messages-template" type="text/x-handlebars-template">
+                <li class="dropdown-title">
+                  <h5><b>Messages</b></h5>
+                </li>
+                {{#each messages}}
+                <li>
+                  <a href="#">
+                    <h6><b>{{user}}</b></h6>
+                    {{{message}}}
+                  </a>
+                </li>
+                {{/each}}
+                <li>
+                  <a href="#" class="text-center">
+                    <span><b><i class="fa fa-bars">bar</i> More</b></span>
+                  </a>
+                </li>
+                </script>
+              </ul>
+            </li>
+            
+            <li><a href="/uploadItem" class="navbar-icons"><i class="fa fa-upload"></i></a></li>
+            <li><a href="/wishList" class="navbar-icons"><i class="fa fa-heart"></i></a></li>
+            <li><a href="#" class="navbar-icons"><i class="fa fa-cog"></i></a></li>
+            <li><a href="/logout" class="navbar-icons"><i class="fa fa-sign-out"></i></a></li>
+            
+            <!-- name and pic get from ajax call-->
+            <li>
+              <a href="/profile" id='username-nav'><img class="navbar-avatar" src="#" alt="Profile" id="avatar-nav"> </a>
+            </li>
+            
+            
+          </ul>
+          <form class="navbar-form navbar-right" role="search" action='/search' method='get'>
+            <div class="form-group">
+              <div class="input-group">
+                <input type="text" class="form-control" placeholder="Search" name="searchKey" >
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </nav>
+    
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-9 col-md-12 col-lg-offset-2">
+          <div class="panel panel-default">
+            <div id="new-micropost" class="panel-body">
+              <!--
+              <hgroup class="mb20">
+              <h1>Related Items</h1>
+              <h2 class="lead"><strong class="text-danger" id="itemCount" style="font-size:130%;"></strong> items and  <strong class="text-danger" id="userCount" style="font-size:130%;"></strong> users were found for the search for <strong class="text-danger" id="searchKey" style="font-size:130%;"></strong></h2>
+              </hgroup>
+              -->
+              <ul id="myTab" class="nav nav-tabs">
+                <li class="active"><a href="#home" data-toggle="tab">
+                  In progress Items
+                </a></li>
+                <li><a href="#ios" data-toggle="tab">Wait For Confirm</a></li>
+                <li><a href="#confirmed" data-toggle="tab">Confirmed Items</a></li>
+                <li><a href="#Withdraw" data-toggle="tab">Withdraw Items</a></li>
+              </ul>
+              <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade in active" id="home">
+              <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults">
+                <script id="itemSearchResult-template" type="text/x-handlebars-template">
+                {{#each itemEntry}}
+                <article class="search-result row">
+                  <div class="col-xs-12 col-sm-12 col-md-3">
+                    <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-2">
+                    <ul class="meta-search">
+                      <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
+                      <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
+                      <!--
+                      <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
+                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
+                      -->
+                      <!--<font color="grey">{{wishedCount}} wished</font>--></span></li>
+                    </ul>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-7">
+                    <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
+                    <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
+                    <p>{{description}}</p>
+                    
+              
+                  </div>
+                  <span class="clearfix borda"></span>
+
+                </article>
+                {{/each}}
+                </script>
+              </section>
+              </div>
+              <div class="tab-pane fade" id="ios">
+                <p>here will list items waiting to be confirmed</p>
+              </div>
+              <div class="tab-pane fade" id="confirmed">
+                <p>this will list confirmed items</p>
+              </div>
+              <div class="tab-pane fade" id="Withdraw">
+                <p>this will list withdraw items</p>
+              </div>
+              </div>
+              
+            </div>
+          </div>
+        </div>
+        
+      </div>
+      
+    </div>
+  <!--
+  </div> -->
+  <!-- Javascript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/include/paper.min.js"></script>
+  <script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
+  <script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
+  <script src="assets/js/jquery.backstretch.min.js"></script>
+  <script type='text/javascript'>
+  window.targetUser =<%-JSON.stringify(user)%> // get item from server
+  // console.log(item)
+  </script>
+  <script src="javascripts/fillUserInfo.js"></script>
+  <script src="javascripts/xwtest1.js"></script>
+<div class="container">
+<div class="row">
+   <div class="col-lg-3 col-md-12">
+          <div class="card">
+            <div class="panel-body">
+              <div class="row">
+                <div class="col-xs-4 col-sm-4 col-lg-12 text-center">
+                  <img src="#" alt="" class="center-block img-circle img-thumbnail img-responsive" id="avatar-profile" >
+                  <ul class="list-inline ratings text-center" title="Ratings">
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
+                  </ul>
+                </div>
+                
+                <div class="col-xs-12 col-sm-8 col-lg-12">
+                  <h2 id = "username-profile"></h2>
+                  <p id = "email-profile"></p>
+                  <p id = "university-profile"></p>
+                  <p id = "description-profile"></p>
+                  <p><strong>Interests: </strong>
+                    <span class="label label-info tags">html5</span>
+                    <span class="label label-info tags">css3</span>
+                    <span class="label label-info tags">jquery</span>
+                    <span class="label label-info tags">bootstrap3</span>
+                  </p>
+                
+                </div>
+                <div class="clearfix"></div>
+                <div class="col-xs-12 col-sm-4 col-lg-4">
+                  <h2 id = "followerNumber"><strong></strong></h2>
+                  <p><small>Followers</small></p>
+                  <!--<button class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> Follow </button>-->
+                </div>
+                
+                <div class="col-xs-12 col-sm-4 col-lg-4">
+                  <h2 id = "followingNumber"><strong></strong></h2>
+                  <p><small>Following</small></p>
+                  <!--<button class="btn btn-info btn-block"><span class="fa fa-user"></span> View Profile </button>-->
+                  <!-- button
+                  <a type="button" href="/updateProfile" class="btn btn-primary btn-block"><span class="fa fa-gear"></span>Update Profile</a>
+                  -->
+                </div>
+                
+                <div class="col-xs-12 col-sm-4 col-lg-4">
+                  <h2 id = "itemNumber"><strong></strong></h2>
+                  <p><small>Posted items</small></p>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+   </div>
+   <div class="col-lg-3 col-md-12">
+      <div class="thumbnail">
+         <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+         alt="通用的占位符缩略图">
+         <div class="caption">
+            <h3>缩略图标签</h3>
+            <p>一些示例文本。一些示例文本。</p>
+            <!--
+            <p>
+               <a href="#" class="btn btn-primary" role="button">
+                  按钮
+               </a> 
+               <a href="#" class="btn btn-default" role="button">
+                  按钮
+               </a>
+            </p>
+               -->
+               <div class="actions">
+                <div class="actions-content">
+                  <a href="#">
+                    <i class="fa fa-arrow-left"></i>
+                  </a>
+                  <a href="#">
+                    <i class="fa fa-retweet"></i>
+                  </a>
+                  <a class="heartButton" id = {{heartID}} value={{itemID}}>
+                    <i class="fa fa-heart" style="{{heartStyle}}" ></i>
+                  </a>
+                  <font color="grey">{{wishedCount}} people wished</font>
+                </div>
+              </div>
+              
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-3 col-md-12">
+      <div class="thumbnail">
+         <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+         alt="通用的占位符缩略图">
+         <div class="caption">
+            <h3>缩略图标签</h3>
+            <p>一些示例文本。一些示例文本。</p>
+            <p>
+               <a href="#" class="btn btn-primary" role="button">
+                  按钮
+               </a> 
+               <a href="#" class="btn btn-default" role="button">
+                  按钮
+               </a>
+            </p>
+         </div>
+      </div>
+   </div>
+   <div class="col-lg-3 col-md-12">
+      <div class="thumbnail">
+         <img src="/wp-content/uploads/2014/06/kittens.jpg" 
+         alt="通用的占位符缩略图">
+         <div class="caption">
+            <h3>缩略图标签</h3>
+            <p>一些示例文本。一些示例文本。</p>
+            <p>
+               <a href="#" class="btn btn-primary" role="button">
+                  按钮
+               </a> 
+               <a href="#" class="btn btn-default" role="button">
+                  按钮
+               </a>
+            </p>
+         </div>
+      </div>
+   </div>
+</div>
+</div>
+  
+</body>
+</html>
