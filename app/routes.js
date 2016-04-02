@@ -91,44 +91,18 @@ module.exports = function(app, passport,upload) {
         });
 
     });
+    
+    app.get('/xwtest1',isLoggedIn,function(req,res){
 
-    app.get('/xwtest', isLoggedIn,function(req, res){
-
-        // get search key
-        console.log(req.query)
-
-        var re = new RegExp('^.*' + req.query.searchKey + '.*$', 'i');
-        var returnData = {}
-
-        Item.find()
-        .or([{ 'itemName': { $regex: re }}, { 'description': { $regex: re }}])
-        .and({_creator: {'$ne':req.user._id }}) // not search own items?
-        .sort({'updateDate': -1}).exec(function(err, items) {
-
-            if(err)
-            {
-                throw err
-            }
-
-            // send search display page with data
-            returnData.items = items;
-            User.find()
-            .or([{ 'userName': { $regex: re }}, { 'university': { $regex: re }}])
-            .and({_id: {'$ne':req.user._id }}) // not search own items?
-            .sort({'updateDate': -1}).exec(function(err, users) {
-                if(err) throw err
-
-                returnData.users = users
-                res.render('xwtest.ejs',{
-                    data : returnData
-                })
-            })
+        //res.send('Hey, you\'ve logged in, ' + req.user.local.email + '\nPlease fill more user info');
+        req.flash()
+        res.render('xwtest1.ejs', {
+            user : req.user // get the user out of session and pass to template
         });
 
-
-        // redirect to searh result page with data
-        //res.redirect('/')
     });
+
+
     
     app.post('/updateProfile', isLoggedIn,upload.single('avatar'),function(req,res){
 
@@ -576,6 +550,18 @@ module.exports = function(app, passport,upload) {
 
         // return all the items posted by a user
         // user id passed in
+        var targetUserID = req.query.targetUserID
+        
+            Item.find({'userID':targetUserID})
+            .populate('_creator')
+            .exec(function(err, items) {
+              if (err) throw err;
+
+              // object of all the users
+              //console.log(items);
+              res.send(items)
+            });
+        
     });
 
 
@@ -787,7 +773,12 @@ module.exports = function(app, passport,upload) {
                 // check user ID
                 //console.log(item)
                 // send user page, flush 2 users
-                res.send(targetUser)
+                //res.send(targetUser)
+                res.render('usershop.ejs',{
+                    targetuser : targetUser,
+                    user : req.user
+                    
+                })
 
             });
         }
