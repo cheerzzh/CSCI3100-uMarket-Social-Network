@@ -1,6 +1,8 @@
 // app/routes.js
 var User            = require('../app/models/user');
 var Item = require('../app/models/item');
+var Message = require('../app/models/message');
+var Conversation = require('../app/models/conversation');
 
 function include(arr,obj) {
     return (arr.indexOf(obj) != -1);
@@ -718,7 +720,6 @@ module.exports = function(app, passport,upload) {
             if (err)
             {
                 throw err;
-                
             }
             // sned back data
             res.send(userObject)
@@ -816,6 +817,103 @@ module.exports = function(app, passport,upload) {
         });
 
     })
+
+    // message related
+    //app.post('/sendMessage',isLoggedIn, function(req,res){
+    app.post('/sendMessage', function(req,res){
+
+        // get parameters
+        console.log(req.body)
+        var senderID = req.body.sender; // req.user._id
+        var receiverID = req.body.receiver;
+        var replyConversationID = req.body.replyConversationID // get from button
+        var isReply = parseInt(req.body.isReply)
+        var content = req.body.content // make sure it is not empty
+
+        // check receiver user ID
+
+        // find sender
+        User.findById(senderID,function(err,sender){
+            if(err) throw err
+            User.findById(receiverID,function(err,receiver){
+                if(err) throw err
+                //console.log(receiver)
+                // check if it is a new conversation
+                if(isReply){
+                    // attach new message to existing conversation
+                    // new conversation
+                    // make a new conversation
+                    var newMessage = new Message()
+                    newMessage.sender = sender._id
+                    newMessage.receiver = receiver._id
+                    newMessage.createTime = Date()
+                    newMessage.content = content
+
+                    newMessage.save(function(err){
+                        if(err) throw err
+                        console.log('save new message with ID' + newMessage._id)
+
+                        // find exisiting conversation
+                        Conversation.findById(replyConversationID,function(err,replyConversation){
+                            if(err) throw err
+
+                            replyConversation.messageList.push(newMessage._id)
+                                replyConversation.save(function(err){
+                                if(err) throw err
+                                console.log('update existing conversation with ID ' + replyConversation._id)
+
+                                // no need to update users' conversation list
+                            })
+                        })
+                    })
+
+                }else{
+
+                    // new conversation
+                    // make a new conversation
+                    var newMessage = new Message()
+                    newMessage.sender = sender._id
+                    newMessage.receiver = receiver._id
+                    newMessage.createTime = Date()
+                    newMessage.content = content
+
+                    newMessage.save(function(err){
+                        if(err) throw err
+                        console.log('save new message with ID' + newMessage._id)
+
+                        // make a new conversation
+                        var newConversation = new Conversation()
+                        newConversation.party1 = sender._id
+                        newConversation.party2 = receiver._id
+                        newConversation.messageList.push(newMessage._id)
+
+                        newConversation.save(function(err){
+                            if(err) throw err
+                            console.log('save new conversation with ID ' + newConversation._id)
+
+                            // attach conversation to both sender and receiver
+                            sender.conversationList.push(newConversation._id);
+                            receiver.conversationList.push(newConversation._id)
+                            sender.save(function(err){
+                                if(err) throw err
+                                receiver.save(function(err){
+                                    if(err) throw err
+                                })
+                            })
+                        })
+                    })
+                }
+
+            })
+        })
+        // insert into database
+
+        // send notification to receiver ? 
+        res.send(true)
+    })
+
+    // get all the conversation related to target user
+    // look up in party1 or party2
 
 
     // =====================================
