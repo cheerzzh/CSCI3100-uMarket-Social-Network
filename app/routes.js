@@ -101,7 +101,6 @@ module.exports = function(app, passport,upload) {
         res.render('xwtest1.ejs', {
             user : req.user // get the user out of session and pass to template
         });
-
     });
 
 
@@ -780,10 +779,8 @@ module.exports = function(app, passport,upload) {
                     user : req.user
                     
                 })
-
             });
         }
-
     })
 
     app.get('/item/:itemid',isLoggedIn,function(req,res){
@@ -892,6 +889,7 @@ module.exports = function(app, passport,upload) {
                                 console.log('update existing conversation with ID ' + replyConversation._id)
 
                                 // no need to update users' conversation list
+                                // push to receiver's notification queue
                             })
                         })
                     })
@@ -920,6 +918,7 @@ module.exports = function(app, passport,upload) {
                             if(err) throw err
                             console.log('save new conversation with ID ' + newConversation._id)
 
+
                             // attach conversation to both sender and receiver
                             sender.conversationList.push(newConversation._id);
                             receiver.conversationList.push(newConversation._id)
@@ -927,6 +926,8 @@ module.exports = function(app, passport,upload) {
                                 if(err) throw err
                                 receiver.save(function(err){
                                     if(err) throw err
+
+                                    // push to receiver's notification queue
                                 })
                             })
                         })

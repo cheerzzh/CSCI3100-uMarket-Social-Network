@@ -4,12 +4,12 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Timeline - uMarket</title>
-    <meta name="description" content="A Simple, Elegant &amp; Flat Bootstrap Theme">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="stylesheets/include/paper.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
-    
+    <link rel="stylesheet" href="stylesheets/include/paper.min.css">
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
     <link rel="stylesheet" href="stylesheets/timeline.css">
+    <link rel="stylesheet" href="stylesheets/search.css">
   </head>
   <body style=" padding-top: 100px; ">
     <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
@@ -136,21 +136,42 @@
         </div>
         
         <div class="col-lg-6 col-md-5">
-        <!--
-          <div class="panel panel-default">
+
+              <div class="panel panel-default">
             <div id="new-micropost" class="panel-body">
-              <form role="form">
-                <div class="form-group">
-                  <textarea rows="1" cols="10" class="form-control" placeholder="Compose Micropost"></textarea>
-                </div>
-                <button id="share" class="btn btn-success">
-                <i class="fa fa-paper-plane"></i> <b>Post</b>
-                </button>
-              </form>
+              <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults">
+                <script id="itemSearchResult-template" type="text/x-handlebars-template">
+                {{#each itemEntry}}
+                <article class="search-result row">
+                  <div class="col-xs-12 col-sm-12 col-md-3">
+                    <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-2">
+                    <ul class="meta-search">
+                      <li style="font-size:50%;"><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
+                      <li  style="font-size:50%;"><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
+                      <li  style="font-size:50%;">By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
+                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:120%;" ></i>
+                      <font color="grey" >{{wishedCount}}</font></span></li>
+                      <li><span class="buyButton" id = {{buyID}} value={{itemID}}><i class="fa fa-shopping-cart" style="{{buyStyle}};font-size:120%;" ></i>
+                      <font color="grey" >Buy</font></span></li>
+                    </ul>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-7">
+                    <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
+                    <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
+                    <p>{{description}}</p>
+                    
+                  </div>
+                  <span class="clearfix borda"></span>
+
+                </article>
+                {{/each}}
+                </script>
+              </section>
             </div>
           </div>
-          -->
-
+          <!--
           <div id="microposts" class="feed">
           
             <script id="microposts-template" type="text/x-handlebars-template">
@@ -194,6 +215,7 @@
             {{/each}}
             </script>
           </div>
+          -->
         </div>
         <div class="col-lg-3 col-md-4">
           <div class="panel panel-default">

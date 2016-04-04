@@ -1,10 +1,15 @@
 var timelinePostSource, timelinePostTemplate
+var itemPostTemplate, itemPostSource
+var messagePanelSource, messagePanelTemplate
 
 $(document).ready(function(){
 
 
-  timelinePostSource = $("#microposts-template").html();
-  timelinePostTemplate = Handlebars.compile(timelinePostSource);
+  //timelinePostSource = $("#microposts-template").html();
+  //timelinePostTemplate = Handlebars.compile(timelinePostSource);
+
+  itemPostSource = $("#itemSearchResult-template").html();
+  itemPostTemplate = Handlebars.compile(itemPostSource);
 
   var source, template;
 
@@ -22,6 +27,7 @@ $(document).ready(function(){
 
   $('#new-micropost textarea').autosize();
 
+  // fetch notification
   var notifications = {
     notifications: [
     {
@@ -51,7 +57,42 @@ $(document).ready(function(){
   template = Handlebars.compile(source);
   $("#notifications").html(template(notifications));
 
-  var messages = {
+ 
+
+  messagePanelSource = $("#messages-template").html();
+  messagePanelTemplate = Handlebars.compile(messagePanelSource);
+
+
+
+  var trends = {
+    trends: [
+    { trend: '#Theme' },
+    { trend: '#Bootstrap' },
+    { trend: '#Rails' },
+    { trend: '#Blog' },
+    { trend: '#Javascript' },
+    ]
+  };
+
+  source = $("#trends-template").html();
+  template = Handlebars.compile(source);
+  $("#trends").html(template(trends));
+
+  fillUserSuggestionPanel()
+  //fillTimeLinePanel(timelinePostTemplate,window.targetUser.wishList)
+  fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList)
+  fillMessagePanel()
+
+
+
+
+
+});
+
+function fillMessagePanel(){
+
+  // get messages
+   var messages = {
     messages: [
     {
       user: '@rails_freak',
@@ -72,35 +113,164 @@ $(document).ready(function(){
     ]
   };
 
-  source = $("#messages-template").html();
-  template = Handlebars.compile(source);
-  $("#messages").html(template(messages));
+    $("#messages").html(messagePanelTemplate(messages));
 
+}
 
-  var trends = {
-    trends: [
-    { trend: '#Theme' },
-    { trend: '#Bootstrap' },
-    { trend: '#Rails' },
-    { trend: '#Blog' },
-    { trend: '#Javascript' },
-    ]
-  };
-
-  source = $("#trends-template").html();
-  template = Handlebars.compile(source);
-  $("#trends").html(template(trends));
-
-  fillUserSuggestionPanel()
-  fillTimeLinePanel(timelinePostTemplate,window.targetUser.wishList)
+function fillItemSearchPanel(template,currentWishList){
 
 
 
+  $.get('/getTimelinePost',1, function(data) {
+    // use window.searchResult as data
+    descriptionLimit = 180
+    var itemPosts = {}
+    itemPosts.itemEntry = []
 
+    data.forEach(function(item){
+    //console.log(item)
+    var postEntry = {}
+    postEntry.avatar = item._creator.avatarLink
+    postEntry.creatorName = item._creator.userName
+    postEntry.itemName = item.itemName
+    if(item.description.length > descriptionLimit)
+    {
+    postEntry.description = item.description.substr(1, descriptionLimit) + " ...";
+    }
+    else
+    {
+    postEntry.description = item.description
+    }
 
+    postEntry.userLink = '/user/' + item._creator._id
+    postEntry.itemLink = '/item/' + item._id
+    // depends on whether in list
 
-});
+    if(!include(currentWishList, item._id)){
 
+    // in wishlist, gray, add to wishlist
+    //postEntry.wishlistLink = '/addToWishList?itemID=' + item._id
+    postEntry.heartStyle = "color:grey;"
+
+    }
+    else
+    {
+    //postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
+    postEntry.heartStyle = "color:red;"
+    }
+
+    // process buy button
+
+    postEntry.wishedCount = item.wishedList.length
+    postEntry.heartID = "heart_" + item._id
+    postEntry.itemID = item._id
+    if(item.imageLinks.length > 0)
+    {
+      postEntry.itemImageLink = item.imageLinks[0]
+    }
+    else{
+      postEntry.itemImageLink = '/images/no-image.png'
+    }
+    postEntry.price = item.price
+    postEntry.condition = item.condition
+
+    var postDate = new Date(item.updateDate)
+    postEntry.updateDate = postDate.toISOString().slice(0,10)// adjust time format
+    postEntry.updateTime = postDate.toISOString().slice(12,19)
+    //console.log(Date(item.updateDate))
+    itemPosts.itemEntry.push(postEntry)
+    })
+
+    //console.log(itemPosts)
+    $("#itemSearchResults").html(itemPostTemplate(itemPosts));
+
+    $('.heartButton').click(function(){
+      var itemID = $(this).attr('value')
+      console.log("click heart: " + itemID)
+
+      if(!include(currentWishList, itemID)){
+        $.ajax({
+          url: "/addToWishList",
+          data: {"itemID":itemID},
+          success: function(data) {
+              //Do Something
+            console.log("add to wishlist succeed")
+            window.targetUser = data.targetUser
+
+            // refresh whole timeline?
+            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+      }else{
+
+        $.ajax({
+          url: "/removeFromWishList",
+          data: {"itemID":itemID},
+          success: function(data) {
+              //Do Something
+            console.log("remove from wishlist succeed")
+            window.targetUser = data.targetUser
+
+            // refresh whole timeline?
+            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+
+      }
+    });
+
+    // attach what to buy button
+    /*
+    $('.buyButton').click(function(){
+      var itemID = $(this).attr('value')
+      console.log("click buy: " + itemID)
+
+      if(!include(currentWishList, itemID)){
+        $.ajax({
+          url: "/addToWishList",
+          data: {"itemID":itemID},
+          success: function(data) {
+              //Do Something
+            console.log("add to wishlist succeed")
+            window.targetUser = data.targetUser
+
+            // refresh whole timeline?
+            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+      }else{
+
+        $.ajax({
+          url: "/removeFromWishList",
+          data: {"itemID":itemID},
+          success: function(data) {
+              //Do Something
+            console.log("remove from wishlist succeed")
+            window.targetUser = data.targetUser
+
+            // refresh whole timeline?
+            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+
+      }
+    });
+    */
+
+  })
+}
 
 function fillTimeLinePanel(template,currentWishList){
   $.get('/getTimelinePost',1, function(data) {
