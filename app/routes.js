@@ -407,7 +407,8 @@ module.exports = function(app, passport,upload) {
 
         // get parameters
         console.log(req.body)
-        var userID = req.body.user; // req.user._id
+        //var userID = req.body.user; // req.user._id
+        var userID = req.user._id;
         var itemID = req.body.itemID;
         // automatically send a message 
         var messageContent = req.body.message
@@ -465,13 +466,25 @@ module.exports = function(app, passport,upload) {
                                             itemOwnerObject.save(function(err){
                                                 if(err) throw err
                                                 console.log('/wantToBuy done!')
-                                                res.send({succeed:true})
+                                                res.send({succeed:true,targetUser:userObject})
                                             })
                                         })
 
                                     })
 
                                 })
+                            }else{
+                                // no message
+                                // save two user
+                                userObject.save(function(err){
+                                    if(err) throw err
+                                    itemOwnerObject.save(function(err){
+                                        if(err) throw err
+                                        console.log('/wantToBuy done!')
+                                        res.send({succeed:true,targetUser:userObject})
+                                    })
+                                })
+
                             }
                         }
                         else{
@@ -1023,9 +1036,10 @@ module.exports = function(app, passport,upload) {
 
     // get all the conversation related to target user
     // app.get('getAllConversation',isloggedIn,function(req,res){
-    app.get('/getAllConversation',function(req,res){ // test purpose
+    app.get('/getAllConversation',isLoggedIn,function(req,res){ // test purpose
 
-        var userID = req.query.userID // req.user._id
+        //var userID = req.query.userID // req.user._id
+        var userID = req.user._id
         console.log(userID)
         // find user ,get conversation list
         // search for related conversation and sorted according to update time
@@ -1037,6 +1051,9 @@ module.exports = function(app, passport,upload) {
             Conversation.find({"_id":{$in:userObject.conversationList}})
             .sort({'updateTime': -1})
             .populate('messageList')
+            .populate('referenceItem')
+            .populate('party1')
+            .populate('party2')
             .exec(function(err,result){
                 res.send(result)
             })

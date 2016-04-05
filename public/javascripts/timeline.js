@@ -80,7 +80,7 @@ $(document).ready(function(){
 
   fillUserSuggestionPanel()
   //fillTimeLinePanel(timelinePostTemplate,window.targetUser.wishList)
-  fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList)
+  fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList,window.targetUser.wantTobuyItemList)
   fillMessagePanel()
 
 
@@ -117,7 +117,7 @@ function fillMessagePanel(){
 
 }
 
-function fillItemSearchPanel(template,currentWishList){
+function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
 
 
 
@@ -151,18 +151,35 @@ function fillItemSearchPanel(template,currentWishList){
     // in wishlist, gray, add to wishlist
     //postEntry.wishlistLink = '/addToWishList?itemID=' + item._id
     postEntry.heartStyle = "color:grey;"
+  
 
     }
     else
     {
     //postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
     postEntry.heartStyle = "color:red;"
+
     }
 
     // process buy button
+    if(!include(currentWantTobuyItemList, item._id)){
+
+    // in wishlist, gray, add to wishlist
+    //postEntry.wishlistLink = '/addToWishList?itemID=' + item._id
+    postEntry.buyStyle = "color:grey;"
+    postEntry.buyDesciption ="Buy"
+
+    }
+    else
+    {
+    //postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
+    postEntry.buyStyle = "color:red;"
+    postEntry.buyDesciption ="Sent"
+    }
 
     postEntry.wishedCount = item.wishedList.length
     postEntry.heartID = "heart_" + item._id
+     postEntry.buyID = "buy_" + item._id
     postEntry.itemID = item._id
     if(item.imageLinks.length > 0)
     {
@@ -226,22 +243,23 @@ function fillItemSearchPanel(template,currentWishList){
     });
 
     // attach what to buy button
-    /*
+    
     $('.buyButton').click(function(){
       var itemID = $(this).attr('value')
       console.log("click buy: " + itemID)
 
-      if(!include(currentWishList, itemID)){
+      if(!include(currentWantTobuyItemList, itemID)){
         $.ajax({
-          url: "/addToWishList",
-          data: {"itemID":itemID},
+          type: "POST",
+          url: "/wantToBuy",
+          data: {itemID:itemID,message:"I want to buy your item"},
           success: function(data) {
               //Do Something
-            console.log("add to wishlist succeed")
+            console.log("add to shopping cart succeed")
             window.targetUser = data.targetUser
 
             // refresh whole timeline?
-            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
           },
           error: function(xhr) {
               //Do Something to handle error
@@ -249,6 +267,7 @@ function fillItemSearchPanel(template,currentWishList){
         });
       }else{
 
+        /*
         $.ajax({
           url: "/removeFromWishList",
           data: {"itemID":itemID},
@@ -264,10 +283,11 @@ function fillItemSearchPanel(template,currentWishList){
               //Do Something to handle error
           }
         });
+        */
 
       }
     });
-    */
+    
 
   })
 }
