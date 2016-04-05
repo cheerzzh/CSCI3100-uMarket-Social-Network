@@ -402,18 +402,93 @@ module.exports = function(app, passport,upload) {
     // buy  ======================
     // =====================================
     // === user want to buy item : user can send a message to the seller
-    app.post('/whatToBuy',isLoggedIn, function(req,res){
+    //app.post('/whatToBuy',isLoggedIn, function(req,res){
+    app.post('/wantToBuy', function(req,res){ // test 
 
-        // make sure user can not buy items posted by it self
+        // get parameters
+        console.log(req.body)
+        var userID = req.body.user; // req.user._id
+        var itemID = req.body.itemID;
+        // automatically send a message 
+        var messageContent = req.body.message
+        // find user. find item first
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(itemID,function(err,itemObject){
+                if(err) throw err
+                User.findById(itemObject._creator,function(err,itemOwnerObject){
+                    if(err) throw err
+                    //console.log(itemObject._creator + " " + userObject._id)
+                    //console.log(itemObject._creator.equals(userObject._id))
+                    if(itemObject._creator.equals(userObject._id)){
+                        console.log("Cannot buy own object!");
+                        res.send({succeed:false, message:"Cannot buy own item!"})
+                    }else{
 
-        // check item status: if is wait for confirm/ confirmed/ withdrawed, send back message
+                        // add item to users whatToBuyList
+                        if(!include(userObject.wantTobuyItemList,itemObject._id)){
 
-        // add user to item's waiting list
+                            userObject.wantTobuyItemList.push(itemObject)
+                            itemObject.whatTobuyUserList.push(userObject)
 
-        // send message to seller
-        // req.body.message
+                            // makeup message
+                            if(messageContent){
+                                console.log('Non-empty message: ' + messageContent + " , add new conversation")
 
-        // send back success info
+                                var newMessage = new Message()
+                                newMessage.sender = userObject._id
+                                newMessage.receiver = itemObject._creator
+                                newMessage.createTime = Date()
+                                newMessage.content = messageContent
+
+
+                                // save message
+                                newMessage.save(function(err){
+                                    if(err) throw err
+                                    // new conversation
+                                    var newConversation = new Conversation()
+                                    newConversation.party1 = userObject._id
+                                    newConversation.party2 = itemObject._creator
+                                    newConversation.messageList.push(newMessage._id)
+                                    newConversation.updateTime = Date()
+                                    newConversation.referencedItem = itemObject
+
+                                    newConversation.save(function(err){
+                                        if(err) throw err
+                                        // add new conversatio to both users
+                                        userObject.conversationList.push(newConversation._id)
+                                        itemOwnerObject.conversationList.push(newConversation._id)
+
+                                        // save two user
+                                        userObject.save(function(err){
+                                            if(err) throw err
+                                            itemOwnerObject.save(function(err){
+                                                if(err) throw err
+                                                console.log('/wantToBuy done!')
+                                                res.send({succeed:true})
+                                            })
+                                        })
+
+                                    })
+
+                                })
+                            }
+                        }
+                        else{
+                            console.log("Cannot buy repeated item!")
+                            res.send({succeed:false, message:"Cannot buy repeated item!"})
+
+                        }
+                        // if message is not empty: make a new conversation ref to the item and store
+
+                        // send back success info
+                        //
+
+                    }
+                })
+                
+            })
+        })
 
     });
 
@@ -807,6 +882,8 @@ module.exports = function(app, passport,upload) {
 
 
     })
+
+
     // =====================================
     // Recommadation =======================
     // =====================================
@@ -884,12 +961,13 @@ module.exports = function(app, passport,upload) {
                             if(err) throw err
 
                             replyConversation.messageList.push(newMessage._id)
-                                replyConversation.save(function(err){
-                                if(err) throw err
-                                console.log('update existing conversation with ID ' + replyConversation._id)
+                            replyConversation.updateTime = Date()
+                            replyConversation.save(function(err){
+                            if(err) throw err
+                            console.log('update existing conversation with ID ' + replyConversation._id)
 
-                                // no need to update users' conversation list
-                                // push to receiver's notification queue
+                            // no need to update users' conversation list
+                            // push to receiver's notification queue
                             })
                         })
                     })
@@ -913,6 +991,7 @@ module.exports = function(app, passport,upload) {
                         newConversation.party1 = sender._id
                         newConversation.party2 = receiver._id
                         newConversation.messageList.push(newMessage._id)
+                        newConversation.updateTime = Date()
 
                         newConversation.save(function(err){
                             if(err) throw err
@@ -943,7 +1022,32 @@ module.exports = function(app, passport,upload) {
     })
 
     // get all the conversation related to target user
-    // look up in party1 or party2
+    // app.get('getAllConversation',isloggedIn,function(req,res){
+    app.get('/getAllConversation',function(req,res){ // test purpose
+
+        var userID = req.query.userID // req.user._id
+        console.log(userID)
+        // find user ,get conversation list
+        // search for related conversation and sorted according to update time
+        User.findById(userID,function(err,userObject){
+            if(err) throw err 
+            
+            //res.send(userObject)
+            //console.log(userObject)
+            Conversation.find({"_id":{$in:userObject.conversationList}})
+            .sort({'updateTime': -1})
+            .populate('messageList')
+            .exec(function(err,result){
+                res.send(result)
+            })
+        })
+
+                        
+
+        // or search from Conversation
+
+
+    })
 
 
     // =====================================

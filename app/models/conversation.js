@@ -7,6 +7,7 @@ var conversationListSchema = mongoose.Schema({
 	party2 : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     messageList : [{type: mongoose.Schema.Types.ObjectId, ref: 'Message'}],
     referencedItem : { type: mongoose.Schema.Types.ObjectId, ref: 'Item' }, // optional field: related item entry for this conversation
+    updateTime : Date,
 
 });
 
