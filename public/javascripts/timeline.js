@@ -215,7 +215,7 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
             window.targetUser = data.targetUser
 
             // refresh whole timeline?
-            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
           },
           error: function(xhr) {
               //Do Something to handle error
@@ -232,7 +232,7 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
             window.targetUser = data.targetUser
 
             // refresh whole timeline?
-            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
           },
           error: function(xhr) {
               //Do Something to handle error

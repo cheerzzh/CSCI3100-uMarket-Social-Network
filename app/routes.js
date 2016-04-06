@@ -403,7 +403,7 @@ module.exports = function(app, passport,upload) {
     // =====================================
     // === user want to buy item : user can send a message to the seller
     //app.post('/whatToBuy',isLoggedIn, function(req,res){
-    app.post('/wantToBuy', function(req,res){ // test 
+    app.post('/wantToBuy', isLoggedIn,function(req,res){ // test 
 
         // get parameters
         console.log(req.body)
@@ -935,8 +935,8 @@ module.exports = function(app, passport,upload) {
     })
 
     // message related
-    //app.post('/sendMessage',isLoggedIn, function(req,res){
-    app.post('/sendMessage', function(req,res){
+    app.post('/sendMessage',isLoggedIn, function(req,res){
+    //app.post('/sendMessage', function(req,res){
 
         // get parameters
         console.log(req.body)
