@@ -24,13 +24,10 @@ var itemSchema = mongoose.Schema({
 
     _creator : { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     wishedList : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}],
-    whatTobuyUserList : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}], // store users who what to buy
+    wantToBuyUserList : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}], // store users who what to buy
 
     // comment list
-
-
-
-
+    commentList : [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}]
 
 });
 
