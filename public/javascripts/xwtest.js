@@ -16,6 +16,7 @@ $(document).ready(function(){
 			bttns.append('<a href="#" class="btn btn-primary" role="button">close</a>')
 			bttns.append('<a href="#" class="btn btn-default" role="button">delete</a>')
 			item.append(bttns)
+			if(element)
 			$('.list-group').append(item)
 		}); 
     })
