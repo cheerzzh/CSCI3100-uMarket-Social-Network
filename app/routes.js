@@ -1332,7 +1332,8 @@ module.exports = function(app, passport,upload) {
             // check user ID
             //console.log(item)
             // send user page, flush 2 users
-            res.send(targetItem)
+            //res.send(targetItem)
+            res.render("item1.ejs",{user:req.user,item:targetItem})
 
         });
 
