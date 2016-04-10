@@ -59,6 +59,7 @@ var userSchema = mongoose.Schema({
     boughtItemList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
 
     conversationList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Conversation'}],
+    notificationList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Notification'}],
 
 
 });
