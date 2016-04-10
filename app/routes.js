@@ -20,6 +20,10 @@ module.exports = function(app, passport,upload) {
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
+    app.get('/conversation', function(req,res){
+        res.render('converpage.ejs');
+    })
+    
     app.get('/', function(req, res) {
         //res.render('index3.ejs'); // load the index.ejs file
         if (req.isAuthenticated())
