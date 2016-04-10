@@ -4,6 +4,7 @@ var Item = require('../app/models/item');
 var Message = require('../app/models/message');
 var Conversation = require('../app/models/conversation');
 var Comment = require('../app/models/comment');
+var Notification = require('../app/models/notification');
 
 function include(arr,obj) {
     return (arr.indexOf(obj) != -1);
@@ -647,6 +648,16 @@ module.exports = function(app, passport,upload) {
 
     });
 
+    app.post('/getUserInfo',isLoggedIn,function(req,res){
+
+        var userID = req.body.userID
+
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            res.send(userObject)
+        })
+    })
+
     app.get('/getUserItem',function(req,res){
 
         // return all the items posted by a user
@@ -1034,18 +1045,29 @@ module.exports = function(app, passport,upload) {
                 {
                     user.followingList.push(targetUser)
                     //user.followingIDList.push(targetUser._id)
+                    // add user to follower list of targetUser
+                    targetUser.followerList.push(user._id)
 
+                    // make up notification
+                    var newNotification = new Notification()
+                    newNotification.type = 0;
+                    newNotification.user = user._id
+                    newNotification.hasRead = false;
+                    // no item 
                     //save
-                    user.save(function(err) {
-                        if (err) throw err;
-
-                        // add user to follower list of targetUser
-                        targetUser.followerList.push(user._id)
-                        targetUser.save(function(err){
+                    newNotification.save(function(err){
+                        if(err) throw err
+                        console.log('Saved notification for following')
+                        targetUser.notificationList.push(newNotification._id)
+                        user.save(function(err) {
                             if (err) throw err;
-                            res.send(true)
+                            
+                            targetUser.save(function(err){
+                                if (err) throw err;
+                                    res.send(true)
+                            })
                         })
-                        
+                            
                     })
                 }
                 else
