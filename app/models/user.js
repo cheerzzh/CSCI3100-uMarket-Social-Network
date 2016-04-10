@@ -54,6 +54,11 @@ var userSchema = mongoose.Schema({
     followingList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     followerList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
     wishList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }], // store id of item entries interested,
+    wantTobuyItemList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }], // store id of items the user choose to buy
+    waitForMetoConfirmItemList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
+    boughtItemList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Item' }],
+
+    conversationList : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Conversation'}],
 
 
 });

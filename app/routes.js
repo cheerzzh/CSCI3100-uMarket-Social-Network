@@ -1,6 +1,9 @@
 // app/routes.js
 var User            = require('../app/models/user');
 var Item = require('../app/models/item');
+var Message = require('../app/models/message');
+var Conversation = require('../app/models/conversation');
+var Comment = require('../app/models/comment');
 
 function include(arr,obj) {
     return (arr.indexOf(obj) != -1);
@@ -99,7 +102,6 @@ module.exports = function(app, passport,upload) {
         res.render('xwtest1.ejs', {
             user : req.user // get the user out of session and pass to template
         });
-
     });
 
 
@@ -402,20 +404,119 @@ module.exports = function(app, passport,upload) {
     // buy  ======================
     // =====================================
     // === user want to buy item : user can send a message to the seller
-    app.post('/whatToBuy',isLoggedIn, function(req,res){
+    //app.post('/whatToBuy',function(req,res){
+    app.post('/wantToBuy', isLoggedIn,function(req,res){ // test 
 
-        // make sure user can not buy items posted by it self
+        // get parameters
+        console.log(req.body)
+        //var userID = req.body.user; // req.user._id
+        var userID = req.user._id;
+        var itemID = req.body.itemID;
+        // automatically send a message 
+        var messageContent = req.body.message
+        // find user. find item first
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(itemID,function(err,itemObject){
+                if(err) throw err
+                User.findById(itemObject._creator,function(err,itemOwnerObject){
+                    if(err) throw err
+                    //console.log(itemObject._creator + " " + userObject._id)
+                    //console.log(itemObject._creator.equals(userObject._id))
+                    if(itemObject._creator.equals(userObject._id)){
+                        console.log("Cannot buy own object!");
+                        res.send({succeed:false, message:"Cannot buy own item!"})
+                    }else{
+                        // add item to users whatToBuyList
+                        if(!include(userObject.wantTobuyItemList,itemObject._id)){
 
-        // check item status: if is wait for confirm/ confirmed/ withdrawed, send back message
+                            //console.log(itemObject.wantToBuyUserList)
+                            userObject.wantTobuyItemList.push(itemObject)
+                            itemObject.wantToBuyUserList.push(userObject)
 
-        // add user to item's waiting list
+                            itemObject.save(function(err){
+                                if(err) throw err
 
-        // send message to seller
-        // req.body.message
+                                // makeup message
+                                if(messageContent){
+                                    console.log('Non-empty message: ' + messageContent + " , add new conversation")
 
-        // send back success info
+                                    var newMessage = new Message()
+                                    newMessage.sender = userObject._id
+                                    newMessage.receiver = itemObject._creator
+                                    newMessage.createTime = Date()
+                                    newMessage.content = messageContent
+
+                                    // save message
+                                    newMessage.save(function(err){
+                                        if(err) throw err
+                                        // new conversation
+                                        var newConversation = new Conversation()
+                                        newConversation.party1 = userObject._id
+                                        newConversation.party2 = itemObject._creator
+                                        newConversation.messageList.push(newMessage._id)
+                                        newConversation.updateTime = Date()
+                                        newConversation.referencedItem = itemObject
+                                        newConversation.hasNewMessage = true
+
+                                        newConversation.save(function(err){
+                                            if(err) throw err
+                                            // add new conversatio to both users
+                                            userObject.conversationList.push(newConversation._id)
+                                            itemOwnerObject.conversationList.push(newConversation._id)
+
+                                            // save two user
+                                            userObject.save(function(err){
+                                                if(err) throw err
+                                                itemOwnerObject.save(function(err){
+                                                    if(err) throw err
+                                                    console.log('/wantToBuy done!')
+                                                    res.send({succeed:true,targetUser:userObject})
+                                                })
+                                            })
+
+                                        })
+
+                                    })
+                                }else{
+                                    // no message
+                                    // save two user
+                                    userObject.save(function(err){
+                                        if(err) throw err
+                                        itemOwnerObject.save(function(err){
+                                            if(err) throw err
+                                            console.log('/wantToBuy done!')
+                                            res.send({succeed:true,targetUser:userObject})
+                                        })
+                                    })
+                                }
+                                })
+                        }
+                        else{
+                            console.log("Cannot buy repeated item!")
+                            res.send({succeed:false, message:"Cannot buy repeated item!"})
+
+                        }
+                        // if message is not empty: make a new conversation ref to the item and store
+
+                        // send back success info
+                        //
+
+                    }
+                })
+                
+            })
+        })
 
     });
+    
+    // user want to cancel 
+    //app.post('/cancelWantToBuy',isLoggedIn.function(req,res){
+    app.post('/cancelWantToBuy',function(req,res){
+
+        // 
+        // for all pending confirmation operation 
+    })
 
 
 
@@ -565,9 +666,296 @@ module.exports = function(app, passport,upload) {
         
     });
 
+    // seller initiate trade confirmation
+    app.post('/toInitiateConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toInitiateConfirmation',function(req,res){
+
+        console.log(req.body)
+        // get parameters
+        //var userID = req.body.userID; // 
+        var userID = req.body.req.user._id
+        var counterPartyID = req.body.counterPartyID
+        var targetItemID = req.body.itemID
+        
+        //make sure object is not null
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(targetItemID,function(err,itemObject){
+                if(err) throw err
+                User.findById(counterPartyID,function(err,counterpartyObject){
+                    if(err) throw err
+                    if((userObject != null) && (itemObject != null) && (itemObject != null)){
+                        // check whether target item belongs to user
+                        if(!itemObject._creator.equals(userObject._id)){
+                            res.send({succeed:false,message:"Tagret item not belongs to you!"})
+                        }else{
+                            // check the item status
+                            // if 0 : ok
+                            if(itemObject.status != 0){
+                                res.send({succeed:false,message:"Item is not in open status!"})
+                            }
+                            else
+                            {   
+                                // check whether counterparty is in the item's waiting list and item is in user's whatToBuyItemList
+                                if(!((include(itemObject.wantToBuyUserList,counterpartyObject._id)) && (include(counterpartyObject.wantTobuyItemList,itemObject._id)))){
+                                    res.send({succeed:false,message:"Item and user relationship is not consistent"})
+                                }else{
+
+                                    // modify item
+                                   itemObject.status = 1;
+                                   itemObject.confirmedCounterParty = counterpartyObject._id
+
+                                   // modify counterparty
+                                   counterpartyObject.waitForMetoConfirmItemList.push(itemObject._id)
+
+                                   // save
+                                   itemObject.save(function(err){
+                                        if(err) throw err
+                                        counterpartyObject.save(function(err){
+                                            if(err) throw err
+                                            res.send({succeed:true})
+                                        })
+
+                                   })
+                                    //
+                                }
+                            }
+                        }
+                    }else{
+                        res.send({succeed:false,message:"invalid object ID"})
+                    }
+                })
+            })
+        })
+        
+        
+        // change item status and confirmedCounterparty
+        // send to notification list : which will be queryed by client, when user click a noitification, send a message to indiciate it has been readed
+    })
+
+    // 
+    app.post('/toAcceptConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toAcceptConfirmation',function(req,res){
+        console.log(req.body)
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id
+        var targetItemID = req.body.itemID
+
+        // get object
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(targetItemID,function(err,itemObject){
+                if(err) throw err
+                    User.findById(itemObject._id,function(err,sellerObject){
+                        if(err) throw err
+                        // check item status 
+                        if(itemObject.status != 1){
+                            res.send({succeed:false,message:"Item is not in wait for confirm status "})
+                        }else{
+                            // check whether item is within user's wait for confirm item list 
+                            if(! ((include(userObject.waitForMetoConfirmItemList,itemObject._id)) && (itemObject.confirmedCounterParty.equals(userObject._id)))){
+                                res.send({succeed:false,message:"The counterparty is not you!"})
+                            }else{
+                                // modify item and add to boughtList
+                                itemObject.status  = 2;
+                                userObject.boughtItemList.push(itemObject)
+                                // remove from wait for me to confirm list
+                                var index = userObject.waitForMetoConfirmItemList.indexOf(itemObject._id);
+                                if(index > -1){ // found
+                                    userObject.waitForMetoConfirmItemList.splice(index,1)
+                                }
+
+                                // save 
+                                itemObject.save(function(err){
+                                    if(err) throw err
+                                    userObject.save(function(err){
+                                        if(err) throw err
+
+                                            // send notification ?
+                                            res.send({succeed:true})
+                                    })
+                                })
+
+                            }
+                        }
+                    })
+
+            })
+        })
+        
+        
+    })
+
+    // if an confirmation request is pending, seller can cancel it, send a message
+    app.post('/toCancelConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toCancelConfirmation',function(req,res){
+
+        console.log(req.body)
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id
+        var targetItemID = req.body.itemID
+
+        // get user, item
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(targetItemID,function(err,itemObject){
+                if(err) throw err
+                User.findById(itemObject.confirmedCounterParty,function(err,counterPartyObject){
+                    if(err) throw err
+                    // check whether object belongs to user
+                    if(!itemObject._creator.equals(userObject._id)){
+                        res.send({succeed:false,message:"Item not belongs to user"})
+                    }else{
+                        // check item status == 1
+                        if(itemObject.status!= 1){
+                            res.send({succeed:false,message:"Item not in confirmation pending status"})
+                        }else{
+                            // commit cancel operation, send notification to the counterparty?
+                            itemObject.status = 0;
+                            //var counterpartyID = itemObject.confirmedCounterParty;
+                            itemObject.confirmedCounterParty  = null; // empty counterparty
+                            // save 
+                            itemObject.save(function(err){
+                                if(err) throw err
+                                // remove from counterparty's list
+                                var index = counterPartyObject.waitForMetoConfirmItemList.indexOf(itemObject._id);
+                                if(index > -1){ // found
+                                    counterPartyObject.waitForMetoConfirmItemList.splice(index,1)
+                                }
+
+                                counterPartyObject.save(function(err){
+                                    if(err) throw err
+                                    // push notification to 
+                                    res.send({succeed:true})
+                                })
+                                
+                            })
+                        }
+                    }
+                })
+            })
+        })
+    })
+
+    // counterparty reject the confirmation request from the seller
+    // send notification to seller
+    app.post('/toRejectConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toRejectConfirmation',function(req,res){
+
+        console.log(req.body)
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id
+        var targetItemID = req.body.itemID
+
+        // get object
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(targetItemID,function(err,itemObject){
+                if(err) throw err
+                User.findById(itemObject._creator,function(err,ownerOnject){
+                    if(err) throw err
+                    // check status of the object is in 1
+                    if(itemObject.status != 1){
+                        res.send({succeed:false,message:"Item not in confirmation pending status"})
+                    }else{
+                        if(! itemObject.confirmedCounterParty.equals(userObject._id)){
+                            res.send({succeed:false,message:"The counterparty is not you!"})
+                        }
+                        else{
+
+                            itemObject.status = 0;
+                            itemObject.confirmedCounterParty  = null;
+
+                            // remove from list, but may still want to buy
+                            var index = userObject.waitForMetoConfirmItemList.indexOf(itemObject._id);
+                            if(index > -1){ // found
+                                userObject.waitForMetoConfirmItemList.splice(index,1)
+                            }
+
+                            // save
+                            itemObject.save(function(err){
+                                if(err) throw err
+                                userObject.save(function(err){
+                                    if(err) throw err
+
+                                    // push notification to owner
+                                    res.send({succeed:true})
+                                })
+                            })
+                        }
+
+                    }
+                })
+            })
+        })
+        
+        // check user is the counterParty specificed in item
+        // commit change and send notification to item owner
 
 
+    })
 
+
+    // user send a comment to a item
+    // create a new comment object and insert into item's commentList
+    //app.post('/writeComment',function(req,res){
+    app.post('/writeComment',isLoggedIn,function(req,res){
+
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id;
+        var itemID = req.body.itemID;
+        var commentContent = req.body.commentContent
+
+        // get object
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(itemID,function(err,itemObject){
+                if(err) throw err
+
+                // make a new comment
+                var newComment = new Comment()
+                newComment.commenter = userObject._id
+                newComment.createTime = Date()
+                newComment.referencedItem = itemObject._id
+                newComment.content = commentContent
+
+                // save
+                newComment.save(function(err){
+                    if(err) throw err
+                    // push to item
+                    itemObject.commentList.push(newComment)
+                    itemObject.save(function(err){
+                        if(err) throw err
+                        res.send({succeed:true,message:"Commented"})
+                    })
+                })
+
+            })
+        })
+    })
+
+    // return all comment for a user
+    app.post('/getUserComments',function(req,res){
+        var userID = req.body.userID; // req.user._id
+        console.log(req.body)
+        //var userID = req.user._id;
+
+        //find user
+        
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+
+            Comment.find({commenter:userObject._id})
+            .populate('referencedItem')
+            .exec(function(err,comments){
+                if(err) throw err
+                res.send(comments)
+            })
+        })
+        
+
+
+    })
     // =====================================
     // Timeline  =======================
     // =====================================
@@ -743,7 +1131,6 @@ module.exports = function(app, passport,upload) {
             if (err)
             {
                 throw err;
-                
             }
             // sned back data
             res.send(userObject)
@@ -780,10 +1167,8 @@ module.exports = function(app, passport,upload) {
                     user : req.user
                     
                 })
-
             });
         }
-
     })
 
     app.get('/item/:itemid',isLoggedIn,function(req,res){
@@ -791,6 +1176,7 @@ module.exports = function(app, passport,upload) {
         //console.log(req.params.itemid)
         Item.findById(req.params.itemid)
         .populate('_creator')
+        .populate('commentList')
         .exec(function(err, targetItem) {
 
             if (err)
@@ -810,6 +1196,8 @@ module.exports = function(app, passport,upload) {
 
 
     })
+
+
     // =====================================
     // Recommadation =======================
     // =====================================
@@ -844,6 +1232,158 @@ module.exports = function(app, passport,upload) {
         Item.findRandom().limit(2).exec(function (err, items) {
             console.log(items);
         });
+
+    })
+
+    // message related
+    app.post('/sendMessage',isLoggedIn, function(req,res){
+    //app.post('/sendMessage', function(req,res){
+
+        // get parameters
+        console.log(req.body)
+        var senderID = req.body.sender; // req.user._id
+        var receiverID = req.body.receiver;
+        var replyConversationID = req.body.replyConversationID // get from button
+        var isReply = parseInt(req.body.isReply)
+        var content = req.body.content // make sure it is not empty
+
+        // check receiver user ID
+
+        // find sender
+        User.findById(senderID,function(err,sender){
+            if(err) throw err
+            User.findById(receiverID,function(err,receiver){
+                if(err) throw err
+                //console.log(receiver)
+                // check if it is a new conversation
+                if(isReply){
+                    // attach new message to existing conversation
+                    // new conversation
+                    // make a new conversation
+                    var newMessage = new Message()
+                    newMessage.sender = sender._id
+                    newMessage.receiver = receiver._id
+                    newMessage.createTime = Date()
+                    newMessage.content = content
+
+                    newMessage.save(function(err){
+                        if(err) throw err
+                        console.log('save new message with ID' + newMessage._id)
+
+                        // find exisiting conversation
+                        Conversation.findById(replyConversationID,function(err,replyConversation){
+                            if(err) throw err
+
+                            replyConversation.messageList.push(newMessage._id)
+                            replyConversation.updateTime = Date()
+                            replyConversation.hasNewMessage = true;
+                            replyConversation.save(function(err){
+                            if(err) throw err
+                            console.log('update existing conversation with ID ' + replyConversation._id)
+
+                            // no need to update users' conversation list
+                            // push to receiver's notification queue
+                            })
+                        })
+                    })
+
+                }else{
+
+                    // new conversation
+                    // make a new conversation
+                    var newMessage = new Message()
+                    newMessage.sender = sender._id
+                    newMessage.receiver = receiver._id
+                    newMessage.createTime = Date()
+                    newMessage.content = content
+
+                    newMessage.save(function(err){
+                        if(err) throw err
+                        console.log('save new message with ID' + newMessage._id)
+
+                        // make a new conversation
+                        var newConversation = new Conversation()
+                        newConversation.party1 = sender._id
+                        newConversation.party2 = receiver._id
+                        newConversation.messageList.push(newMessage._id)
+                        newConversation.hasNewMessage = true;
+                        newConversation.updateTime = Date()
+
+                        newConversation.save(function(err){
+                            if(err) throw err
+                            console.log('save new conversation with ID ' + newConversation._id)
+
+
+                            // attach conversation to both sender and receiver
+                            sender.conversationList.push(newConversation._id);
+                            receiver.conversationList.push(newConversation._id)
+                            sender.save(function(err){
+                                if(err) throw err
+                                receiver.save(function(err){
+                                    if(err) throw err
+
+                                    // push to receiver's notification queue
+                                })
+                            })
+                        })
+                    })
+                }
+
+            })
+        })
+        // insert into database
+
+        // send notification to receiver ? 
+        res.send(true)
+    })
+    
+    // when user click the conversation list, flip the status
+    app.get('/readConversation',isLoggedIn,function(req,res){
+
+        var userID = req.user._id
+        var conversationID = req.query.conversationID
+
+        // assume the conversation belongs to user
+        Conversation.findById(conversationID,function(err,conversationObject){
+            if(err) throw err
+                conversationObject.hasNewMessage = false;
+
+                conversationObject.save(function(err){
+                    if(err) throw err
+                    res.send(true)
+                })
+        })
+    })
+
+    // get all the conversation related to target user
+    // app.get('getAllConversation',isloggedIn,function(req,res){
+    app.get('/getAllConversation',isLoggedIn,function(req,res){ // test purpose
+
+        //var userID = req.query.userID // req.user._id
+        var userID = req.user._id
+        console.log(userID)
+        // find user ,get conversation list
+        // search for related conversation and sorted according to update time
+        User.findById(userID,function(err,userObject){
+            if(err) throw err 
+            
+            //res.send(userObject)
+            //console.log(userObject)
+            Conversation.find({"_id":{$in:userObject.conversationList}})
+            .sort({'updateTime': -1})
+            .populate('messageList')
+            //.populate('referenceItem')
+            //.populate('party1')
+            //.populate('party2')
+            .exec(function(err,result){
+                res.send(result)
+            })
+        })
+
+                        
+
+        // or search from Conversation
+
 
     })
 
