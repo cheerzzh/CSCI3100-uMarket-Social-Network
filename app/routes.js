@@ -614,7 +614,12 @@ module.exports = function(app, passport,upload) {
         .populate('wishList')
         .exec(function(err, user) {
             if(err) throw err
-            res.send(user.wishList)
+            //res.send(user.wishList)
+            res.render('wishlist.ejs',{
+                    wishList : user.wishList,
+                    User : user
+                    
+            })
         })
 
 
