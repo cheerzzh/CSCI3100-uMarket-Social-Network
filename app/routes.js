@@ -20,8 +20,8 @@ module.exports = function(app, passport,upload) {
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
-    app.get('/conversation', function(req,res){
-        res.render('converpage.ejs');
+    app.get('/conversation', isLoggedIn,function(req,res){
+        res.render('converpage.ejs',{user:req.user});
     })
     
     app.get('/', function(req, res) {
