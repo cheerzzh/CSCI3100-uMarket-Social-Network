@@ -666,6 +666,7 @@ module.exports = function(app, passport,upload) {
     });
 
     // seller initiate trade confirmation
+    //app.post('/toInitiateConfirmation',isLoggedIn,function(req,res){
     app.post('/toInitiateConfirmation',function(req,res){
 
         console.log(req.body)
@@ -747,7 +748,8 @@ module.exports = function(app, passport,upload) {
                         // check item status 
                         if(itemObject.status != 1){
                             res.send({succeed:false,message:"Item is not in wait for confirm status "})
-                        }else{// check whether item is within user's wait for confirm item list 
+                        }else{
+                            // check whether item is within user's wait for confirm item list 
                             if(! ((include(userObject.waitForMetoConfirmItemList,itemObject._id)) && (itemObject.confirmedCounterParty.equals(userObject._id)))){
                                 res.send({succeed:false,message:"The counterparty is not you!"})
                             }else{
@@ -785,7 +787,108 @@ module.exports = function(app, passport,upload) {
     //app.post('/toCancelConfirmation',isLoggedIn,function(req,res){
     app.post('/toCancelConfirmation',function(req,res){
 
+        console.log(req.body)
+        var userID = req.body.userID; // req.user._id
+        var targetItemID = req.body.itemID
+
+        // get user, item
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(targetItemID,function(err,itemObject){
+                if(err) throw err
+                User.findById(itemObject.confirmedCounterParty,function(err,counterPartyObject){
+                    if(err) throw err
+                    // check whether object belongs to user
+                    if(!itemObject._creator.equals(userObject._id)){
+                        res.send({succeed:false,message:"Item not belongs to user"})
+                    }else{
+                        // check item status == 1
+                        if(itemObject.status!= 1){
+                            res.send({succeed:false,message:"Item not in confirmation pending status"})
+                        }else{
+                            // commit cancel operation, send notification to the counterparty?
+                            itemObject.status = 0;
+                            //var counterpartyID = itemObject.confirmedCounterParty;
+                            itemObject.confirmedCounterParty  = null; // empty counterparty
+                            // save 
+                            itemObject.save(function(err){
+                                if(err) throw err
+                                // remove from counterparty's list
+                                var index = counterPartyObject.waitForMetoConfirmItemList.indexOf(itemObject._id);
+                                if(index > -1){ // found
+                                    counterPartyObject.waitForMetoConfirmItemList.splice(index,1)
+                                }
+
+                                counterPartyObject.save(function(err){
+                                    if(err) throw err
+                                    // push notification to 
+                                    res.send({succeed:true})
+                                })
+                                
+                            })
+                        }
+                    }
+                })
+            })
+        })
     })
+
+    // counterparty reject the confirmation request from the seller
+    // send notification to seller
+    app.post('/toRejectConfirmation',function(req,res){
+
+        console.log(req.body)
+        var userID = req.body.userID; // req.user._id
+        var targetItemID = req.body.itemID
+
+        // get object
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(targetItemID,function(err,itemObject){
+                if(err) throw err
+                User.findById(itemObject._creator,function(err,ownerOnject){
+                    if(err) throw err
+                    // check status of the object is in 1
+                    if(itemObject.status != 1){
+                        res.send({succeed:false,message:"Item not in confirmation pending status"})
+                    }else{
+                        if(! itemObject.confirmedCounterParty.equals(userObject._id)){
+                            res.send({succeed:false,message:"The counterparty is not you!"})
+                        }
+                        else{
+
+                            itemObject.status = 0;
+                            itemObject.confirmedCounterParty  = null;
+
+                            // remove from list, but may still want to buy
+                            var index = userObject.waitForMetoConfirmItemList.indexOf(itemObject._id);
+                            if(index > -1){ // found
+                                userObject.waitForMetoConfirmItemList.splice(index,1)
+                            }
+
+                            // save
+                            itemObject.save(function(err){
+                                if(err) throw err
+                                userObject.save(function(err){
+                                    if(err) throw err
+
+                                    // push notification to owner
+                                    res.send({succeed:true})
+                                })
+                            })
+                        }
+
+                    }
+                })
+            })
+        })
+        
+        // check user is the counterParty specificed in item
+        // commit change and send notification to item owner
+
+
+    })
+
 
     // user send a comment to a item
     // create a new comment object and insert into item's commentList
@@ -1067,6 +1170,7 @@ module.exports = function(app, passport,upload) {
         //console.log(req.params.itemid)
         Item.findById(req.params.itemid)
         .populate('_creator')
+        .populate('commentList')
         .exec(function(err, targetItem) {
 
             if (err)
