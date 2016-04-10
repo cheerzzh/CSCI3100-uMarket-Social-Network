@@ -666,12 +666,13 @@ module.exports = function(app, passport,upload) {
     });
 
     // seller initiate trade confirmation
-    //app.post('/toInitiateConfirmation',isLoggedIn,function(req,res){
-    app.post('/toInitiateConfirmation',function(req,res){
+    app.post('/toInitiateConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toInitiateConfirmation',function(req,res){
 
         console.log(req.body)
         // get parameters
-        var userID = req.body.userID; // req.user._id
+        //var userID = req.body.userID; // 
+        var userID = req.body.req.user._id
         var counterPartyID = req.body.counterPartyID
         var targetItemID = req.body.itemID
         
@@ -732,10 +733,11 @@ module.exports = function(app, passport,upload) {
     })
 
     // 
-    //app.post('/toAcceptConfirmation',isLoggedIn,function(req,res){
-    app.post('/toAcceptConfirmation',function(req,res){
+    app.post('/toAcceptConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toAcceptConfirmation',function(req,res){
         console.log(req.body)
-        var userID = req.body.userID; // req.user._id
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id
         var targetItemID = req.body.itemID
 
         // get object
@@ -784,11 +786,12 @@ module.exports = function(app, passport,upload) {
     })
 
     // if an confirmation request is pending, seller can cancel it, send a message
-    //app.post('/toCancelConfirmation',isLoggedIn,function(req,res){
-    app.post('/toCancelConfirmation',function(req,res){
+    app.post('/toCancelConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toCancelConfirmation',function(req,res){
 
         console.log(req.body)
-        var userID = req.body.userID; // req.user._id
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id
         var targetItemID = req.body.itemID
 
         // get user, item
@@ -835,10 +838,12 @@ module.exports = function(app, passport,upload) {
 
     // counterparty reject the confirmation request from the seller
     // send notification to seller
-    app.post('/toRejectConfirmation',function(req,res){
+    app.post('/toRejectConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toRejectConfirmation',function(req,res){
 
         console.log(req.body)
-        var userID = req.body.userID; // req.user._id
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id
         var targetItemID = req.body.itemID
 
         // get object
@@ -1366,9 +1371,9 @@ module.exports = function(app, passport,upload) {
             Conversation.find({"_id":{$in:userObject.conversationList}})
             .sort({'updateTime': -1})
             .populate('messageList')
-            .populate('referenceItem')
-            .populate('party1')
-            .populate('party2')
+            //.populate('referenceItem')
+            //.populate('party1')
+            //.populate('party2')
             .exec(function(err,result){
                 res.send(result)
             })
