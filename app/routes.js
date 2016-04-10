@@ -439,7 +439,9 @@ module.exports = function(app, passport,upload) {
 
                                 // makeup message
                                 if(messageContent){
-                                    console.log('Non-empty message: ' + messageContent + " , add new conversation")
+                                    messageContent = "I want to buy your item!"
+                                }
+                                    console.log('message: ' + messageContent + " , add new conversation")
 
                                     var newMessage = new Message()
                                     newMessage.sender = userObject._id
@@ -465,20 +467,34 @@ module.exports = function(app, passport,upload) {
                                             userObject.conversationList.push(newConversation._id)
                                             itemOwnerObject.conversationList.push(newConversation._id)
 
-                                            // save two user
-                                            userObject.save(function(err){
+                                            // notification to owner
+                                            var newNotification = new Notification()
+                                            newNotification.owner = itemOwnerObject._id
+                                            newNotification.createTime = Date()
+                                            newNotification.hasRead = false;
+                                            newNotification.type = 2
+                                            newNotification.user = userObject._id
+                                            newNotification.item = itemObject._id
+
+                                            newNotification.save(function(err){
                                                 if(err) throw err
-                                                itemOwnerObject.save(function(err){
+                                                itemOwnerObject.notificationList.push(newNotification._id)
+                                                // save two user
+                                                userObject.save(function(err){
                                                     if(err) throw err
-                                                    console.log('/wantToBuy done!')
-                                                    res.send({succeed:true,targetUser:userObject})
+                                                    itemOwnerObject.save(function(err){
+                                                        if(err) throw err
+                                                        console.log('/wantToBuy done!')
+                                                        res.send({succeed:true,targetUser:userObject})
+                                                    })
                                                 })
                                             })
-
                                         })
 
                                     })
-                                }else{
+                                
+                                /*
+                                else{
                                     // no message
                                     // save two user
                                     userObject.save(function(err){
@@ -490,7 +506,8 @@ module.exports = function(app, passport,upload) {
                                         })
                                     })
                                 }
-                                })
+                                */
+                            })
                         }
                         else{
                             console.log("Cannot buy repeated item!")
@@ -532,32 +549,49 @@ module.exports = function(app, passport,upload) {
         var userID = req.user._id
         var itemID = req.query.itemID
 
+
         // add to current user's wish list
         User.findById(userID, function(err, user) {
             if(err) throw err
+            Item.findById(itemID, function(err, item) {
+                if(err) throw err
+                User.findById(item._creator,function(err,ownerObject){
 
-            console.log(user.wishList)
-            if(!include(user.wishList, itemID)){
-                user.wishList.push(itemID)
-            }
+                    console.log(user.wishList)
+                    if(!include(user.wishList, itemID)){
+                        user.wishList.push(itemID)
+                    }
 
-            user.save(function(err){
-                if (err) throw  err
-
-                // append to item wishedList
-                Item.findById(itemID, function(err, item) {
-                    if(err) throw  err
                     if(!include(item.wishedList, userID)){
-                        item.wishedList.push(userID)
+                        item.wishedList.push(userID)            
+                    }
+
+                    var newNotification = new Notification()
+                    newNotification.owner = ownerObject._id
+                    newNotification.type = 1
+                    newNotification.createTime = Date()
+                    newNotification.hasRead = false;
+                    newNotification.user = user._id
+                    newNotification.item = item._id
+
+                    newNotification.save(function(err){
+                        if(err) throw err
+                        ownerObject.notificationList.push(newNotification._id)
+                        user.save(function(err){
+                        if (err) throw  err
                         item.save(function(err){
                             if(err) throw err
-                            res.send({targetUser:user})
+                            ownerObject.save(function(err){
+                                res.send({targetUser:user})
+                            })
+                            
                         })
-                    }
+                    })
+
+                    })
                 })
             })
         })
-
         // append to item's wished list
 
     });
@@ -677,13 +711,13 @@ module.exports = function(app, passport,upload) {
     });
 
     // seller initiate trade confirmation
-    app.post('/toInitiateConfirmation',isLoggedIn,function(req,res){
-    //app.post('/toInitiateConfirmation',function(req,res){
+    //app.post('/toInitiateConfirmation',isLoggedIn,function(req,res){
+    app.post('/toInitiateConfirmation',function(req,res){
 
         console.log(req.body)
         // get parameters
-        //var userID = req.body.userID; // 
-        var userID = req.body.req.user._id
+        var userID = req.body.userID; // 
+        //var userID = req.user._id
         var counterPartyID = req.body.counterPartyID
         var targetItemID = req.body.itemID
         
@@ -718,16 +752,28 @@ module.exports = function(app, passport,upload) {
                                    // modify counterparty
                                    counterpartyObject.waitForMetoConfirmItemList.push(itemObject._id)
 
-                                   // save
-                                   itemObject.save(function(err){
-                                        if(err) throw err
-                                        counterpartyObject.save(function(err){
-                                            if(err) throw err
-                                            res.send({succeed:true})
-                                        })
+                                   // notification
+                                   var newNotification = new Notification()
+                                   newNotification.owner = counterpartyObject._id
+                                   newNotification.createTime = Date()
+                                   newNotification.hasRead = false
+                                   newNotification.type = 5
+                                   newNotification.user = userObject._id
+                                   newNotification.item = itemObject._id
 
+                                   newNotification.save(function(err){
+                                        if(err) throw err
+                                        counterpartyObject.notificationList.push(newNotification)
+
+                                        // save
+                                       itemObject.save(function(err){
+                                            if(err) throw err
+                                            counterpartyObject.save(function(err){
+                                                if(err) throw err
+                                                res.send({succeed:true})
+                                            })
+                                       })
                                    })
-                                    //
                                 }
                             }
                         }
@@ -744,11 +790,11 @@ module.exports = function(app, passport,upload) {
     })
 
     // 
-    app.post('/toAcceptConfirmation',isLoggedIn,function(req,res){
-    //app.post('/toAcceptConfirmation',function(req,res){
+    //app.post('/toAcceptConfirmation',isLoggedIn,function(req,res){
+    app.post('/toAcceptConfirmation',function(req,res){
         console.log(req.body)
-        //var userID = req.body.userID; // req.user._id
-        var userID = req.user._id
+        var userID = req.body.userID; // req.user._id
+        //var userID = req.user._id
         var targetItemID = req.body.itemID
 
         // get object
@@ -756,7 +802,7 @@ module.exports = function(app, passport,upload) {
             if(err) throw err
             Item.findById(targetItemID,function(err,itemObject){
                 if(err) throw err
-                    User.findById(itemObject._id,function(err,sellerObject){
+                    User.findById(itemObject._creator,function(err,sellerObject){
                         if(err) throw err
                         // check item status 
                         if(itemObject.status != 1){
@@ -775,16 +821,31 @@ module.exports = function(app, passport,upload) {
                                     userObject.waitForMetoConfirmItemList.splice(index,1)
                                 }
 
-                                // save 
-                                itemObject.save(function(err){
-                                    if(err) throw err
-                                    userObject.save(function(err){
-                                        if(err) throw err
+                                // make new notification
+                                var newNotification = new Notification()
+                                newNotification.owner = sellerObject
+                                newNotification.createTime = Date()
+                                newNotification.hasRead = false;
+                                newNotification.type = 3
+                                newNotification.user = userObject
+                                newNotification.item = itemObject
 
-                                            // send notification ?
-                                            res.send({succeed:true})
+                                // save 
+                                newNotification.save(function(err){
+                                    if(err) throw err
+                                    sellerObject.notificationList.push(newNotification)
+                                    itemObject.save(function(err){
+                                        if(err) throw err
+                                        userObject.save(function(err){
+                                            if(err) throw err
+                                            sellerObject.save(function(err){
+                                                if(err) throw err
+                                                res.send({succeed:true})
+                                            })   
+                                        })
                                     })
                                 })
+                                
 
                             }
                         }
@@ -797,12 +858,12 @@ module.exports = function(app, passport,upload) {
     })
 
     // if an confirmation request is pending, seller can cancel it, send a message
-    app.post('/toCancelConfirmation',isLoggedIn,function(req,res){
-    //app.post('/toCancelConfirmation',function(req,res){
+    //app.post('/toCancelConfirmation',isLoggedIn,function(req,res){
+    app.post('/toCancelConfirmation',function(req,res){
 
         console.log(req.body)
-        //var userID = req.body.userID; // req.user._id
-        var userID = req.user._id
+        var userID = req.body.userID; // req.user._id
+        //var userID = req.user._id
         var targetItemID = req.body.itemID
 
         // get user, item
@@ -825,21 +886,37 @@ module.exports = function(app, passport,upload) {
                             //var counterpartyID = itemObject.confirmedCounterParty;
                             itemObject.confirmedCounterParty  = null; // empty counterparty
                             // save 
-                            itemObject.save(function(err){
-                                if(err) throw err
-                                // remove from counterparty's list
-                                var index = counterPartyObject.waitForMetoConfirmItemList.indexOf(itemObject._id);
-                                if(index > -1){ // found
-                                    counterPartyObject.waitForMetoConfirmItemList.splice(index,1)
-                                }
 
-                                counterPartyObject.save(function(err){
+                            // send notification
+                            var newNotification = new Notification()
+                            newNotification.owner = counterPartyObject
+                            newNotification.createTime = Date()
+                            newNotification.hasRead = false
+                            newNotification.type = 6
+                            newNotification.user = userObject
+                            newNotification.item = itemObject
+
+                            newNotification.save(function(err){
+                                if(err) throw err
+                                counterPartyObject.notificationList.push(newNotification)
+
+                                itemObject.save(function(err){
                                     if(err) throw err
-                                    // push notification to 
-                                    res.send({succeed:true})
+                                    // remove from counterparty's list
+                                    var index = counterPartyObject.waitForMetoConfirmItemList.indexOf(itemObject._id);
+                                    if(index > -1){ // found
+                                        counterPartyObject.waitForMetoConfirmItemList.splice(index,1)
+                                    }
+
+                                    counterPartyObject.save(function(err){
+                                        if(err) throw err
+                                        // push notification to 
+                                        res.send({succeed:true})
+                                    })
+                                    
                                 })
-                                
                             })
+
                         }
                     }
                 })
@@ -849,12 +926,12 @@ module.exports = function(app, passport,upload) {
 
     // counterparty reject the confirmation request from the seller
     // send notification to seller
-    app.post('/toRejectConfirmation',isLoggedIn,function(req,res){
-    //app.post('/toRejectConfirmation',function(req,res){
+    //app.post('/toRejectConfirmation',isLoggedIn,function(req,res){
+    app.post('/toRejectConfirmation',function(req,res){
 
         console.log(req.body)
-        //var userID = req.body.userID; // req.user._id
-        var userID = req.user._id
+        var userID = req.body.userID; // req.user._id
+        //var userID = req.user._id
         var targetItemID = req.body.itemID
 
         // get object
@@ -862,7 +939,7 @@ module.exports = function(app, passport,upload) {
             if(err) throw err
             Item.findById(targetItemID,function(err,itemObject){
                 if(err) throw err
-                User.findById(itemObject._creator,function(err,ownerOnject){
+                User.findById(itemObject._creator,function(err,ownerObject){
                     if(err) throw err
                     // check status of the object is in 1
                     if(itemObject.status != 1){
@@ -882,14 +959,28 @@ module.exports = function(app, passport,upload) {
                                 userObject.waitForMetoConfirmItemList.splice(index,1)
                             }
 
-                            // save
-                            itemObject.save(function(err){
-                                if(err) throw err
-                                userObject.save(function(err){
-                                    if(err) throw err
+                            // notification
+                            var newNotification = new Notification()
+                            newNotification.owner = ownerObject
+                            newNotification.createTime = Date()
+                            newNotification.hasRead = false
+                            newNotification.type = 4
+                            newNotification.user = userObject
+                            newNotification.item = itemObject
 
-                                    // push notification to owner
-                                    res.send({succeed:true})
+                            newNotification.save(function(err){
+                                if(err) throw err
+                                ownerObject.notificationList.push(newNotification)
+                                // save
+                                itemObject.save(function(err){
+                                    if(err) throw err
+                                    userObject.save(function(err){
+                                        if(err) throw err
+                                        ownerObject.save(function(err){
+                                            // push notification to owner
+                                            res.send({succeed:true})
+                                        })
+                                    })
                                 })
                             })
                         }
@@ -908,11 +999,11 @@ module.exports = function(app, passport,upload) {
 
     // user send a comment to a item
     // create a new comment object and insert into item's commentList
-    //app.post('/writeComment',function(req,res){
-    app.post('/writeComment',isLoggedIn,function(req,res){
+    app.post('/writeComment',function(req,res){
+    //app.post('/writeComment',isLoggedIn,function(req,res){
 
-        //var userID = req.body.userID; // req.user._id
-        var userID = req.user._id;
+        var userID = req.body.userID; // req.user._id
+        //var userID = req.user._id;
         var itemID = req.body.itemID;
         var commentContent = req.body.commentContent
 
@@ -921,24 +1012,52 @@ module.exports = function(app, passport,upload) {
             if(err) throw err
             Item.findById(itemID,function(err,itemObject){
                 if(err) throw err
-
-                // make a new comment
-                var newComment = new Comment()
-                newComment.commenter = userObject._id
-                newComment.createTime = Date()
-                newComment.referencedItem = itemObject._id
-                newComment.content = commentContent
-
-                // save
-                newComment.save(function(err){
+                User.findById(itemObject._creator,function(err,ownerObject){
                     if(err) throw err
-                    // push to item
-                    itemObject.commentList.push(newComment)
-                    itemObject.save(function(err){
-                        if(err) throw err
-                        res.send({succeed:true,message:"Commented"})
-                    })
+                    // check whether item belongs to you
+                    if(!itemObject._creator.equals(userObject._id)){
+
+                        // make a new comment
+                        var newComment = new Comment()
+                        newComment.commenter = userObject._id
+                        newComment.createTime = Date()
+                        newComment.referencedItem = itemObject._id
+                        newComment.content = commentContent
+
+                        // save
+                        newComment.save(function(err){
+                            if(err) throw err
+                            // push to item
+                            itemObject.commentList.push(newComment)
+
+                            var newNotification = new Notification()
+                            newNotification.owner = ownerObject
+                            newNotification.createTime = Date()
+                            newNotification.hasRead = false
+                            newNotification.type = 7
+                            newNotification.user = userObject
+                            newNotification.item = itemObject
+                            newNotification.save(function(err){
+                                if(err) throw err
+                                ownerObject.notificationList.push(newNotification)
+                                itemObject.save(function(err){
+                                    if(err) throw err
+                                    ownerObject.save(function(err){
+                                        if(err) throw err
+                                        res.send({succeed:true,message:"Commented"})
+                                    })
+                                })
+                            })
+                        })
+
+                    }else {
+                         res.send({succeed:false,message:"Cannot comment own item"})
+                    }
+
                 })
+
+
+
 
             })
         })
@@ -1050,9 +1169,11 @@ module.exports = function(app, passport,upload) {
 
                     // make up notification
                     var newNotification = new Notification()
+                    newNotification.owner = targetUser._id
                     newNotification.type = 0;
                     newNotification.user = user._id
                     newNotification.hasRead = false;
+                    newNotification.createTime = Date()
                     // no item 
                     //save
                     newNotification.save(function(err){
@@ -1401,10 +1522,17 @@ module.exports = function(app, passport,upload) {
             })
         })
 
-                        
+    })
 
-        // or search from Conversation
-
+    app.post('/getAllNotification',function(req,res){
+        var userID = req.body.userID;
+        // var userID = req.user._id
+        User.find({"_id":userID})
+        .populate('notificationList')
+        .exec(function(err,userObject){
+            if(err) throw err
+            res.send(userObject)
+        })
 
     })
 
