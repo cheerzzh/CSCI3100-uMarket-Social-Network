@@ -27,7 +27,8 @@ var itemSchema = mongoose.Schema({
     wantToBuyUserList : [{type: mongoose.Schema.Types.ObjectId, ref: 'User'}], // store users who what to buy
 
     // comment list
-    commentList : [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}]
+    commentList : [{type: mongoose.Schema.Types.ObjectId, ref: 'Comment'}],
+    tagList : [String], // store list of tags from user input
 
 });
 

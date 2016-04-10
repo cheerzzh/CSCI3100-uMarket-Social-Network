@@ -1235,8 +1235,8 @@ module.exports = function(app, passport,upload) {
     })
 
     // message related
-    app.post('/sendMessage',isLoggedIn, function(req,res){
-    //app.post('/sendMessage', function(req,res){
+    //app.post('/sendMessage',isLoggedIn, function(req,res){
+    app.post('/sendMessage', function(req,res){
 
         // get parameters
         console.log(req.body)
@@ -1371,9 +1371,9 @@ module.exports = function(app, passport,upload) {
             Conversation.find({"_id":{$in:userObject.conversationList}})
             .sort({'updateTime': -1})
             .populate('messageList')
-            //.populate('referenceItem')
-            //.populate('party1')
-            //.populate('party2')
+            .populate('referenceItem')
+            .populate('party1')
+            .populate('party2')
             .exec(function(err,result){
                 res.send(result)
             })
