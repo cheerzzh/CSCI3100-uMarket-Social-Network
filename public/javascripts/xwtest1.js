@@ -57,10 +57,10 @@ function fillconfirmlist(WTBlist){
     var wantUsers = {}
     wantUsers.wanttobuyUser = []
     //$("#userCount").text(window.searchResult.users.length)
-    window.searchResult.users.forEach(function(userEntry){
+    WTBlist.forEach(function(wtbUser){
 
       var wantUserEntry = {}
-      wantUserEntry.avatar = userEntry.avatarLink
+      wantUserEntry.avatar = wtbUser.avatarLink
       wantUserEntry.name = userEntry.userName
       wantUserEntry.userID = userEntry._id
       wantUserEntry.university = '@' +userEntry.university

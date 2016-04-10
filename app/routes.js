@@ -397,7 +397,6 @@ module.exports = function(app, passport,upload) {
         // update status
 
         // send back status
-        res.send(req.query.itemID)
     });
 
     // =====================================
