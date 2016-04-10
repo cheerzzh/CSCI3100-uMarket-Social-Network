@@ -15,5 +15,7 @@ $(document).ready(function(){
   	$("#item-description").text(window.targetItem.description)
   	$("#item-name").text(window.targetItem.itemName)
   	$("#item-price").text("$" + window.targetItem.price)
+  	
+  	$("#item-image_1").attr("src",window.targetItem.imageLinks[0]);
 
 })
