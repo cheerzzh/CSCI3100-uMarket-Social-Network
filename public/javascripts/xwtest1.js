@@ -8,6 +8,7 @@ jQuery(document).ready(function() {
     $.backstretch('images/3.jpg', {speed: 1000});
 
     fillUserInfo_Navbar(window.targetUser)
+    $("#confirmed-body").hide()
 
     //console.log(window.targetUser)
     //console.log(window.searchResult)
@@ -30,21 +31,161 @@ jQuery(document).ready(function() {
 
 	itemPostSource = $("#itemSearchResult-template").html();
 	itemPostTemplate = Handlebars.compile(itemPostSource);
+	itemPostSource1 = $("#itemSearchResult-template1").html();
+	itemPostTemplate1 = Handlebars.compile(itemPostSource1);
+	itemPostSource2 = $("#itemSearchResult-template2").html();
+	itemPostTemplate2 = Handlebars.compile(itemPostSource2);
+	itemPostSource3 = $("#itemSearchResult-template3").html();
+	itemPostTemplate3 = Handlebars.compile(itemPostSource3);
 	//$("#itemSearchResults").html(itemPostTemplate(itemSearchResults));
 
 //	fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList)
 //	fillUserSuggestionPanel()
 	//$("#itemSearchResults").children()[0]
+	//handleItemWithdraw();
 	fillItemPanel(window.targetUser.wishList)
-
+	//handleItemWithdraw()
 })
+
+
+function fillconfirmlist(WTBlist){
+	
+
+
+    //console.log(data)
+    // create user suggestion array
+    var wantUsers = {}
+    wantUsers.wanttobuyUser = []
+    //$("#userCount").text(window.searchResult.users.length)
+    window.searchResult.users.forEach(function(userEntry){
+
+      var wantUserEntry = {}
+      wantUserEntry.avatar = userEntry.avatarLink
+      wantUserEntry.name = userEntry.userName
+      wantUserEntry.userID = userEntry._id
+      wantUserEntry.university = '@' +userEntry.university
+      wantUserEntry.followButtonID = "followButton_" + userEntry._id
+      wantUserEntry.unfollowButtonID = "unfollowButton_" + userEntry._id
+      wantUserEntry.userSuggestionID = "userSuggestionID_" + userEntry._id
+      wantUserEntry.userLink = "/user/" + userEntry._id
+      //console.log(include(window.targetUser.followingList, userEntry._id))
+      wantUsers.wanttobuyUser.push(wantUserEntry)
+    })
+    //console.log(userSuggestion)
+    source1 = $("#wantToBuylist-template").html();
+    template1 = Handlebars.compile(source1);
+    $("#wanttobuyUser").html(template1(userSuggestion));
+
+    // loop through all follow-related button
+    $(".followButton").each(function(){
+    	if(include(window.targetUser.followingList, $(this).attr('value'))){
+    		$(this).hide()
+    	}
+    	
+    })
+
+    $(".unfollowButton").each(function(){
+    	if(!include(window.targetUser.followingList, $(this).attr('value'))){
+    		$(this).hide()
+    	}
+    })
+
+    $('.followButton').click(function(){
+      var targetUserID = $(this).attr('value')
+      console.log(targetUserID)
+
+      // ajax get request
+      // request to follow user
+      $.ajax({
+        url: "/toFollowUser",
+        data: {"targetUserID":targetUserID},
+        success: function(response) {
+            //Do Something
+            console.log('Follow' + targetUserID + " success!")
+
+            // remove button
+            $("#followButton_"+targetUserID).remove()
+            // delete entry
+            $("#userSuggestionID_" + targetUserID).remove()
+        },
+        error: function(xhr) {
+            //Do Something to handle error
+        }
+      });
+
+    });
+
+	$('.unfollowButton').click(function(){
+		var targetUserID = $(this).attr('value')
+		console.log(targetUserID)
+
+		// ajax get request
+		// request to follow user
+		$.ajax({
+		url: "/toUnFollowUser",
+		data: {"targetUserID":targetUserID},
+		success: function(response) {
+		    //Do Something
+		    console.log('unFollow' + targetUserID + " success!")
+
+		    // remove button
+		    $("#unfollowButton_"+targetUserID).remove()
+		    // delete entry
+		     $("#userSuggestionID_" + targetUserID).remove()
+
+		},
+		error: function(xhr) {
+		    //Do Something to handle error
+		}
+		});
+	})
+
+
+		
+}
+
+function handleItemWithdraw(){
+	$('.withrawbtn').click(function(){
+		var targetItemID = $(this).attr('value');
+		var Itemstatus = $(this).attr('id');
+		console.log("successfully click withdraw");
+		console.log(targetItemID);
+		console.log(Itemstatus);
+		var statusID=String(Itemstatus) +'id'+targetItemID;
+		$('.itembody'+statusID).remove();
+		$.ajax({
+			url :'/withDrawItem',
+			data : {"itemID" : targetItemID},
+			success : function(){
+				console.log('withdraw ' + targetItemID + ' success')
+				var statusID=String(Itemstatus) +'id'+targetItemID;
+				$('.itembody'+statusID).remove();
+				
+			},
+			error: function(){
+				console.log('withdraw failed')
+				
+			}
+		});
+	});	
+}
 
 function fillItemPanel(currentWishList){
     $.get('getMyItem',function(data){
         console.log(data)
         descriptionLimit = 180
+        /*
         var itemPosts = {}
-        itemPosts.itemEntry = []
+        itemPosts.itemEntry = []*/
+        var itemPosts = []
+        itemPosts[0]={}
+        itemPosts[1]={}
+        itemPosts[2]={}
+        itemPosts[3]={}
+        itemPosts[0].itemEntry = []
+        itemPosts[1].itemEntry = []
+        itemPosts[2].itemEntry = []
+        itemPosts[3].itemEntry = []
 		data.forEach( function(item, index) {
 		    /*
 			console.log(element)
@@ -65,10 +206,13 @@ function fillItemPanel(currentWishList){
 			console.log(item)
 			
 		//console.log(item)
+		var index=item.status
+		console.log(index)
 		var postEntry = {}
 		postEntry.avatar = item._creator.avatarLink
 		postEntry.creatorName = item._creator.userName
 		postEntry.itemName = item.itemName
+		postEntry.confirmedbtnId="confirmed"+item._id
 		if(item.description.length > descriptionLimit)
 		{
 		postEntry.description = item.description.substr(1, descriptionLimit) + " ...";
@@ -80,6 +224,7 @@ function fillItemPanel(currentWishList){
 
 		postEntry.userLink = '/user/' + item._creator._id
 		postEntry.itemLink = '/item/' + item._id
+		postEntry.itemstatus = item.status;
 		// depends on whether in list
 
 		if(!include(currentWishList, item._id)){
@@ -97,6 +242,9 @@ function fillItemPanel(currentWishList){
 		postEntry.wishedCount = item.wishedList.length
 		postEntry.heartID = "heart_" + item._id
 		postEntry.itemID = item._id
+		postEntry.itemWTBlist = item.wantToBuyUserList
+		var itemStatusID=String(item.status) +'id'+item._id
+		postEntry.itembodyID = "itembody"+ itemStatusID
 		if(item.imageLinks.length > 0)
 		{
 			postEntry.itemImageLink = item.imageLinks[0]
@@ -111,11 +259,22 @@ function fillItemPanel(currentWishList){
 		postEntry.updateDate = postDate.toISOString().slice(0,10)// adjust time format
 		postEntry.updateTime = postDate.toISOString().slice(12,19)
 		//console.log(Date(item.updateDate))
-		itemPosts.itemEntry.push(postEntry)
-    
+		itemPosts[index].itemEntry.push(postEntry)
 		}); 
-	    $("#itemSearchResults").html(itemPostTemplate(itemPosts));
-
+	    $("#itemSearchResults").html(itemPostTemplate(itemPosts[0]));
+	    $("#itemSearchResults1").html(itemPostTemplate1(itemPosts[0]));
+	    $("#itemSearchResults2").html(itemPostTemplate2(itemPosts[0]));
+	    $("#itemSearchResults3").html(itemPostTemplate3(itemPosts[0]));
+	    
+		$(".confirmedBtn").click(function(){
+			console.log('successfully click confirm');
+			$("#confirmed-body").show();
+			var WTBlist = $(this).attr('value')
+			console.log(WTBlist)
+			//fillconfirmlist(WTBlist);
+		});
+		handleItemWithdraw();
+	
     //$('.heartButton').click(function(){});
 	
     })

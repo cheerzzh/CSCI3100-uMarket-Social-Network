@@ -100,7 +100,7 @@
     
     <div class="container">
       <div class="row">
-        <div class="col-lg-9 col-md-12 col-lg-offset-2">
+        <div class="col-lg-9 col-md-12">
           <div class="panel panel-default">
             <div id="new-micropost" class="panel-body">
               <!--
@@ -120,8 +120,52 @@
               <div id="myTabContent" class="tab-content">
                 <div class="tab-pane fade in active" id="home">
               <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults">
+                <ul class="newitembody">
                 <script id="itemSearchResult-template" type="text/x-handlebars-template">
                 {{#each itemEntry}}
+                <li class = {{itembodyID}}>
+                <article class="search-result row">
+                  <div class="col-xs-12 col-sm-12 col-md-3">
+                    <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-2">
+                    <ul class="meta-search">
+                      <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
+                      <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
+                      <!--
+                      <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
+                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
+                        <font color="grey">{{wishedCount}} wished</font>--></span></li>
+                      -->
+                    </ul>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-7">
+                    <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
+                    <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
+                    <p>{{description}}</p>
+                    <button type="button" class="btn btn-primary btn-xs withrawbtn" value={{itemID}} id={{itemstatus}}>
+                    Withdraw
+                    </button>
+                    <button type="button" class="btn btn-default btn-xs confirmedBtn" id={{itemID}} value={{itemWTBlist}}>
+                    confirmed
+                    </button>
+                  </div>
+                  <span class="clearfix borda"></span>
+
+                </article>
+                </li>
+                {{/each}}
+                </script>
+                </ul>
+              </section>
+              </div>
+              <div class="tab-pane fade" id="ios">
+                <p>here will list items waiting to be confirmed</p>
+              <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults1">
+                <ul class="waitingItemBody">
+                <script id="itemSearchResult-template1" type="text/x-handlebars-template">
+                {{#each itemEntry}}
+                <li class = {{itembodyID}}>
                 <article class="search-result row">
                   <div class="col-xs-12 col-sm-12 col-md-3">
                     <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
@@ -141,30 +185,153 @@
                     <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
                     <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
                     <p>{{description}}</p>
-                    
+                    <button type="button" class="btn btn-primary btn-xs" id="withrawbtn" value={{itemID}} id={{itemstatus}}>withdraw</button>
+                    <button type="button" class="btn btn-default btn-xs" id="cancelbtn">cancel</button>
               
                   </div>
                   <span class="clearfix borda"></span>
 
                 </article>
+                </li>
                 {{/each}}
                 </script>
+                </ul>
               </section>
-              </div>
-              <div class="tab-pane fade" id="ios">
-                <p>here will list items waiting to be confirmed</p>
               </div>
               <div class="tab-pane fade" id="confirmed">
                 <p>this will list confirmed items</p>
+              <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults2">
+                <ul class="confirmedItemBody">
+                <script id="itemSearchResult-template2" type="text/x-handlebars-template">
+                {{#each itemEntry}}
+                <li class = {{itembodyID}}>
+                <article class="search-result row">
+                  <div class="col-xs-12 col-sm-12 col-md-3">
+                    <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-2">
+                    <ul class="meta-search">
+                      <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
+                      <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
+                      <!--
+                      <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
+                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
+                      -->
+                      <!--<font color="grey">{{wishedCount}} wished</font>--></span></li>
+                    </ul>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-7">
+                    <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
+                    <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
+                    <p>{{description}}</p>
+              
+                  </div>
+                  <span class="clearfix borda"></span>
+
+                </article>
+                </li>
+                {{/each}}
+                
+                </script>
+                </ul>
+              </section>
               </div>
               <div class="tab-pane fade" id="Withdraw">
                 <p>this will list withdraw items</p>
+              <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults3">
+                <ul class="withdrawitembody">
+                <script id="itemSearchResult-template3" type="text/x-handlebars-template">
+                {{#each itemEntry}}
+                <li id={{itembodyID}}>
+                <article class="search-result row">
+                  <div class="col-xs-12 col-sm-12 col-md-3">
+                    <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-2">
+                    <ul class="meta-search">
+                      <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
+                      <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
+                      <!--
+                      <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
+                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
+                      -->
+                      <!--<font color="grey">{{wishedCount}} wished</font>--></span></li>
+                    </ul>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-7">
+                    <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
+                    <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
+                    <p>{{description}}</p>
+                    <button type="button" class="btn btn-primary btn-xs" id="deletebtn" value={{itemID}}>delete</button>
+              
+                  </div>
+                  <span class="clearfix borda"></span>
+
+                </article>
+                </li>
+                {{/each}}
+                </script>
+                </ul>
+              </section>
               </div>
               </div>
               
             </div>
           </div>
         </div>
+        
+        <!--
+        <div class="col-lg-3 col-md-12" id="confirmed-body">
+          <div class="panel panel-default">
+            <div id="new-micropost" class="panel-body">
+              <ul id="confirmed-list-body">
+                <script id="comfirmedlist-template" type="text/x-handlebars-template">
+                  {{#each wantUser}}
+                    <li id={{wantUserBody}}>
+                      
+                    </li>
+                  {{/each}}
+                </script>
+              </ul>
+            </div>
+          </div>
+        </div>
+        -->
+        
+        <div class="col-lg-3 col-md-12"id="confirmed-body">
+            <div class="panel panel-default">
+            <div class="panel-heading">
+              <h3 class="panel-title"><b>Want to buy list</b></h3>
+            </div>
+            <div class="panel-body">
+              <ul id="wanttobuyUser" class="panel-list">
+                <script id="wantToBuylist-template" type="text/x-handlebars-template">
+                {{#each wantUser}}
+                <li id={{wantBodyID}}>
+                 
+                    <div class="row" >
+                      <div class="col-lg-3 col-md-3 col-xs-2">
+                        <img src={{wantUseravatar}} alt="" class="avatar">
+                      </div>
+                      <div class="col-lg-5 col-md-5 col-xs-3">
+                        <a href={{wantuserLink}}><span style="font-size:130%;">{{wantusername}}</span></a><br>
+                        <span class="username">{{wantuseruniversity}}</span>
+                      </div>
+                      <div class="col-lg-4 col-md-4 col-md-offset-0 col-xs-4 col-xs-offset-3">
+                        <button class="btn btn-success btn-sm wantconfirmedButton  btn-block" value={{wantuseruserID}}>
+                        confirmed
+                        </button>
+                      </div>
+                    </div>
+                  
+                </li>
+
+                {{/each}}
+                </script>
+              </ul>
+            </div>
+          </div>
+          </div>
         
       </div>
       
@@ -238,77 +405,8 @@
           </div>
           
    </div>
-   <div class="col-lg-3 col-md-12">
-      <div class="thumbnail">
-         <img src="/wp-content/uploads/2014/06/kittens.jpg" 
-         alt="通用的占位符缩略图">
-         <div class="caption">
-            <h3>缩略图标签</h3>
-            <p>一些示例文本。一些示例文本。</p>
-            <!--
-            <p>
-               <a href="#" class="btn btn-primary" role="button">
-                  按钮
-               </a> 
-               <a href="#" class="btn btn-default" role="button">
-                  按钮
-               </a>
-            </p>
-               -->
-               <div class="actions">
-                <div class="actions-content">
-                  <a href="#">
-                    <i class="fa fa-arrow-left"></i>
-                  </a>
-                  <a href="#">
-                    <i class="fa fa-retweet"></i>
-                  </a>
-                  <a class="heartButton" id = {{heartID}} value={{itemID}}>
-                    <i class="fa fa-heart" style="{{heartStyle}}" ></i>
-                  </a>
-                  <font color="grey">{{wishedCount}} people wished</font>
-                </div>
-              </div>
-              
-         </div>
-      </div>
-   </div>
-   <div class="col-lg-3 col-md-12">
-      <div class="thumbnail">
-         <img src="/wp-content/uploads/2014/06/kittens.jpg" 
-         alt="通用的占位符缩略图">
-         <div class="caption">
-            <h3>缩略图标签</h3>
-            <p>一些示例文本。一些示例文本。</p>
-            <p>
-               <a href="#" class="btn btn-primary" role="button">
-                  按钮
-               </a> 
-               <a href="#" class="btn btn-default" role="button">
-                  按钮
-               </a>
-            </p>
-         </div>
-      </div>
-   </div>
-   <div class="col-lg-3 col-md-12">
-      <div class="thumbnail">
-         <img src="/wp-content/uploads/2014/06/kittens.jpg" 
-         alt="通用的占位符缩略图">
-         <div class="caption">
-            <h3>缩略图标签</h3>
-            <p>一些示例文本。一些示例文本。</p>
-            <p>
-               <a href="#" class="btn btn-primary" role="button">
-                  按钮
-               </a> 
-               <a href="#" class="btn btn-default" role="button">
-                  按钮
-               </a>
-            </p>
-         </div>
-      </div>
-   </div>
+   
+
 </div>
 </div>
   

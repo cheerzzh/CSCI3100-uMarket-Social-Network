@@ -1,10 +1,11 @@
+var followerlength,itemPostSource,itemPostTemplate;
 jQuery(document).ready(function() {
 	
     /*
         Fullscreen background
     */
     $.backstretch('images/3.jpg', {speed: 1000});
-    console.log(window.user)
+    console.log(window.user);
 
     fillUserInfo_Navbar(window.targetUser)
     console.log(window.targetUser)
@@ -15,6 +16,7 @@ jQuery(document).ready(function() {
     $('#followerNumber').text(window.targetUser.followerList.length)
     $('#followingNumber').text(window.targetUser.followingList.length)
     $('#itemNumber').text(window.targetUser.itemList.length)
+    followerlength = window.targetUser.followerList.length;
     //console.log(addAction().html())
     //$.get('/getUserItem',{targetuser : window.targetUser})
     itemPostSource = $("#item-template").html();
@@ -27,10 +29,10 @@ jQuery(document).ready(function() {
 
 function followButton(){
     if(include(window.user.followingList,window.targetUser._id)){
-	    $('.unfollowButton').hide()
+	    $('.followButton').hide()
 	}
 	else{
-	    $('.followButton').hide()
+	    $('.unfollowButton').hide()
 	}
 	
 	$('.followButton').click(function(){
@@ -50,6 +52,8 @@ function followButton(){
             //$("#followButton_"+targetUserID).remove()
             $('.followButton').hide()
             $('.unfollowButton').show()
+            followerlength += 1
+            $('#followerNumber').text(followerlength)
             
         },
         error: function(xhr) {
@@ -78,7 +82,8 @@ function followButton(){
 		     //$("#userSuggestionID_" + targetUserID).remove()
 		     $('.followButton').show()
             $('.unfollowButton').hide()
-
+            followerlength -= 1
+            $('#followerNumber').text(followerlength)
 		},
 		error: function(xhr) {
 		    //Do Something to handle error
