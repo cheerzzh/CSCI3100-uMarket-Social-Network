@@ -1,0 +1,165 @@
+ <!DOCTYPE html>
+<html>
+ <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Conversation - uMarket</title>
+  <meta name="description" content="A Simple, Elegant &amp; Flat Bootstrap Theme">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="stylesheets/include/paper.min.css">
+  <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+  <link rel="stylesheet" href="stylesheets/demo.css">
+  <link rel="stylesheet" href="stylesheets/converpage.css">
+
+<nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container">
+      <div class="navbar-header">
+        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+          <span class="sr-only">Toggle navigation</span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+          <span class="icon-bar"></span>
+        </button>
+        <a id="logo" class="navbar-brand" href="/">uMarket</a>
+      </div>
+      <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown">
+            <a id="notification" href="#" class="dropdown-toggle navbar-icons" data-toggle="dropdown">
+              <i class="fa fa-bell-o"></i>
+            </a>
+            <ul id="notifications" class="dropdown-menu" role="menu">
+              <script id="notifications-template" type="text/x-handlebars-template">
+                <li class="dropdown-title">
+                  <h5><b>Notifications</b></h5>
+                </li>
+                {{#each notifications}}
+                <li>
+                  <a href="#">
+                    <h5><b>{{title}}</b></h5>
+                    {{{post}}}
+                  </a>
+                </li>
+                {{/each}}
+                <li>
+                  <a href="#" class="text-center">
+                    <span><b><i class="fa fa-bars"></i> More</b></span>
+                  </a>
+                </li>
+              </script>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a id="inbox" href="#" class="dropdown-toggle navbar-icons" data-toggle="dropdown">
+              <i class="fa fa-inbox"></i>
+            </a>
+            <ul id="messages" class="dropdown-menu" role="menu">
+              <script id="messages-template" type="text/x-handlebars-template">
+                <li class="dropdown-title">
+                  <h5><b>Messages</b></h5>
+                </li>
+                {{#each messages}}
+                <li>
+                  <a href="#">
+                    <h6><b>{{user}}</b></h6>
+                    {{{message}}}
+                  </a>
+                </li>
+                {{/each}}
+                <li>
+                  <a href="#" class="text-center">
+                    <span><b><i class="fa fa-bars">bar</i> More</b></span>
+                  </a>
+                </li>
+              </script>
+            </ul>
+          </li>
+          
+          
+          <li><a href="#" class="navbar-icons"><i class="fa fa-heart"></i></a></li>
+          <li><a href="#" class="navbar-icons"><i class="fa fa-cog"></i></a></li>
+          <li><a href="/logout" class="navbar-icons"><i class="fa fa-sign-out"></i></a></li>
+  
+          <!-- name and pic get from ajax call-->
+          <li>
+            <a href="/profile"><img class="navbar-avatar" src="https://en.gravatar.com/userimage/23763355/e7bbf514106dc2fd9ddb4e8160a72e8c.png" alt="Profile"> sudharti </a>
+          </li>
+          
+        </ul>
+        <form class="navbar-form navbar-right" role="search">
+          <div class="form-group">
+            <div class="input-group">
+              <input type="text" class="form-control" placeholder="Search">
+              <div class="input-group-addon"><i class="fa fa-search"></i></div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </nav>
+  
+  
+  <div class="contacts-head">
+     <b>Conversations</b>
+  </div>
+  <div id="contacts">
+      <script id="contacts-template" type="text/x-handlebars-template">
+          <div class="list-group">
+              {{#each conversation}}
+                  <a href="#" class="list-group-item" value={{conversationId}}>
+                    <h6><b>{{user}}</b></h6>
+                    {{{message}}}
+              </a>
+                {{/each}}
+        </script>
+</div>
+
+
+<div class="chat-window">
+  <div class="panel widget-chat">
+					<div class="panel-heading">
+						<span class="panel-title"><i class="panel-title-icon fa fa-comments-o"></i>Messages</span>
+					</div> <!-- / .panel-heading -->
+					<div id="panel-body">
+						
+					<div id="bimessages">
+					<script id="bimessages-template" type="text/x-handlebars-template">
+              {{#each bimessage}}
+              <div class="message">
+							<img src={{imgsource}} class="message-avatar">
+							<div class="message-body">
+								<div class="message-heading">
+									<a href="#" title="">{{{sender}}}</a> says:
+									<span class="pull-right">{{time}}</span>
+								</div>
+								<div class="message-text">
+									{{{bimessage}}}
+								</div>
+							</div>
+						</div> 
+              {{/each}}
+        </script>
+        </div>
+      </div>
+        
+				<div class="panel-footer chat-controls">
+						<div class="chat-controls-input">
+							<textarea id="mess" rows="1" class="form-control"></textarea>
+						</div>
+						<button  id="send" class="btn btn-primary chat-controls-btn" required>Send</button>
+					</div> <!-- / .panel-footer -->
+				</div> <!-- / .panel -->
+</div>
+
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+  <script type="text/javascript" src="javascripts/include/paper.min.js"></script>
+  <script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
+  <script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
+  <script type='text/javascript'>
+    var targetUser =<%-JSON.stringify(user)%> // get item from server
+    // console.log(item)
+    console.log(targetUser)
+    </script>
+  <script type="text/javascript" src="javascripts/converpage.js"></script>
+  
+ </html>

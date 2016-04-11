@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="robots" content="all,follow">
+        <meta name="googlebot" content="index,follow,snippet,archive">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="description" content="Obaju e-commerce template">
+        <meta name="author" content="Ondrej Svestka | ondrejsvestka.cz">
+        <meta name="keywords" content="">
+        <title>
+        Item
+        </title>
+        <meta name="keywords" content="">
+        <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
+        <!-- styles -->
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
+        <link rel="stylesheet" href="stylesheets/include/paper.min.css">
+        <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
+        <link rel="stylesheet" href="stylesheets/timeline.css">
+        <link rel="stylesheet" href="stylesheets/search.css">
+        <link href="stylesheets/animate.min.css" rel="stylesheet">
+        <link href="stylesheets/owl.carousel.css" rel="stylesheet">
+        <link href="stylesheets/owl.theme.css" rel="stylesheet">
+        
+        
+        <link rel="stylesheet" href="stylesheets/widgets.min.css">
+        <link rel="stylesheet" href="stylesheets/themes.min.css">
+        <link rel="stylesheet" href="stylesheets/rtl.min.css">
+        <!-- theme stylesheet -->
+        <link href="stylesheets/style.default.css" rel="stylesheet" id="theme-stylesheet">
+        <!-- your stylesheet with modifications -->
+        
+        <script src="javascripts/respond.min.js"></script>
+        
+    </head>
+    <body style=" padding-top: 100px; ">
+        <!-- *** NAVBAR ***
+        _________________________________________________________ -->
+        <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    </button>
+                    <a id="logo" class="navbar-brand" href="/">uMarket</a>
+                </div>
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li class="dropdown">
+                            <a id="notification" href="#" class="dropdown-toggle navbar-icons" data-toggle="dropdown">
+                                <i class="fa fa-bell-o"></i>
+                            </a>
+                            <ul id="notifications" class="dropdown-menu" role="menu">
+                                <script id="notifications-template" type="text/x-handlebars-template">
+                                <li class="dropdown-title">
+                                    <h5><b>Notifications</b></h5>
+                                </li>
+                                {{#each notifications}}
+                                <li>
+                                    <a href="#">
+                                        <h5><b>{{title}}</b></h5>
+                                        {{{post}}}
+                                    </a>
+                                </li>
+                                {{/each}}
+                                <li>
+                                    <a href="#" class="text-center">
+                                        <span><b><i class="fa fa-bars"></i> More</b></span>
+                                    </a>
+                                </li>
+                                </script>
+                            </ul>
+                        </li>
+                        <li class="dropdown">
+                            <a id="inbox" href="#" class="dropdown-toggle navbar-icons" data-toggle="dropdown">
+                                <i class="fa fa-inbox"></i>
+                            </a>
+                            <ul id="messages" class="dropdown-menu" role="menu">
+                                <script id="messages-template" type="text/x-handlebars-template">
+                                <li class="dropdown-title">
+                                    <h5><b>Messages</b></h5>
+                                </li>
+                                {{#each messages}}
+                                <li>
+                                    <a href="#">
+                                        <h6><b>{{user}}</b></h6>
+                                        {{{message}}}
+                                    </a>
+                                </li>
+                                {{/each}}
+                                <li>
+                                    <a href="#" class="text-center">
+                                        <span><b><i class="fa fa-bars">bar</i> More</b></span>
+                                    </a>
+                                </li>
+                                </script>
+                            </ul>
+                        </li>
+                        
+                        <li><a href="/uploadItem" class="navbar-icons"><i class="fa fa-upload"></i></a></li>
+                        <li><a href="/wishList" class="navbar-icons"><i class="fa fa-heart"></i></a></li>
+                        <li><a href="#" class="navbar-icons"><i class="fa fa-cog"></i></a></li>
+                        <li><a href="/logout" class="navbar-icons"><i class="fa fa-sign-out"></i></a></li>
+                        
+                        <!-- name and pic get from ajax call-->
+                        <li>
+                            <a href="/profile" id='username-nav'><img class="navbar-avatar" src="#" alt="Profile" id="avatar-nav"> </a>
+                        </li>
+                    </ul>
+                    <form class="navbar-form navbar-right" role="search" action='/search' method='get'>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="Search" name="searchKey" >
+                                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </nav>
+        <!-- /#navbar -->
+        <!-- *** NAVBAR END *** -->
+        <div id="all">
+            <div id="content">
+                <div class="container">
+                
+                    <div class="col-lg-3 col-md-3">
+                        <div class="card">
+                            <div class="cover" data-fade="1500" data-duration="2500">
+                                <ul class="cover-pics">
+                                    <li><img src="images/img-1.jpg"></li>
+                                    <li><img src="images/img-2.jpg"></li>
+                                    <li><img src="images/img-3.jpg"></li>
+                                    <li><img src="images/img-4.jpg"></li>
+                                </ul>
+                                <img src="#" alt="" class="avatar" id="avatar-cover">
+                            </div>
+                            <div class="about">
+                                <h3 class="name" id="username-cover"></h3>
+                                <h5 class="username" id="email-cover"></h5>
+                                <span class="content" id="statement-cover"></span><br>
+                                <label class="location" id="university-cover"><i class="fa fa-map-marker"></i></label>
+                            </div>
+                        </div><br>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                <h3 class="panel-title"><b>Trends</b></h3>
+                            </div>
+                            <div class="panel-body">
+                                <ul id="trends" class="panel-list">
+                                    <script id="trends-template" type="text/x-handlebars-template">
+                                    {{#each trends}}
+                                    <li><a href="#">{{trend}}</a></li>
+                                    {{/each}}
+                                    </script>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    <div class="col-md-9">
+                        <div class="row" id="productMain">
+                            <div class="col-sm-6">
+                                <div id="mainImage">
+                                    <img src="" id="item-image_1" class="img-responsive ">
+                                </div>
+
+                                <div class="ribbon sale">
+                                    <div class="theribbon">In Progress</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                <!-- /.ribbon -
+                                <div class="ribbon new">
+                                    <div class="theribbon">NEW</div>
+                                    <div class="ribbon-background"></div>
+                                </div>
+                                -->
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="box">
+                                    <h1 class="text-center" id="item-name"></h1>
+                                    <p class="goToDescription" style="font-size:150%;"><a href="#" class="scroll-to">90% New</a>
+                                </p>
+                                <p class="price" id = "item-price" style="font-size:250%;"></p>
+                                <p class="text-center buttons">
+                                    <a style="display:none;"  class="btn btn-danger" id="itemTradedButton"><i class="fa fa-frown-o"></i>Traded</a>
+                                    <a style="display:none;"  class="btn btn-warning" id="itemReservedButton"><i class="fa fa-exclamation"></i>Reserved</a>
+                                    <a style="display:none;"  class="btn btn-primary" id="wantToBuyButton"><i class="fa fa-shopping-cart"></i><span id="buyButtonText"></span></a>
+                                    <a class="btn btn-default " id="addToWishlistButton"><i id="heartIcon"class="fa fa-heart" style="color:red"></i><span><font color="grey" id="wishedCount"></font></span></a>
+                                </p>
+                            </div>
+                            <div class="row" id="thumbs">
+                                <div class="col-xs-4">
+                                    <a href="#" class="thumb">
+                                        <img src="http://placehold.it/800x400" alt="" class="img-responsive">
+                                    </a>
+                                </div>
+                                <div class="col-xs-4">
+                                    <a href="#" class="thumb">
+                                        <img src="http://placehold.it/800x400" alt="" class="img-responsive">
+                                    </a>
+                                </div>
+                                <div class="col-xs-4">
+                                    <a href="#" class="thumb">
+                                        <img src="http://placehold.it/800x400" alt="" class="img-responsive">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box" id="details">
+                        <p>
+                            <h2>Product details</h2>
+                            
+                            <blockquote>
+                                <p id="item-description"></p>
+                            </blockquote>
+                            <hr>
+                        </div>
+                        <div class="panel widget-article-comments">
+                            <div class="panel-heading">
+                                <span class="panel-title"><i class="panel-title-icon fa fa-comment"></i>Item comments</span>
+                                </div> <!-- / .panel-heading -->
+                                <div class="panel-body">
+                                    <div class="comment">
+                                        <img src="http://placehold.it/800x400" alt="" class="comment-avatar">
+                                        <div class="comment-body">
+                                            <div class="comment-text">
+                                                <div class="comment-heading">
+                                                    <a href="#" title="">Michelle Bortz</a><span>14 hours ago</span>
+                                                </div>
+                                                Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
+                                            </div>
+                                            </div> <!-- / .comment-body -->
+                                            </div> <!-- / .comment -->
+                                            <div class="comment">
+                                                <img src="http://placehold.it/800x400" alt="" class="comment-avatar">
+                                                <div class="comment-body">
+                                                    <div class="comment-text">
+                                                        <div class="comment-heading">
+                                                            <a href="#" title="">Michelle Bortz</a><span>14 hours ago</span>
+                                                        </div>
+                                                        Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore.
+                                                    </div>
+                                                    </div> <!-- / .comment-body -->
+                                                    </div> <!-- / .comment -->
+                                                    
+                                                    </div> <!-- / .panel-body -->
+                                                    <div class="panel-footer clearfix">
+                                                        <div class="article-comments-add">
+                                                            <textarea rows="1" class="form-control input-sm"></textarea>
+                                                            <div class="expanding-input-hidden" style="margin-top: 10px;">
+                                                                <button class="btn btn-sm btn-primary pull-right">Post comment</button>
+                                                            </div>
+                                                        </div>
+                                                        </div> <!-- / .panel-footer -->
+                                                    </div>
+                                                    <div class="row same-height-row">
+                                                        <div class="col-md-3 col-sm-6">
+                                                            <div class="box same-height">
+                                                                <h3>You may also like these products</h3>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-6">
+                                                            <div class="product same-height">
+                                                                <div class="flip-container">
+                                                                    <div class="flipper">
+                                                                        <div class="front">
+                                                                            <a href="detail.html">
+                                                                                <img src="http://placehold.it/800x800" alt="" class="img-responsive">
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="back">
+                                                                            <a href="detail.html">
+                                                                                <img src="http://placehold.it/800x800" alt="" class="img-responsive">
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <a href="detail.html" class="invisible">
+                                                                    <img src="http://placehold.it/800x800" alt="" class="img-responsive">
+                                                                </a>
+                                                                <div class="text">
+                                                                    <h3>Fur coat</h3>
+                                                                    <p class="price">$143</p>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /.product -->
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-6">
+                                                            <div class="product same-height">
+                                                                <div class="flip-container">
+                                                                    <div class="flipper">
+                                                                        <div class="front">
+                                                                            <a href="detail.html">
+                                                                                <img src="http://placehold.it/800x800" alt="" class="img-responsive">
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="back">
+                                                                            <a href="detail.html">
+                                                                                <img src="http://placehold.it/800x800" alt="" class="img-responsive">
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <a href="detail.html" class="invisible">
+                                                                    <img src="http://placehold.it/800x800" alt="" class="img-responsive">
+                                                                </a>
+                                                                <div class="text">
+                                                                    <h3>Fur coat</h3>
+                                                                    <p class="price">$143</p>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /.product -->
+                                                        </div>
+                                                        <div class="col-md-3 col-sm-6">
+                                                            <div class="product same-height">
+                                                                <div class="flip-container">
+                                                                    <div class="flipper">
+                                                                        <div class="front">
+                                                                            <a href="detail.html">
+                                                                                <img src="http://placehold.it/800x800" alt="" class="img-responsive">
+                                                                            </a>
+                                                                        </div>
+                                                                        <div class="back">
+                                                                            <a href="detail.html">
+                                                                                <img src="http://placehold.it/800x800" alt="" class="img-responsive">
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <a href="detail.html" class="invisible">
+                                                                    <img src="http://placehold.it/800x800" alt="" class="img-responsive">
+                                                                </a>
+                                                                <div class="text">
+                                                                    <h3>Fur coat</h3>
+                                                                    <p class="price">$143</p>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /.product -->
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- /.col-md-9 -->
+                                            </div>
+                                            <!-- /.container -->
+                                        </div>
+                                        <!-- /#content -->
+                                    </div>
+                                    
+                                    <!-- *** SCRIPTS TO INCLUDE ***
+                                    _________________________________________________________ -->
+                                    <script src="javascripts/jquery-1.11.0.min.js"></script>
+                                    <script src="javascripts/bootstrap.min.js"></script>
+                                    <script src="javascripts/jquery.cookie.js"></script>
+                                    <script src="javascripts/waypoints.min.js"></script>
+                                    <script src="javascripts/modernizr.js"></script>
+                                    <script src="javascripts/bootstrap-hover-dropdown.js"></script>
+                                    <script src="javascripts/owl.carousel.min.js"></script>
+                                    <script type="text/javascript" src="javascripts/include/paper.min.js"></script>
+                                    <script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
+                                    <script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
+                                    <!--<script src="javascripts/front.js"></script>-->
+                                    
+                                    <script type='text/javascript'>
+                                    window.targetUser =<%-JSON.stringify(user)%> // get item from server
+                                    window.targetItem = <%-JSON.stringify(item)%>
+                                    console.log(window.targetUser)
+                                    console.log(window.targetItem)
+                                    // console.log(item)
+                                    </script>
+                                    <script src="javascripts/fillUserInfo.js"></script>
+                                    <script src="javascripts/item.js"></script>
+                                </body>
+                            </html>

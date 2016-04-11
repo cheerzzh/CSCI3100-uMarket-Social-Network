@@ -1,0 +1,313 @@
+.navbar-avatar {
+  width: 25px;
+  border-radius: 10rem;
+}
+
+.navbar li a.navbar-icons {
+  font-size: 2rem;
+  padding: 15px;
+  color: #505050;
+  margin-right: 5px;
+}
+
+#notification {
+  font-size: 1.75rem;
+}
+
+.dropdown li {
+  border-bottom: 1px solid #c0c0c0;
+}
+
+.dropdown-title {
+  background-color: #f0f0f0;
+  padding: 5px 20px;
+  cursor: default;
+}
+
+.well {
+  padding: 0;
+  border: none;
+}
+
+#new-micropost textarea {
+  border: 2px solid #ccc;
+  resize: none;
+  max-height: 100px;
+}
+
+#new-micropost textarea:focus {
+  border: 2px solid #000;
+}
+
+#location {
+  margin-top: 20px;
+}
+
+.mention {
+  font-weight: 700; 
+  color: #019c70;
+}
+
+.hashtags {
+  color: #4285f4;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.link {
+  color: #4285f4;
+}
+
+#microposts {
+  margin-bottom: 40px;
+}
+
+.footer {
+  padding: 10px;
+  word-wrap: break-word;
+}
+
+.footer h5 {
+  margin-left: 10px;
+}
+
+.footer a {
+  font-size: 1.2rem;
+  margin-left: 10px;
+  text-decoration: underline;
+}
+
+.panel-list {
+  padding-left: 0px;
+  list-style: none;
+}
+
+.panel-list li {
+  padding: 5px 10px;
+}
+
+.avatar {
+  width: 35px;
+  border-radius: 10rem;
+}
+
+#suggestions .name, #suggestions .username {
+  font-weight: 600;
+  font-size: 1.25rem;
+}
+
+#suggestions .name {
+  color: #000;
+}
+
+#suggestions li {
+  margin-top: 5px;
+}
+
+.input-group {
+  margin-right: 10px;
+}
+
+.input-group input {
+  border: 1px solid #c0c0c0;
+  border-right: none;
+  border-radius: 10em;
+}
+
+.input-group input:focus {
+  border: 1px solid #c0c0c0;
+  border-right: none;
+}
+
+.input-group-addon {
+  background-color: #fff;
+  border: 1px solid #c0c0c0;
+  border-radius: 10em;
+}
+
+
+.style {
+    overflow: auto;
+}
+
+#contacts{
+  top:17%;
+  left:2%;
+  width:24%;
+  height:85%;
+  position: fixed;
+  background-color:#FFFFFF;
+}
+.contacts-head{
+  position: fixed;
+  top:10%;
+  left:2%;
+  width:24%;
+  height:7%;
+  color:#000000;
+  background: #fafafa;
+  border-bottom: 2px solid #ececec;
+  padding-bottom: 9px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 11px;
+  font-size:18px;
+  text-align:center;
+}
+
+.list-group{
+  left:2%;
+  position:fixed;
+  width:24%;
+  height:85%;
+  overflow:scroll;
+}
+
+.a{
+  list-style-type:none;
+}
+
+.chat-window{
+  position: fixed;
+  right: 2%;
+  top:10%;
+  width:70%;
+  height:inherit;
+}
+
+
+
+.conButton{
+  width:100%;
+}
+
+.message-avatar {
+    display: block;
+    float: left;
+    height: 40px;
+    width: 40px;
+    border-radius: 2px;
+}
+
+.message.right .message-avatar {
+    float: right;
+}
+
+.panel-heading {
+    background: #fafafa;
+    border-bottom: 2px solid #ececec;
+    padding-bottom: 9px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 11px;
+    position: relative;
+}
+
+#panel-body{
+  padding:2%;
+  height:100%;
+  overflow:scroll;
+}
+
+.panel-footer {
+    background: #fff;
+    border-top: 1px solid #ececec;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+.message-heading {
+    font-size: 12px;
+    color: #aaa;
+}
+
+.message-body {
+    margin-left: 55px;
+}
+
+.message.right .message-body {
+    margin-left: 0;
+    margin-right: 55px;
+}
+
+.message-text {
+    background: #f4f4f4;
+    margin-top: 4px;
+    padding: 10px 15px 12px;
+    border-radius: 2px;
+    position: relative;
+}
+
+.message-text {
+    background: #f4f4f4;
+    margin-top: 4px;
+    padding: 10px 15px 12px;
+    border-radius: 2px;
+    position: relative;
+}
+
+.chat-controls-btn {
+    position: absolute;
+    float:right;
+    right: 20px;
+    width: 80px;
+    top: 10px;
+}
+
+.form-control {
+    display: block;
+    width: 100%;
+    height: 32px;
+    padding: 6px 12px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #555;
+    background-color: #fff;
+    background-image: none;
+    border: 1px solid #d6d6d6;
+    border-radius: 2px;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    box-shadow: inset 0 1px 1px rgba(0,0,0,.075);
+    -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+
+.widget-chat .chat-controls .chat-controls-input {
+    margin-right: 90px;
+}
+
+.widget-chat .chat-controls {
+    width: 100%;
+    position: relative;
+}
+
+textarea{
+  overflow: hidden; 
+  word-wrap: break-word; 
+  resize: horizontal; 
+  height: 32px;
+}
+
+body {
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #555;
+}
+/* CSS used here will be applied after bootstrap.css */
+
+body{ margin-top:50px;}
+.nav-tabs .glyphicon:not(.no-margin) { margin-right:10px; }
+.tab-pane .list-group-item:first-child {border-top-right-radius: 0px;border-top-left-radius: 0px;}
+.tab-pane .list-group-item:last-child {border-bottom-right-radius: 0px;border-bottom-left-radius: 0px;}
+.tab-pane .list-group .checkbox { display: inline-block;margin: 0px; }
+.tab-pane .list-group input[type="checkbox"]{ margin-top: 2px; }
+.tab-pane .list-group .glyphicon { margin-right:5px; }
+.tab-pane .list-group .glyphicon:hover { color:#FFBC00; }
+a.list-group-item.read { color: #222;background-color: #F3F3F3; }
+hr { margin-top: 5px;margin-bottom: 10px; }
+.nav-pills>li>a {padding: 5px 10px;}
+
+.ad { padding: 5px;background: #F5F5F5;color: #222;font-size: 80%;border: 1px solid #E5E5E5; }
+.ad a.title {color: #15C;text-decoration: none;font-weight: bold;font-size: 110%;}
+.ad a.url {color: #093;text-decoration: none;}

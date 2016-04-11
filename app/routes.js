@@ -20,6 +20,10 @@ module.exports = function(app, passport,upload) {
     // =====================================
     // HOME PAGE (with login links) ========
     // =====================================
+    app.get('/conversation', isLoggedIn,function(req,res){
+        res.render('converpage.ejs',{user:req.user});
+    })
+    
     app.get('/', function(req, res) {
         //res.render('index3.ejs'); // load the index.ejs file
         if (req.isAuthenticated())
@@ -485,7 +489,7 @@ module.exports = function(app, passport,upload) {
                                                     itemOwnerObject.save(function(err){
                                                         if(err) throw err
                                                         console.log('/wantToBuy done!')
-                                                        res.send({succeed:true,targetUser:userObject})
+                                                        res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
                                                     })
                                                 })
                                             })
@@ -582,7 +586,7 @@ module.exports = function(app, passport,upload) {
                         item.save(function(err){
                             if(err) throw err
                             ownerObject.save(function(err){
-                                res.send({targetUser:user})
+                                res.send({targetUser:user,targetItem:item})
                             })
                             
                         })
@@ -630,7 +634,7 @@ module.exports = function(app, passport,upload) {
                     }
                     item.save(function(err){
                         if (err) throw err;
-                        res.send({targetUser:user})
+                        res.send({targetUser:user,targetItem:item})
                     })
                 })
             })
@@ -1081,6 +1085,36 @@ module.exports = function(app, passport,upload) {
         })
     })
 
+    app.post('/getItemComments',isLoggedIn,function(req,res){
+        var itemID = req.body.itemID
+        var commentIDList = req.body.commentIDList
+        Item.findById(itemID)
+        .populate('commentList')
+        .exec(function(err,itemObject){
+            if(err) throw err
+            res.send(itemObject.commentList)
+        })
+    })
+
+    //app.post('/getWantToBuyUserListDetail',function(req,res){
+    app.post('/getWantToBuyUserListDetail',isLoggedIn,function(req,res){
+
+        // get item
+        var itemID = req.body.itemID
+
+        Item.findById(itemID,function(err,itemObject){
+            if(err) throw err
+            var wantToBuyUserList = itemObject.wantToBuyUserList
+            // search user
+            User.find({_id:{'$in':itemObject.wantToBuyUserList}})
+            .exec(function(err,userArray){
+                if(err) throw err
+                res.send(userArray)
+            })
+
+        })
+    })
+
     // return all comment for a user
     app.post('/getUserComments',function(req,res){
         var userID = req.body.userID; // req.user._id
@@ -1350,7 +1384,8 @@ module.exports = function(app, passport,upload) {
             // check user ID
             //console.log(item)
             // send user page, flush 2 users
-            res.send(targetItem)
+            //res.send(targetItem)
+            res.render("item1.ejs",{user:req.user,item:targetItem})
 
         });
 
