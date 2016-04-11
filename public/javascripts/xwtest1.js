@@ -6,9 +6,8 @@ jQuery(document).ready(function() {
         Fullscreen background
     */
     $.backstretch('images/3.jpg', {speed: 1000});
-
     fillUserInfo_Navbar(window.targetUser)
-    //$("#confirmed-body").hide()
+    $("#confirmed-body").hide()
 
     //console.log(window.targetUser)
     //console.log(window.searchResult)
@@ -73,8 +72,8 @@ jQuery(document).ready(function() {
 	itemPostTemplate2 = Handlebars.compile(itemPostSource2);
 	itemPostSource3 = $("#itemSearchResult-template3").html();
 	itemPostTemplate3 = Handlebars.compile(itemPostSource3);
-	source = $("#suggestions-template").html();
-    template = Handlebars.compile(source);
+	//source = $("#suggestions-template").html();
+    //template = Handlebars.compile(source);
 	sourceWTB = $("#wantToBuylist-template").html();
 	templateWTB = Handlebars.compile(sourceWTB);
 	//$("#wanttobuyUser").html(templateWTB(itemWantUser1));
@@ -90,7 +89,7 @@ jQuery(document).ready(function() {
 })
 
 
-
+/*
 function fillUserSuggestionPanel(){
 
 
@@ -210,6 +209,49 @@ function fillconfirmlist1(WTBlist){
     console.log(userSuggestion)
     $("#suggestions").html(template(userSuggestion));
 }
+*/
+
+function handleConfirmBtn(){
+	$(".wantconfirmedButton").click(function(){
+		var userID = $(this).attr('value')
+		var itemID = $(this).attr('ID')
+		var choice = confirm("Sell "+itemID+" to "+userID +" ?\n")
+		if(choice == true){
+			console.log("you chose yes")
+			$.post('toInitiateConfirmation',{"counterPartyID" : userID,"itemID" : itemID},function(data){
+				if(data.succeed)
+					console.log("initializeConfirmation Successfully")
+					fillItemPanel(window.targetUser.wishList)
+					$("#confirmed-body").hide()
+			})
+		}
+		else{
+			console.log("you chose cancel")
+		}
+	})
+	
+}
+
+function handleCancelbtn(){
+	$(".cancelbtn").click(function(){
+		var itemID = $(this).attr('value')
+		var itemname = $(this).attr('id')
+		var choice = confirm("Do not confirmed "+itemname+" ?\n")
+		if(choice == true){
+			console.log("cancel confirming "+itemname)
+			$.post('toCancelConfirmation',{"itemID" : itemID},function(data){
+				if(data.succeed){
+					console.log("cancel confirm successfully")
+					fillItemPanel(window.targetUser.wishList)
+					$("#confirmed-body").hide()
+				}
+			})
+		}
+		else{
+			console.log("still confirm "+itemname)
+		}
+	})
+}
 
 function fillconfirmlistNew(clickItem){
 	var wantUser = {}
@@ -223,14 +265,17 @@ function fillconfirmlistNew(clickItem){
 			wu.wantusername = suser.userName
 			wu.wantuseruniversity = suser.university
 			wu.wantuserID = suser._id
+			wu.itemID = clickItem
 			wantUser.wanttobuyUser.push(wu)
 		})
 		console.log(wantUser)
 		$("#wanttobuyUser").html(templateWTB(wantUser))
+		handleConfirmBtn()
 	})
 	
 }
 
+/*
 function fillconfirmlistGet(WTBlist){
 	var wantUser = {}
 	wantUser.wanttobuyUser = []
@@ -267,6 +312,7 @@ function fillconfirmlistGet(WTBlist){
 	
 }
 
+*/
 function fillconfirmlist(WTBlist){
 	
 
@@ -422,6 +468,7 @@ function fillconfirmlist(WTBlist){
 		
 };
 
+
 function handleItemWithdraw(){
 	$('.withrawbtn').click(function(){
 		var targetItemID = $(this).attr('value');
@@ -558,6 +605,7 @@ function fillItemPanel(currentWishList){
 			}
 		});
 		handleItemWithdraw();
+		handleCancelbtn();
 	
     //$('.heartButton').click(function(){});
 	
