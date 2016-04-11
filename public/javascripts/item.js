@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	//$.backstretch('images/3.jpg', {speed: 1000});
+	$.backstretch('images/3.jpg', {speed: 1000});
   	$('.cover-pic').backstretch([
     'images/img-1.jpg',
     'images/img-2.jpg',
