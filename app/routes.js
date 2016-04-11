@@ -675,6 +675,30 @@ module.exports = function(app, passport,upload) {
            
         })
     });
+    
+    // === user retrieve boughtItemList
+    app.get('/getboughtItemList',isLoggedIn,function(req,res){
+
+        // find user
+        User.findById(req.user._id)
+        .populate('boughtItemList')
+        .exec(function(err, user) {
+            if(err) throw err
+            res.send(user.boughtItemList)
+        })
+    });
+    
+    // === user retrieve wishlist
+    app.get('/getwishList',isLoggedIn,function(req,res){
+
+        // find user
+        User.findById(req.user._id)
+        .populate('wishList')
+        .exec(function(err, user) {
+            if(err) throw err
+            res.send(user.wishList)
+        })
+    });
 
     app.get('/test',function(req,res){
         res.render('xx.ejs');

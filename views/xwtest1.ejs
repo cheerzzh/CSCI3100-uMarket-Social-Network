@@ -111,13 +111,14 @@
               -->
               <ul id="myTab" class="nav nav-tabs">
                 <li class="active"><a href="#home" data-toggle="tab">
-                  In progress Items
+                  In progress
                 </a></li>
                 <li><a href="#ios" data-toggle="tab">Wait For Confirm</a></li>
-                <li><a href="#confirmed" data-toggle="tab">Confirmed Items</a></li>
+                <li><a href="#confirmed" data-toggle="tab">Sold Items</a></li>
                 <li><a href="#Withdraw" data-toggle="tab">Withdraw Items</a></li>
-                <li><a href="wished" data-toggle="tab">Wish List</a></li>
+                <li><a href="#wished" data-toggle="tab">Wish List</a></li>
                 <li><a href="#confirmedWTB" data-toggle="tab">Buy Confirmed</a></li>
+                <li><a href="#boughtItem" data-toggle="tab">Bought Items</a></li>
               </ul>
               <div id="myTabContent" class="tab-content">
                 <div class="tab-pane fade in active" id="home">
@@ -134,11 +135,6 @@
                     <ul class="meta-search">
                       <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
                       <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
-                      <!--
-                      <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
-                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
-                        <font color="grey">{{wishedCount}} wished</font>--></span></li>
-                      -->
                     </ul>
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-7">
@@ -162,7 +158,6 @@
               </section>
               </div>
               <div class="tab-pane fade" id="ios">
-                <p>here will list items waiting to be confirmed</p>
               <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults1">
                 <ul class="waitingItemBody">
                 <script id="itemSearchResult-template1" type="text/x-handlebars-template">
@@ -200,7 +195,6 @@
               </section>
               </div>
               <div class="tab-pane fade" id="confirmed">
-                <p>this will list confirmed items</p>
               <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults2">
                 <ul class="confirmedItemBody">
                 <script id="itemSearchResult-template2" type="text/x-handlebars-template">
@@ -214,6 +208,7 @@
                     <ul class="meta-search">
                       <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
                       <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
+                      <li>Sell To:</li>
                       <!--
                       <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
                       <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
@@ -238,7 +233,6 @@
               </section>
               </div>
               <div class="tab-pane fade" id="Withdraw">
-                <p>this will list withdraw items</p>
               <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults3">
                 <ul class="withdrawitembody">
                 <script id="itemSearchResult-template3" type="text/x-handlebars-template">
@@ -277,7 +271,6 @@
               </div>
               
               <div class="tab-pane fade" id="confirmedWTB">
-                <p>here will list items users want to buy and waiting to be confirmed</p>
               <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults5">
                 <ul class="waitingItemBody">
                 <script id="itemSearchResult-template5" type="text/x-handlebars-template">
@@ -302,7 +295,8 @@
                     <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
                     <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
                     <p>{{description}}</p>
-                    <button type="button" class="btn btn-default btn-xs cancelbtn" value={{itemID}} id={{itemName}}>cancel</button>
+                    <button type="button" class="btn btn-primary btn-xs confirmedBuybtn" value={{itemID}} id={{itemName}}>confirmed</button>
+                    <button type="button" class="btn btn-danger btn-xs confirmedRejectbtn" value={{itemID}} id={{itemName}}>Reject</button>
               
                   </div>
                   <span class="clearfix borda"></span>
@@ -316,7 +310,6 @@
               </div>
               
               <div class="tab-pane fade" id="wished">
-                <p>here will list items users wished</p>
               <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults6">
                 <ul class="waitingItemBody">
                 <script id="itemSearchResult-template6" type="text/x-handlebars-template">
@@ -353,6 +346,45 @@
                 </ul>
               </section>
               </div>
+              
+              <div class="tab-pane fade" id="boughtItem">
+              <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults7">
+                <ul class="waitingItemBody">
+                <script id="itemSearchResult-template7" type="text/x-handlebars-template">
+                {{#each itemEntry}}
+                <li class = {{itembodyID}}>
+                <article class="search-result row">
+                  <div class="col-xs-12 col-sm-12 col-md-3">
+                    <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-2">
+                    <ul class="meta-search">
+                      <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
+                      <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
+                      <!--
+                      <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
+                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
+                      -->
+                      <!--<font color="grey">{{wishedCount}} wished</font>--></span></li>
+                    </ul>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-7">
+                    <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
+                    <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
+                    <p>{{description}}</p>
+                    <!--
+                    -->
+                  </div>
+                  <span class="clearfix borda"></span>
+
+                </article>
+                </li>
+                {{/each}}
+                </script>
+                </ul>
+              </section>
+              </div>
+              
               </div>
               
             </div>
@@ -474,65 +506,7 @@
   </script>
   <script src="javascripts/fillUserInfo.js"></script>
   <script src="javascripts/xwtest1.js"></script>
-<div class="container">
-<div class="row">
-   <div class="col-lg-3 col-md-12">
-          <div class="card">
-            <div class="panel-body">
-              <div class="row">
-                <div class="col-xs-4 col-sm-4 col-lg-12 text-center">
-                  <img src="#" alt="" class="center-block img-circle img-thumbnail img-responsive" id="avatar-profile" >
-                  <ul class="list-inline ratings text-center" title="Ratings">
-                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                    <li><a href="#"><span class="fa fa-star fa-lg"></span></a></li>
-                  </ul>
-                </div>
-                
-                <div class="col-xs-12 col-sm-8 col-lg-12">
-                  <h2 id = "username-profile"></h2>
-                  <p id = "email-profile"></p>
-                  <p id = "university-profile"></p>
-                  <p id = "description-profile"></p>
-                  <p><strong>Interests: </strong>
-                    <span class="label label-info tags">html5</span>
-                    <span class="label label-info tags">css3</span>
-                    <span class="label label-info tags">jquery</span>
-                    <span class="label label-info tags">bootstrap3</span>
-                  </p>
-                
-                </div>
-                <div class="clearfix"></div>
-                <div class="col-xs-12 col-sm-4 col-lg-4">
-                  <h2 id = "followerNumber"><strong></strong></h2>
-                  <p><small>Followers</small></p>
-                  <!--<button class="btn btn-success btn-block"><span class="fa fa-plus-circle"></span> Follow </button>-->
-                </div>
-                
-                <div class="col-xs-12 col-sm-4 col-lg-4">
-                  <h2 id = "followingNumber"><strong></strong></h2>
-                  <p><small>Following</small></p>
-                  <!--<button class="btn btn-info btn-block"><span class="fa fa-user"></span> View Profile </button>-->
-                  <!-- button
-                  <a type="button" href="/updateProfile" class="btn btn-primary btn-block"><span class="fa fa-gear"></span>Update Profile</a>
-                  -->
-                </div>
-                
-                <div class="col-xs-12 col-sm-4 col-lg-4">
-                  <h2 id = "itemNumber"><strong></strong></h2>
-                  <p><small>Posted items</small></p>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-   </div>
-   
-
-</div>
-</div>
   
+
 </body>
 </html>
