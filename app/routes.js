@@ -662,6 +662,19 @@ module.exports = function(app, passport,upload) {
 
 
     });
+    
+    // === user retrieve waitForMetoConfirmItemList
+    app.get('/getwaitForMetoConfirmItemList',isLoggedIn,function(req,res){
+
+        // find user
+        User.findById(req.user._id)
+        .populate('waitForMetoConfirmItemList')
+        .exec(function(err, user) {
+            if(err) throw err
+            res.send(user.waitForMetoConfirmItemList)
+           
+        })
+    });
 
     app.get('/test',function(req,res){
         res.render('xx.ejs');

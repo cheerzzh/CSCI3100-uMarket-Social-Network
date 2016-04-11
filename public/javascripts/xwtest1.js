@@ -1,4 +1,4 @@
-var itemPostTemplate, itemPostSource,sourceWTB,templateWTB,source,template,itemWantUser1,singleuser2;
+var itemPostTemplate, itemPostSource,sourceWTB,templateWTB;
 
 jQuery(document).ready(function() {
 	
@@ -8,10 +8,11 @@ jQuery(document).ready(function() {
     $.backstretch('images/3.jpg', {speed: 1000});
     fillUserInfo_Navbar(window.targetUser)
     $("#confirmed-body").hide()
+    console.log(window.targetUser)
 
     //console.log(window.targetUser)
     //console.log(window.searchResult)
-
+	/*
     var itemSearchResults = {
 
     	itemEntry :[
@@ -62,6 +63,7 @@ jQuery(document).ready(function() {
 	singleuser1.wantuseruniversity = "kaka"
 	singleuser1.wantuserID = "456789"
 	itemWantUser1.wanttobuyUser.push(singleuser1)
+	*/
 	itemPostSource = $("#itemSearchResult-template").html();
 	//console.log(itemPostSource)
 	itemPostTemplate = Handlebars.compile(itemPostSource);
@@ -72,12 +74,16 @@ jQuery(document).ready(function() {
 	itemPostTemplate2 = Handlebars.compile(itemPostSource2);
 	itemPostSource3 = $("#itemSearchResult-template3").html();
 	itemPostTemplate3 = Handlebars.compile(itemPostSource3);
+	itemPostSource5 = $("#itemSearchResult-template5").html();
+	itemPostTemplate5 = Handlebars.compile(itemPostSource5);
+	itemPostSource6 = $("#itemSearchResult-template6").html();
+	itemPostTemplate6 = Handlebars.compile(itemPostSource6);
 	//source = $("#suggestions-template").html();
     //template = Handlebars.compile(source);
 	sourceWTB = $("#wantToBuylist-template").html();
 	templateWTB = Handlebars.compile(sourceWTB);
 	//$("#wanttobuyUser").html(templateWTB(itemWantUser1));
-	console.log(itemWantUser)
+	//console.log(itemWantUser)
 	//$("#itemSearchResults").html(itemPostTemplate(itemSearchResults));
 
 //	fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList)
@@ -611,6 +617,70 @@ function fillItemPanel(currentWishList){
 	
     })
     
+    $.get('getwaitForMetoConfirmItemList',function(data){
+		console.log(data)
+		var itemAll = {}
+		itemAll.itemEntry = []
+		data.forEach(function(item,index){
+		//console.log(item)
+		var index=item.status
+		//console.log(index)
+		var postEntry = {}
+		postEntry.avatar = item._creator.avatarLink
+		postEntry.creatorName = item._creator.userName
+		postEntry.itemName = item.itemName
+		postEntry.confirmedbtnId="confirmed"+item._id
+		if(item.description.length > descriptionLimit)
+		{
+		postEntry.description = item.description.substr(1, descriptionLimit) + " ...";
+		}
+		else
+		{
+		postEntry.description = item.description
+		}
+
+		postEntry.userLink = '/user/' + item._creator._id
+		postEntry.itemLink = '/item/' + item._id
+		postEntry.itemstatus = item.status;
+		// depends on whether in list
+
+		if(!include(currentWishList, item._id)){
+
+		// in wishlist, gray, add to wishlist
+		//postEntry.wishlistLink = '/addToWishList?itemID=' + item._id
+		postEntry.heartStyle = "color:grey;"
+
+		}
+		else
+		{
+		//postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
+		postEntry.heartStyle = "color:red;"
+		}
+		postEntry.wishedCount = item.wishedList.length
+		postEntry.heartID = "heart_" + item._id
+		postEntry.itemID = item._id
+		postEntry.itemWTBlist = item.wantToBuyUserList.slice()
+		var itemStatusID=String(item.status) +'id'+item._id
+		postEntry.itembodyID = "itembody"+ itemStatusID
+		if(item.imageLinks.length > 0)
+		{
+			postEntry.itemImageLink = item.imageLinks[0]
+		}
+		else{
+			postEntry.itemImageLink = '/images/no-image.png'
+		}
+		postEntry.price = item.price
+		postEntry.condition = item.condition
+
+		var postDate = new Date(item.updateDate)
+		postEntry.updateDate = postDate.toISOString().slice(0,10)// adjust time format
+		postEntry.updateTime = postDate.toISOString().slice(12,19)
+		//console.log(Date(item.updateDate))
+		itemAll.itemEntry.push(postEntry)
+		})
+		$("#itemSearchResults5").html(itemPostTemplate5(itemAll));
+		
+	})
 }
 
 /*
