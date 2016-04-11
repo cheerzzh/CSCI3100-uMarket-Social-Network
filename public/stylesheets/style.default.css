@@ -976,12 +976,15 @@ h1 {
 .yamm .nav,
 .yamm .collapse,
 .yamm .dropup,
+/*
 .yamm .dropdown {
   position: static;
 }
+*/
 .yamm .container {
   position: relative;
 }
+/*
 .yamm .dropdown-menu {
   left: auto;
 }
@@ -989,6 +992,7 @@ h1 {
   left: auto;
   right: 0;
 }
+*/
 .yamm .yamm-content {
   padding: 20px 30px;
 }
@@ -997,10 +1001,12 @@ h1 {
     padding: 10px 20px;
   }
 }
+/*
 .yamm .dropdown.yamm-fw .dropdown-menu {
   left: 0;
   right: 0;
 }
+*/
 /* Original Boostrap template overwrite */
 /* nav */
 .nav {
@@ -1395,16 +1401,20 @@ hr {
 .btn-primary:focus,
 .btn-primary:active,
 .btn-primary.active,
+/*
 .open .dropdown-toggle.btn-primary {
   color: #ffffff;
   background-color: #3da892;
   border-color: #318675;
 }
+*/
 .btn-primary:active,
 .btn-primary.active,
+/*
 .open .dropdown-toggle.btn-primary {
   background-image: none;
 }
+*/
 .btn-primary.disabled,
 .btn-primary[disabled],
 fieldset[disabled] .btn-primary,
@@ -1446,9 +1456,11 @@ fieldset[disabled] .btn-primary.active {
   border-radius: 3px;
 }
 /* dropdowns */
+/*
 .dropdown-menu > li > a {
   padding: 5px 20px;
 }
+*/
 /* forms.less */
 label {
   font-weight: normal;
