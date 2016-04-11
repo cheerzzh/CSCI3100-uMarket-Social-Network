@@ -86,11 +86,19 @@ $(document).ready(function(){
 
 
   // get notification
+  fillNotificationNavBar(notificationNavTemplate)
+
+
+
+
+});
+
+function fillNotificationNavBar(template){
   $.ajax({
     type: "POST",
     url: "/getAllNotification",
     success: function(data) {
-      console.log(data)
+      //console.log(data)
       var notificationList = {}
       notificationList.notifications = []
 
@@ -104,10 +112,12 @@ $(document).ready(function(){
         if(!entry.hasRead){
           temp.backgroundStyle = "background-color:#ECF5FF";
           temp.style1 = "<i class='fa fa-circle' style='color:red;'></i>"
+        }else{
+          temp.backgroundStyle = "";
         }
         notificationList.notifications.push(temp)
       })
-      $("#notifications").html(notificationNavTemplate(notificationList));
+      $("#notifications").html(template(notificationList));
 
       // attach function to label readed
       $(".notification_post").click(function(){
@@ -118,6 +128,8 @@ $(document).ready(function(){
           url: "/readNotification",
           data: {"notificationID":notificationID},
           success: function(data) {
+            //console.log(data)
+            fillNotificationNavBar(notificationNavTemplate)
           },
           error: function(xhr) {
               //Do Something to handle error
@@ -130,10 +142,7 @@ $(document).ready(function(){
         //Do Something to handle error
     }
   });
-
-
-
-});
+}
 
 function fillMessagePanel(){
 

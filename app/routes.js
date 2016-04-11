@@ -1654,6 +1654,7 @@ module.exports = function(app, passport,upload) {
             .sort({'createTime': -1})
             .limit(4)
             .exec(function(err,result){
+                if(err) throw err
                 res.send(result)
             })
         })
@@ -1662,7 +1663,7 @@ module.exports = function(app, passport,upload) {
 
     app.post("/readNotification",isLoggedIn,function(req,res){
 
-        var userID = req.body._id
+        var userID = req.user._id
         var notificationID = req.body.notificationID
 
         User.findById(userID,function(err,userObject){
@@ -1672,7 +1673,13 @@ module.exports = function(app, passport,upload) {
                 notificationObject.hasRead = true
                 notificationObject.save(function(err){
                     if(err) throw err
-                    res.send(true)
+                    Notification.find({"_id":{$in:userObject.notificationList}})
+                    .sort({'createTime': -1})
+                    .limit(4)
+                    .exec(function(err,result){
+                        if(err) throw err
+                        res.send(result)
+                    })
                 })
 
             })
