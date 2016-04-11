@@ -17,6 +17,34 @@ $(document).ready(function(){
   	commentBoxSource = $("#commentBox-template").html();
  	commentBoxTemplate = Handlebars.compile(commentBoxSource);
  	
+ 	var notifications = {
+    notifications: [
+    {
+      title: 'New Post',
+      post: '<span class="mention">@rails_freak</span> shared a new micropost<br>' +
+      'Ruby on Rails is Awesome! <span class="link">p.co/RoRawsme</span>' +
+      '<span class="hashtags">#Rails</span>'
+    },
+    {
+      title: '@Mention',
+      post: '<span class="mention">@rails_freak</span> mentioned you in a micropost'
+    },
+    {
+      title: 'Trends',
+      post: '<span class="hashtags">#Rails</span> - Topic you are following is trending!'
+    },
+    {
+      title: 'Followers',
+      post: 'Yay! <span class="mention">@rails_freak</span> and '+
+      '<span class="mention">@Dev</span>' +
+      'followed you'
+    }
+    ]
+  };
+
+  source = $("#notifications-template").html();
+  template = Handlebars.compile(source);
+  $("#notifications").html(template(notifications));
 
   	// fillin item info
   	$("#item-description").text(window.targetItem.description)
@@ -38,15 +66,17 @@ function fillInCommentBox(template,commentListData){
   	commentList.commentEntries = []
 
 	commentListData.forEach(function(commentObject){
-		console.log(commentObject)
+		//console.log(commentObject)
 		var commentEntry = {}
 		commentEntry.avatarLink = commentObject.commenter.avatarLink
 		commentEntry.userName = commentObject.commenter.userName
 		commentEntry.messageContent = commentObject.content
+		commentEntry.postTime = commentObject.createTime.slice(0,10) + " " + commentObject.createTime.slice(12,19)
+		commentEntry.commenterLink = '/user/' + commentObject.commenter._id
 		commentList.commentEntries.push(commentEntry)
 	})
 
-	console.log(commentList)
+	//console.log(commentList)
   	$("#commetBox").html(template(commentList));
 }
 
@@ -57,6 +87,7 @@ function processButton(userObject,itemObject){
 	$("#wishedCount").text(itemObject.wishedList.length)
 	$('#addToWishlistButton').unbind() // to avoid multiple bind
 	$("#wantToBuyButton").unbind()
+	$("#message-submit-button").unbind()
 
 
 	// check whether user is itemOwner
@@ -166,6 +197,37 @@ function processButton(userObject,itemObject){
               //Do Something to handle error
           }
         });
+
+        // attach comment write function
+        $("#add-comment-box").show()
+        $("#message-submit-button").click(function(){
+        	console.log('click submit message')
+        	console.log($("#message-area").val())
+        	var commentContent = $("#message-area").val()
+
+        	if(commentContent != ""){
+        		//console.log('not empty')
+	        $.ajax({
+	          type: "POST",
+	          url: "/writeComment",
+	          data: {itemID:itemObject._id,commentContent:commentContent},
+	          success: function(data) {
+	          	console.log('Commented')
+	          	$("#message-area").val("")
+	          	window.targetUser = data.targetUser
+	            window.targetItem = data.targetItem
+	            processButton(window.targetUser, window.targetItem)
+	          	
+	          },
+	          error: function(xhr) {
+	              //Do Something to handle error
+	          }
+	        });
+
+        	}
+
+        })
+
 	}
 
 }

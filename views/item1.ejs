@@ -19,7 +19,7 @@
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="stylesheets/timeline.css">
         <link rel="stylesheet" href="stylesheets/search.css">
-        <link href="stylesheets/animate.min.css" rel="stylesheet">
+       
         <link href="stylesheets/owl.carousel.css" rel="stylesheet">
         <link href="stylesheets/owl.theme.css" rel="stylesheet">
         
@@ -222,7 +222,7 @@
                         </div>
                         <div class="panel widget-article-comments">
                             <div class="panel-heading">
-                                <span class="panel-title"><i class="panel-title-icon fa fa-comment"></i>Item comments</span>
+                                <span class="panel-title"><i class="panel-title-icon fa fa-comment"></i>Comments</span>
                                 </div> <!-- / .panel-heading -->
                                 <div class="panel-body">
                                     <div class="comment" id="commetBox">
@@ -232,7 +232,7 @@
                                         <div class="comment-body">
                                             <div class="comment-text">
                                                 <div class="comment-heading">
-                                                    <a href="#" title="">{{userName}}</a><span>14 hours ago</span>
+                                                    <a href={{commenterLink}} style="font-size:120%;">{{userName}}</a><span>{{postTime}}</span>
                                                 </div>
                                                 {{messageContent}}
                                             </div>
@@ -245,18 +245,18 @@
                                             
                                 </div> <!-- / .panel-body -->
                                         <div class="panel-footer clearfix">
-                                            <div class="article-comments-add">
-                                                <textarea rows="1" class="form-control input-sm" placeholder="Say something here..."></textarea>
+                                            <div class="article-comments-add" style="display:none;" id="add-comment-box">
+                                                <textarea id = "message-area" rows="1" class="form-control input-sm" placeholder="Say something here..." maxlength="50"></textarea>
                                                 <div class="expanding-input-hidden" style="margin-top: 10px;">
-                                                    <button class="btn btn-sm btn-primary pull-right">Post comment</button>
+                                                    <button id="message-submit-button" class="btn btn-sm btn-primary pull-right">Post comment</button>
                                                 </div>
                                             </div>
-                                            </div> <!-- / .panel-footer -->
+                                        </div> <!-- / .panel-footer -->
                                         </div>
 
 
                                             <!-- suggestion-->
-                                            
+
                                             <div class="row same-height-row">
                                                 <div class="col-md-3 col-sm-6">
                                                     <div class="box same-height">
@@ -352,19 +352,14 @@
                             </div>
 
 
-                            
                             <!-- *** SCRIPTS TO INCLUDE ***
                             _________________________________________________________ -->
                             <script src="javascripts/jquery-1.11.0.min.js"></script>
                             <script src="javascripts/bootstrap.min.js"></script>
-                            <script src="javascripts/jquery.cookie.js"></script>
-                            <script src="javascripts/waypoints.min.js"></script>
-                            <script src="javascripts/modernizr.js"></script>
-                            <script src="javascripts/bootstrap-hover-dropdown.js"></script>
-                            <script src="javascripts/owl.carousel.min.js"></script>
                             <script type="text/javascript" src="javascripts/include/paper.min.js"></script>
                             <script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
                             <script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
+                            <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
                             <!--<script src="javascripts/front.js"></script>-->
                             
                             <script type='text/javascript'>

@@ -1066,7 +1066,7 @@ module.exports = function(app, passport,upload) {
                                     if(err) throw err
                                     ownerObject.save(function(err){
                                         if(err) throw err
-                                        res.send({succeed:true,message:"Commented"})
+                                        res.send({succeed:true,message:"Commented",targetUser:userObject,targetItem:itemObject})
                                     })
                                 })
                             })
@@ -1263,7 +1263,7 @@ module.exports = function(app, passport,upload) {
     })
 
     // user want to add another user to his own following list
-    app.get('/toUnFollowUser',function(req,res){
+    app.get('/toUnFollowUser',isLoggedIn,function(req,res){
 
         var targetUserID = req.query.targetUserID
 
