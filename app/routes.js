@@ -687,6 +687,7 @@ module.exports = function(app, passport,upload) {
 
     });
 
+    /*
     app.post('/getUserInfo',isLoggedIn,function(req,res){
 
         var userID = req.body.userID
@@ -696,7 +697,19 @@ module.exports = function(app, passport,upload) {
             res.send(userObject)
         })
     })
+    */
+    
+    app.get('/getUserInfo',function(req,res){
 
+        var userID = req.query.userID
+
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            res.send(userObject)
+        })
+        
+    });
+    
     app.get('/getUserItem',function(req,res){
 
         // return all the items posted by a user
