@@ -94,7 +94,19 @@ function processButton(userObject,itemObject){
 	if(userObject._id == itemObject._creator._id){
 		console.log('This is my own item')
 
-		// remove comment form here
+		$.ajax({
+          type: "POST",
+          url: "/getItemComments",
+          data: {itemID:itemObject._id},
+          success: function(data) {
+          	console.log('Item comment list:')
+          	//console.log(data)
+          	fillInCommentBox(commentBoxTemplate,data)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
 
 	}else {
 		
