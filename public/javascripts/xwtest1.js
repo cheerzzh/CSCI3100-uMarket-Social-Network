@@ -1,4 +1,4 @@
-var itemPostTemplate, itemPostSource,sourceWTB,templateWTB,source,template;
+var itemPostTemplate, itemPostSource,sourceWTB,templateWTB,source,template,itemWantUser1,singleuser2;
 
 jQuery(document).ready(function() {
 	
@@ -8,7 +8,7 @@ jQuery(document).ready(function() {
     $.backstretch('images/3.jpg', {speed: 1000});
 
     fillUserInfo_Navbar(window.targetUser)
-    $("#confirmed-body").hide()
+    //$("#confirmed-body").hide()
 
     //console.log(window.targetUser)
     //console.log(window.searchResult)
@@ -28,7 +28,41 @@ jQuery(document).ready(function() {
     	}
     	]
     }
-
+    
+    var itemWantUser = {
+    	wanttobuyUser :[
+    	{
+    		wantBodyID : "wanttobuy_" + "1234567",
+    		wantUseravatar : "http://lorempixel.com/250/140/sports",
+    		wantuserLink : "http://lorempixel.com/250/140/sports",
+    		wantusername : "wendy",
+    		wantuseruniversity : "jiayou!",
+    		wantuseruserID : "12345677",
+    	}
+    	]
+    }
+    var singleuser = {
+    	wantBodyID : "wanttobuy_" + "1234567",
+    	wantUseravatar : "http://lorempixel.com/250/140/sports",
+    	wantuserLink : "http://lorempixel.com/250/140/sports",
+    	wantusername : "user1",
+    	wantuseruniversity : "jiayou!",
+    	wantuseruserID : "12345677",
+    	
+    }
+    itemWantUser1 = {}
+    itemWantUser1.wanttobuyUser = []
+	itemWantUser.wanttobuyUser.push(singleuser)
+	itemWantUser1.wanttobuyUser.push(singleuser)
+	itemWantUser1.wanttobuyUser.push(singleuser)
+	var singleuser1 = {}
+	singleuser1.wantBodyID = "wanttobuy_" + "1234567"
+	singleuser1.wantUseravatar = "http://lorempixel.com/250/140/sports"
+	singleuser1.wantuserLink = "http://lorempixel.com/250/140/sports"
+	singleuser1.wantusername = "user2"
+	singleuser1.wantuseruniversity = "kaka"
+	singleuser1.wantuserID = "456789"
+	itemWantUser1.wanttobuyUser.push(singleuser1)
 	itemPostSource = $("#itemSearchResult-template").html();
 	//console.log(itemPostSource)
 	itemPostTemplate = Handlebars.compile(itemPostSource);
@@ -43,6 +77,8 @@ jQuery(document).ready(function() {
     template = Handlebars.compile(source);
 	sourceWTB = $("#wantToBuylist-template").html();
 	templateWTB = Handlebars.compile(sourceWTB);
+	//$("#wanttobuyUser").html(templateWTB(itemWantUser1));
+	console.log(itemWantUser)
 	//$("#itemSearchResults").html(itemPostTemplate(itemSearchResults));
 
 //	fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList)
@@ -175,32 +211,131 @@ function fillconfirmlist1(WTBlist){
     $("#suggestions").html(template(userSuggestion));
 }
 
+function fillconfirmlistNew(clickItem){
+	var wantUser = {}
+	wantUser.wanttobuyUser = []
+	$.post('getWantToBuyUserListDetail',{"itemID" : clickItem},function(userlist){
+		userlist.forEach(function(suser){
+			var wu = {}
+			wu.wantBodyID = "wantBody_" + suser._id
+			wu.wantUseravatar = suser.avatarLink
+			wu.wantuserLink = '/user/' + suser._id
+			wu.wantusername = suser.userName
+			wu.wantuseruniversity = suser.university
+			wu.wantuserID = suser._id
+			wantUser.wanttobuyUser.push(wu)
+		})
+		console.log(wantUser)
+		$("#wanttobuyUser").html(templateWTB(wantUser))
+	})
+	
+}
+
+function fillconfirmlistGet(WTBlist){
+	var wantUser = {}
+	wantUser.wanttobuyUser = []
+	WTBlist.forEach(function(wtbUser){
+		var wUserEntry = {}
+		var wUserEntry1 = {}
+		$.ajax({
+			url : "/getUserInfo",
+			data : {"userID" : wtbUser},
+			success : function(data){
+				wUserEntry.wantBodyID = "wantBody_"
+				wUserEntry.wantUseravatar = "/images/avatar-default.png"
+				wUserEntry.wantuserID = "123456"
+				wUserEntry.wantuserLink = "123456"
+				wUserEntry.wantusername = "user1"
+				wUserEntry.wantuseruniversity = "cuhk"
+				//wantUser.wanttobuyUser.push(wUserEntry)
+			},
+			error : function(){
+				console.log("get data failed")
+			}
+		})
+		wantUser.wanttobuyUser.push(wUserEntry)
+		wUserEntry1.wantBodyID = "wantBody_"
+		wUserEntry1.wantUseravatar = "/images/avatar-default.png"
+		wUserEntry1.wantuserID = "123456"
+		wUserEntry1.wantuserLink = "123456"
+		wUserEntry1.wantusername = "user1"
+		wUserEntry1.wantuseruniversity = "cuhk"
+		wantUser.wanttobuyUser.push(wUserEntry1)		
+	})	
+	$("#wanttobuyUser").html(templateWTB(wantUser))
+	console.log(templateWTB(wantUser))
+	
+}
+
 function fillconfirmlist(WTBlist){
 	
 
 
     //console.log(data)
     // create user suggestion array
-    var wantUsers = {}
+	var wantUsers = {}
     wantUsers.wanttobuyUser = []
     //$("#userCount").text(window.searchResult.users.length)
     console.log(WTBlist)
     //console.log(WTBlist.length)
+    singleuser2 = {}
+    var counts = 1
     WTBlist.forEach(function(wtbUser){
     	var wantUserEntry = {}
-    	$.post('getUserInfo',{"userID": wtbUser},function(data){
+    	var wantUserEntry1 = {}
+    	var userWant={};
+    	$.post('getUserInfo',{"userID": wtbUser},function(targetUser){
 		  	//var wantUserEntry = {}
 		  	//console.log(data)
-	      	wantUserEntry.wantUseravatar = data.avatarLink
-	      	wantUserEntry.wantusername = data.userName
-	      	wantUserEntry.wantuseruserID =data._id
-			wantUserEntry.wantuseruniversity = '@' +data.university
-			wantUserEntry.wantBodyID = "wantBody_"+data._id
-			wantUserEntry.wantuserLink = "/user/" + data._id
+		  	singleuser2.wantBodyID = "wantBody_"+targetUser._id
+			singleuser2.wantUseravatar = targetUser.avatarLink
+			singleuser2.wantuserLink = "/user/" + targetUser._id
+			singleuser2.wantusername = targetUser.userName
+			singleuser2.wantuseruniversity = '@' +targetUser.university
+			singleuser2.wantuserID = targetUser._id
+			/*
+			wantUserEntry.wantUseravatar = "http://lorempixel.com/250/140/sports"
+	      	wantUserEntry.wantusername = "user1"+"inside"
+	      	wantUserEntry.wantuserID = "123456"
+			wantUserEntry.wantuseruniversity = '@' +"fightting"
+			wantUserEntry.wantBodyID = "wantBody_"
+			wantUserEntry.wantuserLink = "/user/" 
+			$.extend(userWant,targetUser)
+			*/
+	      	wantUserEntry.wantUseravatar = targetUser.avatarLink
+	      	wantUserEntry.wantusername = targetUser.userName
+	      	wantUserEntry.wantuserID = targetUser._id
+			wantUserEntry.wantuseruniversity = '@' +targetUser.university
+			wantUserEntry.wantBodyID = "wantBody_"+targetUser._id
+			wantUserEntry.wantuserLink = "/user/" + targetUser._id
 			//console.log(include(window.targetUser.followingList, userEntry._id))
 	  	});
+	  	 wantUserEntry1.wantUseravatar = "http://lorempixel.com/250/140/sports"
+	      	wantUserEntry1.wantusername = "user1" + String(counts)
+	      	wantUserEntry1.wantuserID = "123456"
+			wantUserEntry1.wantuseruniversity = '@' +"fightting"
+			wantUserEntry1.wantBodyID = "wantBody_"
+			wantUserEntry1.wantuserLink = "/user/" 
+	  	wantUsers.wanttobuyUser.push(wantUserEntry1)
 	  	wantUsers.wanttobuyUser.push(wantUserEntry)
+	  	console.log(userWant)
+	  	wantUserEntry.wantUseravatar = userWant.avatarLink
+	      	wantUserEntry.wantusername = userWant.userName
+	      	wantUserEntry.wantuserID = userWant._id
+			wantUserEntry.wantuseruniversity = '@' +userWant.university
+			wantUserEntry.wantBodyID = "wantBody_"+userWant._id
+			wantUserEntry.wantuserLink = "/user/" + userWant._id
+	  	wantUsers.wanttobuyUser.push(wantUserEntry)
+	  	counts += 1
     })
+    var wantUserEntry = {}
+    wantUserEntry.wantUseravatar = "http://lorempixel.com/250/140/sports"
+	      	wantUserEntry.wantusername = "user1"
+	      	wantUserEntry.wantuserID = "123456"
+			wantUserEntry.wantuseruniversity = '@' +"fightting"
+			wantUserEntry.wantBodyID = "wantBody_"
+			wantUserEntry.wantuserLink = "/user/" 
+	wantUsers.wanttobuyUser.push(wantUserEntry)
     console.log(templateWTB)
     console.log(wantUsers)
     //console.log(wantUsers.wanttobuyUser)
@@ -209,7 +344,9 @@ function fillconfirmlist(WTBlist){
     //console.log(source1)
     //var template1 = Handlebars.compile(source1);
     //console.log(template1)
-	console.log(templateWTB(wantUsers))
+	//console.log(templateWTB(wantUsers))
+    //$("#wanttobuyUser").html(templateWTB(wantUsers));
+    itemWantUser1.wanttobuyUser.push(singleuser2)
     $("#wanttobuyUser").html(templateWTB(wantUsers));
     $(".wantconfirmedButton").click(function(){
     	var wantusersID = $(this).attr('value')
@@ -403,9 +540,6 @@ function fillItemPanel(currentWishList){
 		itemPosts[index].itemEntry.push(postEntry)
 		}); 
 	    $("#itemSearchResults").html(itemPostTemplate(itemPosts[0]));
-	    console.log(itemPostTemplate)
-	    console.log(itemPosts[0])
-	    console.log(itemPostTemplate(itemPosts[0]))
 	    $("#itemSearchResults1").html(itemPostTemplate1(itemPosts[1]));
 	    $("#itemSearchResults2").html(itemPostTemplate2(itemPosts[0]));
 	    $("#itemSearchResults3").html(itemPostTemplate3(itemPosts[0]));
@@ -414,11 +548,13 @@ function fillItemPanel(currentWishList){
 			console.log('successfully click confirm');
 			$("#confirmed-body").show();
 			var WTBlist = $(this).attr('value')
+			var thisitemID = $(this).attr('id')
 			if(WTBlist.length){
 				WTBlist = WTBlist.split(',')
 				//console.log(WTBlist)
-				fillconfirmlist(WTBlist);
-				fillconfirmlist1(WTBlist);
+				//fillconfirmlistGet(WTBlist);
+				//fillconfirmlist1(WTBlist);
+				fillconfirmlistNew(thisitemID);
 			}
 		});
 		handleItemWithdraw();
