@@ -1,3 +1,5 @@
+var commentBoxTemplate, commentBoxSource
+
 $(document).ready(function(){
 
 	$.backstretch('images/3.jpg', {speed: 1000});
@@ -11,6 +13,11 @@ $(document).ready(function(){
   	fillUserInfo_Navbar(window.targetUser)
   	fillUserInfo_cover(window.targetItem._creator)
 
+
+  	commentBoxSource = $("#commentBox-template").html();
+ 	commentBoxTemplate = Handlebars.compile(commentBoxSource);
+ 	
+
   	// fillin item info
   	$("#item-description").text(window.targetItem.description)
   	$("#item-name").text(window.targetItem.itemName)
@@ -23,6 +30,25 @@ $(document).ready(function(){
   	processButton(window.targetUser,window.targetItem)
 
 })
+
+function fillInCommentBox(template,commentListData){
+
+	// fillin handlebar template
+  	var commentList = {}
+  	commentList.commentEntries = []
+
+	commentListData.forEach(function(commentObject){
+		console.log(commentObject)
+		var commentEntry = {}
+		commentEntry.avatarLink = commentObject.commenter.avatarLink
+		commentEntry.userName = commentObject.commenter.userName
+		commentEntry.messageContent = commentObject.content
+		commentList.commentEntries.push(commentEntry)
+	})
+
+	console.log(commentList)
+  	$("#commetBox").html(template(commentList));
+}
 
 // attach function and style for different item status and user-item relationship
 function processButton(userObject,itemObject){
@@ -132,7 +158,9 @@ function processButton(userObject,itemObject){
           url: "/getItemComments",
           data: {itemID:itemObject._id},
           success: function(data) {
-          	console.log(data)
+          	console.log('Item comment list:')
+          	//console.log(data)
+          	fillInCommentBox(commentBoxTemplate,data)
           },
           error: function(xhr) {
               //Do Something to handle error
