@@ -720,13 +720,13 @@ module.exports = function(app, passport,upload) {
     });
 
     // seller initiate trade confirmation
-    //app.post('/toInitiateConfirmation',isLoggedIn,function(req,res){
-    app.post('/toInitiateConfirmation',function(req,res){
+    app.post('/toInitiateConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toInitiateConfirmation',function(req,res){
 
         console.log(req.body)
         // get parameters
-        var userID = req.body.userID; // 
-        //var userID = req.user._id
+        //var userID = req.body.userID; // 
+        var userID = req.user._id
         var counterPartyID = req.body.counterPartyID
         var targetItemID = req.body.itemID
         
@@ -799,11 +799,11 @@ module.exports = function(app, passport,upload) {
     })
 
     // 
-    //app.post('/toAcceptConfirmation',isLoggedIn,function(req,res){
-    app.post('/toAcceptConfirmation',function(req,res){
+    app.post('/toAcceptConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toAcceptConfirmation',function(req,res){
         console.log(req.body)
-        var userID = req.body.userID; // req.user._id
-        //var userID = req.user._id
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id
         var targetItemID = req.body.itemID
 
         // get object
@@ -867,12 +867,12 @@ module.exports = function(app, passport,upload) {
     })
 
     // if an confirmation request is pending, seller can cancel it, send a message
-    //app.post('/toCancelConfirmation',isLoggedIn,function(req,res){
-    app.post('/toCancelConfirmation',function(req,res){
+    app.post('/toCancelConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toCancelConfirmation',function(req,res){
 
         console.log(req.body)
-        var userID = req.body.userID; // req.user._id
-        //var userID = req.user._id
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id
         var targetItemID = req.body.itemID
 
         // get user, item
@@ -935,12 +935,12 @@ module.exports = function(app, passport,upload) {
 
     // counterparty reject the confirmation request from the seller
     // send notification to seller
-    //app.post('/toRejectConfirmation',isLoggedIn,function(req,res){
-    app.post('/toRejectConfirmation',function(req,res){
+    app.post('/toRejectConfirmation',isLoggedIn,function(req,res){
+    //app.post('/toRejectConfirmation',function(req,res){
 
         console.log(req.body)
-        var userID = req.body.userID; // req.user._id
-        //var userID = req.user._id
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id
         var targetItemID = req.body.itemID
 
         // get object
@@ -1008,11 +1008,11 @@ module.exports = function(app, passport,upload) {
 
     // user send a comment to a item
     // create a new comment object and insert into item's commentList
-    app.post('/writeComment',function(req,res){
-    //app.post('/writeComment',isLoggedIn,function(req,res){
+    //app.post('/writeComment',function(req,res){
+    app.post('/writeComment',isLoggedIn,function(req,res){
 
-        var userID = req.body.userID; // req.user._id
-        //var userID = req.user._id;
+        //var userID = req.body.userID; // req.user._id
+        var userID = req.user._id;
         var itemID = req.body.itemID;
         var commentContent = req.body.commentContent
 
@@ -1076,10 +1076,17 @@ module.exports = function(app, passport,upload) {
         var itemID = req.body.itemID
         var commentIDList = req.body.commentIDList
         Item.findById(itemID)
-        .populate('commentList')
+        //.populate('commentList')
         .exec(function(err,itemObject){
             if(err) throw err
-            res.send(itemObject.commentList)
+            //res.send(itemObject.commentList)
+            // find comment list and populate
+            Comment.find({_id:{'$in':itemObject.commentList}})
+            .populate('commenter')
+            .exec(function(err,commentArray){
+                if(err) throw err
+                res.send(commentArray)
+            })
         })
     })
 
@@ -1115,6 +1122,7 @@ module.exports = function(app, passport,upload) {
 
             Comment.find({commenter:userObject._id})
             .populate('referencedItem')
+            .sort({createTime: -1})
             .exec(function(err,comments){
                 if(err) throw err
                 res.send(comments)
