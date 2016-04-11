@@ -18,7 +18,7 @@ $(document).ready(function(){
         uploadClass: "btn btn-info",
         uploadLabel: "Upload",
         uploadIcon: "<i class=\"glyphicon glyphicon-upload\"></i> ",
-        maxFileCount: 5,
+        maxFileCount: 3,
         allowedFileExtensions: ["jpg", "gif", "png"]
     });
 
