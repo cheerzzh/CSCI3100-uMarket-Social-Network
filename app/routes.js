@@ -965,6 +965,9 @@ module.exports = function(app, passport,upload) {
                             newNotification.type = 6
                             newNotification.user = userObject
                             newNotification.item = itemObject
+                            newNotification.title = "Confirmation Cancelled"
+                            newNotification.content =  "Oh! @" +"<span class='mention'>" +userObject.userName + "</span>" + " cancelled the confirmation  for the trade of " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
+                            newNotification.link = "/item/" + itemObject._id
 
                             newNotification.save(function(err){
                                 if(err) throw err
@@ -1111,6 +1114,9 @@ module.exports = function(app, passport,upload) {
                             newNotification.type = 7
                             newNotification.user = userObject
                             newNotification.item = itemObject
+                            newNotification.title = "New Comment"
+                            newNotification.content =  "Hey! @" +"<span class='mention'>" +userObject.userName + "</span>" + " commented your" + "<span class='hashtags'>" + itemObject.itemName+"</span>"
+                            newNotification.link = "/item/" + itemObject._id
                             newNotification.save(function(err){
                                 if(err) throw err
                                 ownerObject.notificationList.push(newNotification)
@@ -1638,16 +1644,40 @@ module.exports = function(app, passport,upload) {
     })
 
     // given 
-    app.post('/getAllNotification',function(req,res){
-        var userID = req.body.userID;
-        // var userID = req.user._id
-        User.find({"_id":userID})
-        .populate('notificationList')
-        .exec(function(err,userObject){
+    app.post('/getAllNotification',isLoggedIn,function(req,res){
+        //var userID = req.body.userID;
+        var userID = req.user._id
+        User.findById(userID,function(err,userObject){
             if(err) throw err
-            res.send(userObject)
+            //res.send(userObject.notificationList)
+            Notification.find({"_id":{$in:userObject.notificationList}})
+            .sort({'createTime': -1})
+            .limit(4)
+            .exec(function(err,result){
+                res.send(result)
+            })
         })
 
+    })
+
+    app.post("/readNotification",isLoggedIn,function(req,res){
+
+        var userID = req.body._id
+        var notificationID = req.body.notificationID
+
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Notification.findById(notificationID,function(err,notificationObject){
+                if(err) throw err
+                notificationObject.hasRead = true
+                notificationObject.save(function(err){
+                    if(err) throw err
+                    res.send(true)
+                })
+
+            })
+        })
+        
     })
 
 

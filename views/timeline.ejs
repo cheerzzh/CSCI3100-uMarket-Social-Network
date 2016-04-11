@@ -37,10 +37,10 @@
                   <h5><b>Notifications</b></h5>
                 </li>
                 {{#each notifications}}
-                <li>
-                  <a href="#">
+                <li style={{backgroundStyle}} class="notification_post" value={{notification_id}}>
+                  <a href={{link}} target="_blank">
                     <h5><b>{{title}}</b></h5>
-                    {{{post}}}
+                    {{{content}}}
                   </a>
                 </li>
                 {{/each}}
@@ -80,7 +80,7 @@
             
             <li><a href="/uploadItem" class="navbar-icons"><i class="fa fa-upload"></i></a></li>
             <li><a href="/wishList" class="navbar-icons"><i class="fa fa-heart"></i></a></li>
-            <li><a href="#" class="navbar-icons"><i class="fa fa-cog"></i></a></li>
+            <li><a href="xwtest1" class="navbar-icons"><i class="fa fa-cog"></i></a></li>
             <li><a href="/logout" class="navbar-icons"><i class="fa fa-sign-out"></i></a></li>
             
             <!-- name and pic get from ajax call-->

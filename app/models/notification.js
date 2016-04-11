@@ -10,8 +10,8 @@ var notificationSchema = mongoose.Schema({
 	// 3: someone accepts your confirmation request ->  item page [ok] 
 	// 4. someone rejects your confirmation request -> item management page [ok] *
 	// 5. someone send confirmation request to you -> item management page [ok] *
-	// 6. someone cancel his confirmaton request on you -> item page [ok]
-	// 7. someone comments your items -> item page [ok]
+	// 6. someone cancel his confirmaton request on you -> item page [ok] *
+	// 7. someone comments your items -> item page [ok] *
 
 	owner:  { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     createTime : Date,

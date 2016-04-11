@@ -1,6 +1,7 @@
 var timelinePostSource, timelinePostTemplate
 var itemPostTemplate, itemPostSource
 var messagePanelSource, messagePanelTemplate
+var notificationNavSource, notificationNavTemplate
 
 $(document).ready(function(){
 
@@ -53,9 +54,9 @@ $(document).ready(function(){
     ]
   };
 
-  source = $("#notifications-template").html();
-  template = Handlebars.compile(source);
-  $("#notifications").html(template(notifications));
+  notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  //$("#notifications").html(notificationNavTemplate(notifications));
 
  
 
@@ -85,7 +86,50 @@ $(document).ready(function(){
 
 
   // get notification
-  
+  $.ajax({
+    type: "POST",
+    url: "/getAllNotification",
+    success: function(data) {
+      console.log(data)
+      var notificationList = {}
+      notificationList.notifications = []
+
+      data.forEach(function(entry){
+        temp = {}
+        temp.link = entry.link
+        temp.title = entry.title
+        temp.content = entry.content
+        temp.notification_id = entry._id
+
+        if(!entry.hasRead){
+          temp.backgroundStyle = "background-color:#ECF5FF";
+          temp.style1 = "<i class='fa fa-circle' style='color:red;'></i>"
+        }
+        notificationList.notifications.push(temp)
+      })
+      $("#notifications").html(notificationNavTemplate(notificationList));
+
+      // attach function to label readed
+      $(".notification_post").click(function(){
+        var notificationID =  $(this).attr('value')
+        //console.log(notificationID)
+         $.ajax({
+          type:"post",
+          url: "/readNotification",
+          data: {"notificationID":notificationID},
+          success: function(data) {
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+
+      })
+    },
+    error: function(xhr) {
+        //Do Something to handle error
+    }
+  });
 
 
 
