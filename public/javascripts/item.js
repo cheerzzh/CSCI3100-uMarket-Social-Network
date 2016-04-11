@@ -51,13 +51,51 @@ $(document).ready(function(){
   	$("#item-name").text(window.targetItem.itemName)
   	$("#item-price").text("$" + window.targetItem.price)
   	
-  	$("#item-image_1").attr("src",window.targetItem.imageLinks[0]);
+  	//$("#item-image_1").attr("src",window.targetItem.imageLinks[0]);
 
   	$("#seller-avatar").attr("src",window.targetItem._creator.avatarLink);
+  	$("#item-condition").text(window.targetItem.condition + "% New")
 
   	processButton(window.targetUser,window.targetItem)
+  	processItemImage(window.targetItem)
 
 })
+
+function processItemImage(itemObject){
+
+	// if no image link: use default image
+	if(itemObject.imageLinks.length == 0){
+		
+		$("#item-image_1").attr("src","images/no-image.png");
+	}else{
+
+		// attach default big image
+		$("#item-image_1").attr("src",window.targetItem.imageLinks[0]);
+		var index = 1;
+		itemObject.imageLinks.forEach(function(imageLink){
+			console.log(imageLink)
+			// attach to small image
+			$("#item_image_block_"+index).show()
+			$("#item_image_"+index).attr("src",imageLink);
+
+			// click to modify 
+			$("#item_image_"+index).click(function(){
+				$("#item-image_1").attr("src",imageLink)
+			})
+			
+
+			index++
+		})
+	}
+
+	if(itemObject.refLink){
+		$("#item_reference_box").show()
+		$("#item_reference_link").attr("href",itemObject.refLink)
+
+	}
+
+}
+
 
 function fillInCommentBox(template,commentListData){
 
@@ -94,7 +132,19 @@ function processButton(userObject,itemObject){
 	if(userObject._id == itemObject._creator._id){
 		console.log('This is my own item')
 
-		// remove comment form here
+		$.ajax({
+          type: "POST",
+          url: "/getItemComments",
+          data: {itemID:itemObject._id},
+          success: function(data) {
+          	console.log('Item comment list:')
+          	//console.log(data)
+          	fillInCommentBox(commentBoxTemplate,data)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
 
 	}else {
 		

@@ -1292,9 +1292,6 @@ module.exports = function(app, passport,upload) {
                 {
                     res.send(false)
                 }
-                
-
-
             })
         })
     })
@@ -1622,6 +1619,7 @@ module.exports = function(app, passport,upload) {
 
     })
 
+    // given 
     app.post('/getAllNotification',function(req,res){
         var userID = req.body.userID;
         // var userID = req.user._id

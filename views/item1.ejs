@@ -2,12 +2,8 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
-        <meta name="robots" content="all,follow">
-        <meta name="googlebot" content="index,follow,snippet,archive">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="description" content="Obaju e-commerce template">
-        <meta name="author" content="Ondrej Svestka | ondrejsvestka.cz">
-        <meta name="keywords" content="">
+
         <title>
         Item
         </title>
@@ -168,21 +164,21 @@
                                 <div id="mainImage">
                                     <img src="" id="item-image_1" class="img-responsive ">
                                 </div>
-                                <div class="ribbon sale">
-                                    <div class="theribbon">In Progress</div>
-                                    <div class="ribbon-background"></div>
-                                </div>
+                                <div class="ribbon sale" style="display:none;" id="item_reference_box">
+                                    <div class="theribbon"><a  id="item_reference_link" style="color:white" target="_blank">Link</a></div>
+                                        <div class="ribbon-background"></div>
+                                    </div>
                                 <!-- /.ribbon -
                                 <div class="ribbon new">
                                     <div class="theribbon">NEW</div>
                                     <div class="ribbon-background"></div>
                                 </div>
                                 -->
-                            </div>
+                                </div>
                             <div class="col-sm-6">
                                 <div class="box">
                                     <h1 class="text-center" id="item-name"></h1>
-                                    <p class="goToDescription" style="font-size:150%;"><a href="#" class="scroll-to">90% New</a>
+                                    <p class="goToDescription" style="font-size:150%;"><a href="#" class="scroll-to" id="item-condition"></a>
                                 </p>
                                 <p class="price" id = "item-price" style="font-size:250%;"></p>
                                 <p class="text-center buttons">
@@ -193,19 +189,19 @@
                                 </p>
                             </div>
                             <div class="row" id="thumbs">
-                                <div class="col-xs-4">
-                                    <a href="#" class="thumb">
-                                        <img src="http://placehold.it/800x400" alt="" class="img-responsive">
+                                <div class="col-xs-4" style="display:none;" id="item_image_block_1">
+                                    <a class="thumb">
+                                        <img src="" alt="" class="img-responsive" id="item_image_1">
                                     </a>
                                 </div>
                                 <div class="col-xs-4">
-                                    <a href="#" class="thumb">
-                                        <img src="http://placehold.it/800x400" alt="" class="img-responsive">
+                                    <a  class="thumb" style="display:none;" id="item_image_block_2">
+                                        <img src="" alt="" class="img-responsive" id="item_image_2">
                                     </a>
                                 </div>
                                 <div class="col-xs-4">
-                                    <a href="#" class="thumb">
-                                        <img src="http://placehold.it/800x400" alt="" class="img-responsive">
+                                    <a  class="thumb" style="display:none;" id="item_image_block_3">
+                                        <img src="" alt="" class="img-responsive" id="item_image_3">
                                     </a>
                                 </div>
                             </div>
