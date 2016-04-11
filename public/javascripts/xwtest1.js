@@ -211,6 +211,25 @@ function fillconfirmlist1(WTBlist){
     $("#suggestions").html(template(userSuggestion));
 }
 
+function fillconfirmlistNew(clickItem){
+	var wantUser = {}
+	wantUser.wanttobuyUser = []
+	$.post('getWantToBuyUserListDetail',{"itemID" : clickItem},function(userlist){
+		userlist.forEach(function(suser){
+			var wu = {}
+			wu.wantBodyID = "wantBody_" + suser._id
+			wu.wantUseravatar = suser.avatarLink
+			wu.wantuserLink = '/user/' + suser._id
+			wu.wantusername = suser.userName
+			wu.wantuseruniversity = suser.university
+			wu.wantuserID = suser._id
+			wantUser.wanttobuyUser.push(wu)
+		})
+		console.log(wantUser)
+		$("#wanttobuyUser").html(templateWTB(wantUser))
+	})
+	
+}
 
 function fillconfirmlistGet(WTBlist){
 	var wantUser = {}
@@ -529,11 +548,13 @@ function fillItemPanel(currentWishList){
 			console.log('successfully click confirm');
 			$("#confirmed-body").show();
 			var WTBlist = $(this).attr('value')
+			var thisitemID = $(this).attr('id')
 			if(WTBlist.length){
 				WTBlist = WTBlist.split(',')
 				//console.log(WTBlist)
-				fillconfirmlistGet(WTBlist);
+				//fillconfirmlistGet(WTBlist);
 				//fillconfirmlist1(WTBlist);
+				fillconfirmlistNew(thisitemID);
 			}
 		});
 		handleItemWithdraw();
