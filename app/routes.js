@@ -1083,8 +1083,8 @@ module.exports = function(app, passport,upload) {
         })
     })
 
-    app.post('/getWantToBuyUserListDetail',function(req,res){
-    //app.post('getWantToBuyUserListDetail',isLoggedIn,function(req,res){
+    //app.post('/getWantToBuyUserListDetail',function(req,res){
+    app.post('getWantToBuyUserListDetail',isLoggedIn,function(req,res){
 
         // get item
         var itemID = req.body.itemID
