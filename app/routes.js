@@ -479,6 +479,9 @@ module.exports = function(app, passport,upload) {
                                             newNotification.type = 2
                                             newNotification.user = userObject._id
                                             newNotification.item = itemObject._id
+                                            newNotification.title = "New Purchase"
+                                            newNotification.content = "Wow! @" +"<span class='mention'>" +userObject.userName + "</span>" + " want to buy your " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
+                                            newNotification.link = "/item/" + itemObject._id
 
                                             newNotification.save(function(err){
                                                 if(err) throw err
@@ -577,7 +580,9 @@ module.exports = function(app, passport,upload) {
                     newNotification.hasRead = false;
                     newNotification.user = user._id
                     newNotification.item = item._id
-
+                    newNotification.title = "New Wishes"
+                    newNotification.content = "Great! @" +"<span class='mention'>" +user.userName + "</span>" + " wished your " + "<span class='hashtags'>" + item.itemName+"</span>"
+                    newNotification.link = "/item/" + item._id
                     newNotification.save(function(err){
                         if(err) throw err
                         ownerObject.notificationList.push(newNotification._id)
@@ -819,6 +824,9 @@ module.exports = function(app, passport,upload) {
                                    newNotification.type = 5
                                    newNotification.user = userObject._id
                                    newNotification.item = itemObject._id
+                                    newNotification.title = "New Confirmation Invitation"
+                                    newNotification.content = "Bravo! @" +"<span class='mention'>" +userObject.userName + "</span>" + " inivites you to confirm the trade of " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
+                                    newNotification.link = "/manage"
 
                                    newNotification.save(function(err){
                                         if(err) throw err
@@ -888,6 +896,9 @@ module.exports = function(app, passport,upload) {
                                 newNotification.type = 3
                                 newNotification.user = userObject
                                 newNotification.item = itemObject
+                                newNotification.title = "Confirmation Accepted"
+                                newNotification.content =  "Yo! @" +"<span class='mention'>" +userObject.userName + "</span>" + " confirmed the trade of " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
+                                newNotification.link = "/item/" + itemObject._id
 
                                 // save 
                                 newNotification.save(function(err){
@@ -1026,6 +1037,10 @@ module.exports = function(app, passport,upload) {
                             newNotification.type = 4
                             newNotification.user = userObject
                             newNotification.item = itemObject
+                            newNotification.title = "Confirmation got rejected"
+                            newNotification.content =  "Oops! @" +"<span class='mention'>" +userObject.userName + "</span>" + " rejected to confirm the trade of " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
+                            newNotification.link = "/manage"
+
 
                             newNotification.save(function(err){
                                 if(err) throw err
@@ -1239,7 +1254,7 @@ module.exports = function(app, passport,upload) {
 
 
     // user want to add another user to his own following list
-    app.get('/toFollowUser',function(req,res){
+    app.get('/toFollowUser',isLoggedIn,function(req,res){
 
         var targetUserID = req.query.targetUserID
 
@@ -1271,6 +1286,9 @@ module.exports = function(app, passport,upload) {
                     newNotification.user = user._id
                     newNotification.hasRead = false;
                     newNotification.createTime = Date()
+                    newNotification.title = "New Following"
+                    newNotification.content = "Yeah! @" +"<span class='mention'>" +user.userName + "</span>" + " follows you"
+                    newNotification.link = "/profile/" + user._id
                     // no item 
                     //save
                     newNotification.save(function(err){

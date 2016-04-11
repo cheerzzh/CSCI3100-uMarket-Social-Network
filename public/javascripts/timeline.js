@@ -84,6 +84,8 @@ $(document).ready(function(){
   fillMessagePanel()
 
 
+  // get notification
+  
 
 
 
