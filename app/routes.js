@@ -489,7 +489,7 @@ module.exports = function(app, passport,upload) {
                                                     itemOwnerObject.save(function(err){
                                                         if(err) throw err
                                                         console.log('/wantToBuy done!')
-                                                        res.send({succeed:true,targetUser:userObject})
+                                                        res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
                                                     })
                                                 })
                                             })
@@ -586,7 +586,7 @@ module.exports = function(app, passport,upload) {
                         item.save(function(err){
                             if(err) throw err
                             ownerObject.save(function(err){
-                                res.send({targetUser:user})
+                                res.send({targetUser:user,targetItem:item})
                             })
                             
                         })
@@ -634,7 +634,7 @@ module.exports = function(app, passport,upload) {
                     }
                     item.save(function(err){
                         if (err) throw err;
-                        res.send({targetUser:user})
+                        res.send({targetUser:user,targetItem:item})
                     })
                 })
             })
@@ -1069,6 +1069,36 @@ module.exports = function(app, passport,upload) {
 
 
             })
+        })
+    })
+
+    app.post('/getItemComments',isLoggedIn,function(req,res){
+        var itemID = req.body.itemID
+        var commentIDList = req.body.commentIDList
+        Item.findById(itemID)
+        .populate('commentList')
+        .exec(function(err,itemObject){
+            if(err) throw err
+            res.send(itemObject.commentList)
+        })
+    })
+
+    app.post('/getWantToBuyUserListDetail',function(req,res){
+    //app.post('getWantToBuyUserListDetail',isLoggedIn,function(req,res){
+
+        // get item
+        var itemID = req.body.itemID
+
+        Item.findById(itemID,function(err,itemObject){
+            if(err) throw err
+            var wantToBuyUserList = itemObject.wantToBuyUserList
+            // search user
+            User.find({_id:{'$in':itemObject.wantToBuyUserList}})
+            .exec(function(err,userArray){
+                if(err) throw err
+                res.send(userArray)
+            })
+
         })
     })
 
