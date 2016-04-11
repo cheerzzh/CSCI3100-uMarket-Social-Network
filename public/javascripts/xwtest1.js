@@ -1,4 +1,4 @@
-var itemPostTemplate, itemPostSource,sourceWTB,templateWTB,source,template,itemWantUser1,singleuser2;
+var itemPostTemplate, itemPostSource,sourceWTB,templateWTB;
 
 jQuery(document).ready(function() {
 	
@@ -8,10 +8,11 @@ jQuery(document).ready(function() {
     $.backstretch('images/3.jpg', {speed: 1000});
     fillUserInfo_Navbar(window.targetUser)
     $("#confirmed-body").hide()
+    console.log(window.targetUser)
 
     //console.log(window.targetUser)
     //console.log(window.searchResult)
-
+	/*
     var itemSearchResults = {
 
     	itemEntry :[
@@ -62,6 +63,7 @@ jQuery(document).ready(function() {
 	singleuser1.wantuseruniversity = "kaka"
 	singleuser1.wantuserID = "456789"
 	itemWantUser1.wanttobuyUser.push(singleuser1)
+	*/
 	itemPostSource = $("#itemSearchResult-template").html();
 	//console.log(itemPostSource)
 	itemPostTemplate = Handlebars.compile(itemPostSource);
@@ -72,12 +74,18 @@ jQuery(document).ready(function() {
 	itemPostTemplate2 = Handlebars.compile(itemPostSource2);
 	itemPostSource3 = $("#itemSearchResult-template3").html();
 	itemPostTemplate3 = Handlebars.compile(itemPostSource3);
+	itemPostSource5 = $("#itemSearchResult-template5").html();
+	itemPostTemplate5 = Handlebars.compile(itemPostSource5);
+	itemPostSource6 = $("#itemSearchResult-template6").html();
+	itemPostTemplate6 = Handlebars.compile(itemPostSource6);
+	itemPostSource7 = $("#itemSearchResult-template7").html();
+	itemPostTemplate7 = Handlebars.compile(itemPostSource7);
 	//source = $("#suggestions-template").html();
     //template = Handlebars.compile(source);
 	sourceWTB = $("#wantToBuylist-template").html();
 	templateWTB = Handlebars.compile(sourceWTB);
 	//$("#wanttobuyUser").html(templateWTB(itemWantUser1));
-	console.log(itemWantUser)
+	//console.log(itemWantUser)
 	//$("#itemSearchResults").html(itemPostTemplate(itemSearchResults));
 
 //	fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList)
@@ -86,6 +94,7 @@ jQuery(document).ready(function() {
 	//handleItemWithdraw();
 	fillItemPanel(window.targetUser.wishList)
 	//handleItemWithdraw()
+	
 })
 
 
@@ -250,6 +259,48 @@ function handleCancelbtn(){
 		else{
 			console.log("still confirm "+itemname)
 		}
+	})
+}
+
+function handleBuyconfirmed(){
+	$(".confirmedBuybtn").click(function(){
+		var itemID = $(this).attr('value')
+		var itemname = $(this).attr('id')
+		var choice = confirm("Are you sure that you want to buy "+itemname+" ?\n")
+		if(choice == true){
+			console.log("confirm "+itemname +" ...")
+			$.post('toAcceptConfirmation',{"itemID":itemID},function(data){
+				if(data.succeed){
+					console.log("confirmed "+itemname + " successfully!")
+					fillItemPanel(window.targetUser.wishList)
+					$("#confirmed-body").hide()
+				}
+				
+			})
+			
+		}
+	})
+}
+
+function handleRejection(){
+	$(".confirmedRejectbtn").click(function(){
+		var itemID = $(this).attr('value')
+		var itemname = $(this).attr('id')
+		var choice = confirm("Reject to buy " + itemname +" ?\n")
+		if(choice == true){
+			console.log("you reject "+itemname)
+			$.post('toRejectConfirmation',{"itemID" : itemID},function(data){
+				if(data.succeed){
+					console.log("successfully reject " + itemname)
+					fillItemPanel(window.targetUser.wishList)
+					$("#confirmed-body").hide()
+				}
+			})
+		}
+		else{
+			console.log("you do not reject "+ itemname)
+		}
+		
 	})
 }
 
@@ -588,8 +639,8 @@ function fillItemPanel(currentWishList){
 		}); 
 	    $("#itemSearchResults").html(itemPostTemplate(itemPosts[0]));
 	    $("#itemSearchResults1").html(itemPostTemplate1(itemPosts[1]));
-	    $("#itemSearchResults2").html(itemPostTemplate2(itemPosts[0]));
-	    $("#itemSearchResults3").html(itemPostTemplate3(itemPosts[0]));
+	    $("#itemSearchResults2").html(itemPostTemplate2(itemPosts[2]));
+	    $("#itemSearchResults3").html(itemPostTemplate3(itemPosts[3]));
 	    
 		$(".confirmedBtn").click(function(){
 			console.log('successfully click confirm');
@@ -611,25 +662,19 @@ function fillItemPanel(currentWishList){
 	
     })
     
-}
-
-/*
-function fillItemSearchPanel(template,currentWishList){
-
-	// use window.searchResult as data
-	descriptionLimit = 180
-    var itemPosts = {}
-    itemPosts.itemEntry = []
-
-    $("#itemCount").text(window.searchResult.items.length)
-    $("#searchKey").text(window.searchKey)
-
-    window.searchResult.items.forEach(function(item){
+    $.get('getwaitForMetoConfirmItemList',function(data){
+		console.log(data)
+		var itemAll = {}
+		itemAll.itemEntry = []
+		data.forEach(function(item,index){
 		//console.log(item)
+		var index=item.status
+		//console.log(index)
 		var postEntry = {}
 		postEntry.avatar = item._creator.avatarLink
 		postEntry.creatorName = item._creator.userName
 		postEntry.itemName = item.itemName
+		postEntry.confirmedbtnId="confirmed"+item._id
 		if(item.description.length > descriptionLimit)
 		{
 		postEntry.description = item.description.substr(1, descriptionLimit) + " ...";
@@ -641,6 +686,7 @@ function fillItemSearchPanel(template,currentWishList){
 
 		postEntry.userLink = '/user/' + item._creator._id
 		postEntry.itemLink = '/item/' + item._id
+		postEntry.itemstatus = item.status;
 		// depends on whether in list
 
 		if(!include(currentWishList, item._id)){
@@ -658,6 +704,9 @@ function fillItemSearchPanel(template,currentWishList){
 		postEntry.wishedCount = item.wishedList.length
 		postEntry.heartID = "heart_" + item._id
 		postEntry.itemID = item._id
+		postEntry.itemWTBlist = item.wantToBuyUserList.slice()
+		var itemStatusID=String(item.status) +'id'+item._id
+		postEntry.itembodyID = "itembody"+ itemStatusID
 		if(item.imageLinks.length > 0)
 		{
 			postEntry.itemImageLink = item.imageLinks[0]
@@ -672,155 +721,145 @@ function fillItemSearchPanel(template,currentWishList){
 		postEntry.updateDate = postDate.toISOString().slice(0,10)// adjust time format
 		postEntry.updateTime = postDate.toISOString().slice(12,19)
 		//console.log(Date(item.updateDate))
-		itemPosts.itemEntry.push(postEntry)
-    })
-
-    //console.log(itemPosts)
-    $("#itemSearchResults").html(itemPostTemplate(itemPosts));
-
-    $('.heartButton').click(function(){
-      var itemID = $(this).attr('value')
-      console.log("click heart: " + itemID)
-
-      if(!include(currentWishList, itemID)){
-        $.ajax({
-          url: "/addToWishList",
-          data: {"itemID":itemID},
-          success: function(data) {
-              //Do Something
-            console.log("add to wishlist succeed")
-            window.targetUser = data.targetUser
-
-            // refresh whole timeline?
-            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
-          },
-          error: function(xhr) {
-              //Do Something to handle error
-          }
-        });
-      }else{
-
-        $.ajax({
-          url: "/removeFromWishList",
-          data: {"itemID":itemID},
-          success: function(data) {
-              //Do Something
-            console.log("remove from wishlist succeed")
-            window.targetUser = data.targetUser
-
-            // refresh whole timeline?
-            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
-          },
-          error: function(xhr) {
-              //Do Something to handle error
-          }
-        });
-
-      }
-
-
-    });
-
-}*/
-
-/*
-function fillUserSuggestionPanel(){
-
-
-    //console.log(data)
-    // create user suggestion array
-    var userSuggestion = {}
-    userSuggestion.suggestions = []
-    $("#userCount").text(window.searchResult.users.length)
-    window.searchResult.users.forEach(function(userEntry){
-
-      var suggestionEntry = {}
-      suggestionEntry.avatar = userEntry.avatarLink
-      suggestionEntry.name = userEntry.userName
-      suggestionEntry.userID = userEntry._id
-      suggestionEntry.university = '@' +userEntry.university
-      suggestionEntry.followButtonID = "followButton_" + userEntry._id
-      suggestionEntry.unfollowButtonID = "unfollowButton_" + userEntry._id
-      suggestionEntry.userSuggestionID = "userSuggestionID_" + userEntry._id
-      suggestionEntry.userLink = "/user/" + userEntry._id
-      console.log(include(window.targetUser.followingList, userEntry._id))
-      userSuggestion.suggestions.push(suggestionEntry)
-    })
-    //console.log(userSuggestion)
-    source = $("#suggestions-template").html();
-    template = Handlebars.compile(source);
-    $("#suggestions").html(template(userSuggestion));
-*/
-
-/*
-    // loop through all follow-related button
-    $(".followButton").each(function(){
-    	if(include(window.targetUser.followingList, $(this).attr('value'))){
-    		$(this).hide()
-    	}
-    	
-    })
-
-    $(".unfollowButton").each(function(){
-    	if(!include(window.targetUser.followingList, $(this).attr('value'))){
-    		$(this).hide()
-    	}
-    })
-
-    $('.followButton').click(function(){
-      var targetUserID = $(this).attr('value')
-      console.log(targetUserID)
-*/
-/*
-      // ajax get request
-      // request to follow user
-      $.ajax({
-        url: "/toFollowUser",
-        data: {"targetUserID":targetUserID},
-        success: function(response) {
-            //Do Something
-            console.log('Follow' + targetUserID + " success!")
-
-            // remove button
-            $("#followButton_"+targetUserID).remove()
-            // delete entry
-            $("#userSuggestionID_" + targetUserID).remove()
-        },
-        error: function(xhr) {
-            //Do Something to handle error
-        }
-      });
-
-    });
-*/
-/*
-	$('.unfollowButton').click(function(){
-		var targetUserID = $(this).attr('value')
-		console.log(targetUserID)
-
-		// ajax get request
-		// request to follow user
-		$.ajax({
-		url: "/toUnFollowUser",
-		data: {"targetUserID":targetUserID},
-		success: function(response) {
-		    //Do Something
-		    console.log('unFollow' + targetUserID + " success!")
-
-		    // remove button
-		    $("#unfollowButton_"+targetUserID).remove()
-		    // delete entry
-		     $("#userSuggestionID_" + targetUserID).remove()
-
-		},
-		error: function(xhr) {
-		    //Do Something to handle error
-		}
-		});
+		itemAll.itemEntry.push(postEntry)
+		})
+		$("#itemSearchResults5").html(itemPostTemplate5(itemAll));
+		handleBuyconfirmed()
+		handleRejection()
 	})
+	
+	$.get('getboughtItemList',function(data){
+		console.log(data)
+		var itemsAll = {}
+		itemsAll.itemEntry = []
+		data.forEach(function(item,index){
+			
+		//console.log(item)
+		var index=item.status
+		//console.log(index)
+		var postEntry = {}
+		postEntry.avatar = item._creator.avatarLink
+		postEntry.creatorName = item._creator.userName
+		postEntry.itemName = item.itemName
+		postEntry.confirmedbtnId="confirmed"+item._id
+		if(item.description.length > descriptionLimit)
+		{
+		postEntry.description = item.description.substr(1, descriptionLimit) + " ...";
+		}
+		else
+		{
+		postEntry.description = item.description
+		}
 
+		postEntry.userLink = '/user/' + item._creator._id
+		postEntry.itemLink = '/item/' + item._id
+		postEntry.itemstatus = item.status;
+		// depends on whether in list
 
-}*/
+		if(!include(currentWishList, item._id)){
+
+		// in wishlist, gray, add to wishlist
+		//postEntry.wishlistLink = '/addToWishList?itemID=' + item._id
+		postEntry.heartStyle = "color:grey;"
+
+		}
+		else
+		{
+		//postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
+		postEntry.heartStyle = "color:red;"
+		}
+		postEntry.wishedCount = item.wishedList.length
+		postEntry.heartID = "heart_" + item._id
+		postEntry.itemID = item._id
+		postEntry.itemWTBlist = item.wantToBuyUserList.slice()
+		var itemStatusID=String(item.status) +'id'+item._id
+		postEntry.itembodyID = "itembody"+ itemStatusID
+		if(item.imageLinks.length > 0)
+		{
+			postEntry.itemImageLink = item.imageLinks[0]
+		}
+		else{
+			postEntry.itemImageLink = '/images/no-image.png'
+		}
+		postEntry.price = item.price
+		postEntry.condition = item.condition
+
+		var postDate = new Date(item.updateDate)
+		postEntry.updateDate = postDate.toISOString().slice(0,10)// adjust time format
+		postEntry.updateTime = postDate.toISOString().slice(12,19)
+		//console.log(Date(item.updateDate))
+		itemsAll.itemEntry.push(postEntry)
+		})
+		$("#itemSearchResults7").html(itemPostTemplate7(itemsAll));
+	})
+	
+	$.get('getwishList',function(data){
+		console.log(data)
+		var allitems = {}
+		allitems.itemEntry = []
+		data.forEach(function(item,index){
+			
+		//console.log(item)
+		var index=item.status
+		//console.log(index)
+		var postEntry = {}
+		postEntry.avatar = item._creator.avatarLink
+		postEntry.creatorName = item._creator.userName
+		postEntry.itemName = item.itemName
+		postEntry.confirmedbtnId="confirmed"+item._id
+		if(item.description.length > descriptionLimit)
+		{
+		postEntry.description = item.description.substr(1, descriptionLimit) + " ...";
+		}
+		else
+		{
+		postEntry.description = item.description
+		}
+
+		postEntry.userLink = '/user/' + item._creator._id
+		postEntry.itemLink = '/item/' + item._id
+		postEntry.itemstatus = item.status;
+		// depends on whether in list
+
+		if(!include(currentWishList, item._id)){
+
+		// in wishlist, gray, add to wishlist
+		//postEntry.wishlistLink = '/addToWishList?itemID=' + item._id
+		postEntry.heartStyle = "color:grey;"
+
+		}
+		else
+		{
+		//postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
+		postEntry.heartStyle = "color:red;"
+		}
+		postEntry.wishedCount = item.wishedList.length
+		postEntry.heartID = "heart_" + item._id
+		postEntry.itemID = item._id
+		postEntry.itemWTBlist = item.wantToBuyUserList.slice()
+		var itemStatusID=String(item.status) +'id'+item._id
+		postEntry.itembodyID = "itembody"+ itemStatusID
+		if(item.imageLinks.length > 0)
+		{
+			postEntry.itemImageLink = item.imageLinks[0]
+		}
+		else{
+			postEntry.itemImageLink = '/images/no-image.png'
+		}
+		postEntry.price = item.price
+		postEntry.condition = item.condition
+
+		var postDate = new Date(item.updateDate)
+		postEntry.updateDate = postDate.toISOString().slice(0,10)// adjust time format
+		postEntry.updateTime = postDate.toISOString().slice(12,19)
+		//console.log(Date(item.updateDate))
+		allitems.itemEntry.push(postEntry)
+		})
+		$("#itemSearchResults6").html(itemPostTemplate6(allitems));
+	})
+	
+	
+}
 
 
 function include(arr,obj) {
