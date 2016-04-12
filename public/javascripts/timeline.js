@@ -101,7 +101,7 @@ function fillNotificationNavBar(template){
       //console.log(data)
       var notificationList = {}
       notificationList.notifications = []
-
+      var newNotificationCount = 0
       data.forEach(function(entry){
         temp = {}
         temp.link = entry.link
@@ -111,13 +111,22 @@ function fillNotificationNavBar(template){
 
         if(!entry.hasRead){
           temp.backgroundStyle = "background-color:#ECF5FF";
-          temp.style1 = "<i class='fa fa-circle' style='color:red;'></i>"
+          //temp.style1 = "<i class='fa fa-circle' style='color:red;'></i>"
+          newNotificationCount ++
         }else{
           temp.backgroundStyle = "";
         }
         notificationList.notifications.push(temp)
       })
       $("#notifications").html(template(notificationList));
+      if(newNotificationCount > 0){
+        $("#notification_title").text(newNotificationCount + " New Notifications")
+        $("#notification_icon").css("color","#dd4b39")
+      }
+      else{
+        $("#notification_icon").css("color","")
+      }
+      
 
       // attach function to label readed
       $(".notification_post").click(function(){
