@@ -394,7 +394,7 @@ module.exports = function(app, passport,upload) {
     })
 
 
-    app.get('/toWithdrawItem',isLoggedIn,function(req,res){
+    app.post('/toWithdrawItem',isLoggedIn,function(req,res){
 
         // get item id
         // check user id
