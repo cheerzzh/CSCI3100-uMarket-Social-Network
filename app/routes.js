@@ -761,6 +761,18 @@ module.exports = function(app, passport,upload) {
             res.send(user.wishList)
         })
     });
+    
+    // === user retrieve wantTobuyItemList
+    app.get('/getwantTobuyItemList',isLoggedIn,function(req,res){
+
+        // find user
+        User.findById(req.user._id)
+        .populate('wantTobuyItemList')
+        .exec(function(err, user) {
+            if(err) throw err
+            res.send(user.wantTobuyItemList)
+        })
+    });
 
     app.get('/test',function(req,res){
         res.render('xx.ejs');
@@ -919,7 +931,7 @@ module.exports = function(app, passport,upload) {
                                             if(err) throw err
                                             counterpartyObject.save(function(err){
                                                 if(err) throw err
-                                                res.send({succeed:true})
+                                                res.send({succeed:true,targetUser : userObject})
                                             })
                                        })
                                    })

@@ -119,7 +119,8 @@
                 <li><a href="#ios" data-toggle="tab">Wait For Confirm</a></li>
                 <li><a href="#confirmed" data-toggle="tab">Sold Items</a></li>
                 <li><a href="#Withdraw" data-toggle="tab">Withdraw Items</a></li>
-                <li><a href="#wished" data-toggle="tab">Wish List</a></li>
+                <li><a href="#wtb" data-toggle="tab">Shopping Cart</a></li> 
+                <li><a href="#wished" data-toggle="tab">Like</a></li>
                 <li><a href="#confirmedWTB" data-toggle="tab">Buy Confirmed</a></li>
                 <li><a href="#boughtItem" data-toggle="tab">Bought Items</a></li>
               </ul>
@@ -262,7 +263,6 @@
                     <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
                     <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
                     <p>{{description}}</p>
-                    <button type="button" class="btn btn-primary btn-xs" id="deletebtn" value={{itemID}}>delete</button>
               
                   </div>
                   <span class="clearfix borda"></span>
@@ -356,6 +356,44 @@
               <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults7">
                 <ul class="waitingItemBody">
                 <script id="itemSearchResult-template7" type="text/x-handlebars-template">
+                {{#each itemEntry}}
+                <li class = {{itembodyID}}>
+                <article class="search-result row">
+                  <div class="col-xs-12 col-sm-12 col-md-3">
+                    <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-2">
+                    <ul class="meta-search">
+                      <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
+                      <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
+                      <!--
+                      <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
+                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
+                      -->
+                      <!--<font color="grey">{{wishedCount}} wished</font>--></span></li>
+                    </ul>
+                  </div>
+                  <div class="col-xs-12 col-sm-12 col-md-7">
+                    <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
+                    <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
+                    <p>{{description}}</p>
+                    <!--
+                    -->
+                  </div>
+                  <span class="clearfix borda"></span>
+
+                </article>
+                </li>
+                {{/each}}
+                </script>
+                </ul>
+              </section>
+              </div>
+              
+            <div class="tab-pane fade" id="wtb">
+              <section class="col-xs-12 col-sm-12 col-md-12" id="itemSearchResults8">
+                <ul class="waitingItemBody">
+                <script id="itemSearchResult-template8" type="text/x-handlebars-template">
                 {{#each itemEntry}}
                 <li class = {{itembodyID}}>
                 <article class="search-result row">
