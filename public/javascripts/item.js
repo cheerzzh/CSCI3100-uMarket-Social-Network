@@ -66,7 +66,7 @@ function processItemImage(itemObject){
 	// if no image link: use default image
 	if(itemObject.imageLinks.length == 0){
 		
-		$("#item-image_1").attr("src","images/no-image.png");
+		$("#item-image_1").attr("src","images/no_image_1.png");
 	}else{
 
 		// attach default big image
@@ -222,7 +222,25 @@ function processButton(userObject,itemObject){
 			        });
 				})
 			}else{
-				$("#buyButtonText").text('Buying Request Sent')
+				$("#buyButtonText").text('Cancel Buying Request')
+				$("#wantToBuyButton").click(function(){
+					$.ajax({
+			          type:"post",
+			          url: "/toCancelWantToBuy",
+			          data: {"itemID":itemObject},
+			          success: function(data) {
+			            console.log(data)
+			            
+			            window.targetUser = data.targetUser
+			            window.targetItem = data.targetItem
+				        processButton(window.targetUser, window.targetItem)
+			          },
+			          error: function(xhr) {
+			              //Do Something to handle error
+			          }
+			        });
+				})
+				
 			}
 		}else if(itemObject.status == 1){
 			console.log('Item is waiting for confirmation')

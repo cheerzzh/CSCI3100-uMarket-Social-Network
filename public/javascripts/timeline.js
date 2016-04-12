@@ -221,7 +221,7 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
     else
     {
     //postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
-    postEntry.heartStyle = "color:red;"
+    postEntry.heartStyle = "color:#ff4444;"
 
     }
 
@@ -250,7 +250,7 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
       postEntry.itemImageLink = item.imageLinks[0]
     }
     else{
-      postEntry.itemImageLink = '/images/no-image.png'
+      postEntry.itemImageLink = '/images/no_image_1.png'
     }
     postEntry.price = item.price
     postEntry.condition = item.condition
