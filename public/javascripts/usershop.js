@@ -22,10 +22,107 @@ jQuery(document).ready(function() {
     itemPostSource = $("#item-template").html();
 	itemPostTemplate = Handlebars.compile(itemPostSource);
 	followButton()
-    fillItems(window.targetUser,window.targetUser.wishedList)
+    fillItems(window.targetUser,window.user.wishList)
     
     
 })
+
+function handleActions(){
+    
+	$(".buyButton").click(function(){
+      var itemID = $(this).attr('value')
+      console.log("click buy: " + itemID)
+
+      if(!include(window.user.wantTobuyItemList, itemID)){
+        $.ajax({
+          type: "POST",
+          url: "/wantToBuy",
+          data: {itemID:itemID,message:"I want to buy your item"},
+          success: function(data) {
+              //Do Something
+            console.log("add to shopping cart succeed")
+            window.user = data.targetUser
+
+            // refresh whole timeline?
+            //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
+          	fillItems(window.targetUser,window.user.wishList)
+          	
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+      }else{
+
+        
+        $.ajax({
+          type:"post",
+          url: "/toCancelWantToBuy",
+          data: {"itemID":itemID},
+          success: function(data) {
+            console.log(data)
+              //Do Something
+            console.log("remove from wantToBuy succeed")
+            window.user = data.targetUser
+
+            //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
+          	fillItems(window.targetUser,window.user.wishList)
+          	
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+        
+
+      }
+    })
+    $(".heartButton").click((function(){
+      var itemID = $(this).attr('value')
+      console.log("click heart: " + itemID)
+
+      if(!include(window.user.wishList, itemID)){
+        $.ajax({
+          url: "/addToWishList",
+          data: {"itemID":itemID},
+          success: function(data) {
+              //Do Something
+            console.log("add to wishlist succeed")
+            window.user = data.targetUser
+
+            // refresh whole timeline?
+            //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
+          	fillItems(window.targetUser,window.user.wishList)
+          	
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+      }else{
+
+        $.ajax({
+          url: "/removeFromWishList",
+          data: {"itemID":itemID},
+          success: function(data) {
+              //Do Something
+            console.log("remove from wishlist succeed")
+            window.user = data.targetUser
+
+            // refresh whole timeline?
+            //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
+          	fillItems(window.targetUser,window.user.wishList)
+          	
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+
+      }
+    }))
+
+}
 
 function followButton(){
     if(include(window.user.followingList,window.targetUser._id)){
@@ -118,10 +215,11 @@ function fillItems(user,currentWishList){
             console.log(index)
             var postEntry={}
             postEntry.itemname=item.itemName
-            postEntry.itemStatus=item.condiction
+            postEntry.itemStatus=item.condition
             postEntry.itemPrice=item.price
             postEntry.itemLink='/item/' + item._id
             postEntry.userLink = '/user/' + item._creator._id
+            postEntry.buyID = "buy_" + item._id
             /*
             if(!include(currentWishList, item._id)){
     		// in wishlist, gray, add to wishlist
@@ -135,7 +233,34 @@ function fillItems(user,currentWishList){
     		postEntry.heartStyle = "color:red;"
     		}
     		*/
+        	if(!include(currentWishList, item._id)){
+    
+    		// in wishlist, gray, add to wishlist
+    		//postEntry.wishlistLink = '/addToWishList?itemID=' + item._id
     		postEntry.heartStyle = "color:grey;"
+    
+    		}
+    		else
+    		{
+    		//postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
+    		postEntry.heartStyle = "color:red;"
+    		}
+    		// process buy button
+		
+    		if(!include(window.user.wantTobuyItemList, item._id)){
+    		
+    		    // in wishlist, gray, add to wishlist
+    		    //postEntry.wishlistLink = '/addToWishList?itemID=' + item._id
+    		  	postEntry.buyStyle = "color:grey;"
+    		    postEntry.buyDesciption ="Buy"
+    		
+    		 }
+    		 else
+    		 {
+    		    //postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
+    		    postEntry.buyStyle = "color:#ffa85a;"
+    		    postEntry.buyDesciption ="Sent"
+    		 }
     		postEntry.wishedCount = item.wishedList.length
     		postEntry.heartID = "heart_" + item._id
     		postEntry.itemID = item._id
@@ -152,6 +277,7 @@ function fillItems(user,currentWishList){
 		    itemPosts.itemEntry.push(postEntry)
         })
         $("#item").html(itemPostTemplate(itemPosts));
+        handleActions()
         }
         
     })

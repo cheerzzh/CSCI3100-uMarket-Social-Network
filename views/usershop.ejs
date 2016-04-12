@@ -259,37 +259,38 @@
          <div class="caption">
             <a href={{itemLink}}><h3>{{itemname}}</h3></a>
                 <div class="row">
-                <div class="col-lg-6">
+                <div class="col-lg-6 ol-md-6 col-xs-12">
                     <p>Status:{{itemStatus}}</p>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6 col-md-6 clo-xs-12">
                     <p>Price:{{itemPrice}}</p>
                 </div>
             </div>
             <div class="row">
-              <div class="col-lg-6 col-md-6">
+              <div class="col-lg-4 col-md-6">
                 <i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span>
               </div>
               
-              <div class="col-lg-6 col-md-6">
+              
+              <div class="col-lg-8 col-md-6">
+              
                <div class="actions">
                 <div class="actions-content">
-                  <a href="#">
-                    <i class="fa fa-arrow-left"></i>
-                  </a>
-                  <a href="#">
-                    <i class="fa fa-retweet"></i>
-                  </a>
-                  <a class="heartButton" id = {{heartID}} value={{itemID}}>
-                    <i class="fa fa-heart" style="{{heartStyle}}" ></i>
-                  </a>
-                  <font color="grey">{{wishedCount}} people wished</font>
+                <ul style="list-style: none;">
+                
+                  <span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:120%;" ></i>
+                  <font color="grey" >{{wishedCount}}</font></span>
+                
+                
+                </ul>
                 </div>
               </div>
               </div>
+              
               <div class="col-lg-12 col-md-12">
                 <i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span>
               </div>
+              
             </div>
               
          </div>
