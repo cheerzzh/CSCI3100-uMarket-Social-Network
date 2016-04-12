@@ -237,7 +237,7 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
     else
     {
     //postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
-    postEntry.buyStyle = "color:red;"
+    postEntry.buyStyle = "color:#ffa85a;"
     postEntry.buyDesciption ="Sent"
     }
 
@@ -331,23 +331,24 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
         });
       }else{
 
-        /*
+        
         $.ajax({
-          url: "/removeFromWishList",
+          type:"post",
+          url: "/toCancelWantToBuy",
           data: {"itemID":itemID},
           success: function(data) {
+            console.log(data)
               //Do Something
-            console.log("remove from wishlist succeed")
+            console.log("remove from wantToBuy succeed")
             window.targetUser = data.targetUser
 
-            // refresh whole timeline?
-            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
           },
           error: function(xhr) {
               //Do Something to handle error
           }
         });
-        */
+        
 
       }
     });

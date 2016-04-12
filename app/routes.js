@@ -449,7 +449,7 @@ module.exports = function(app, passport,upload) {
                     if(err) throw err
                     //console.log(itemObject._creator + " " + userObject._id)
                     //console.log(itemObject._creator.equals(userObject._id))
-                    if(itemObject._creator.equals(userObject._id) || itemObject.status == 3){
+                    if(itemObject._creator.equals(userObject._id) || itemObject.status == 3 || itemObject.status == 2){
                         console.log("Cannot buy own object!");
                         res.send({succeed:false, message:"Cannot buy own item!"})
                     }else{
@@ -558,13 +558,45 @@ module.exports = function(app, passport,upload) {
     
     // user want to cancel 
     //app.post('/cancelWantToBuy',isLoggedIn.function(req,res){
-    app.post('/cancelWantToBuy',isLoggedIn,function(req,res){
+    app.post('/toCancelWantToBuy',isLoggedIn,function(req,res){
 
         var userID = req.user._id
         var itemID = req.body.itemID
 
         // check item is in user's wantTobuylist
-        // check item status, if 1
+        // if item status == 1 &&item's confirmedCounterparty is not user, can cancel
+        // if item status == 0, can cancel
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(itemID,function(err,itemObject){
+                if(err) throw err
+                if(!include(userObject.wantTobuyItemList, itemObject._id)){
+                    res.send({succeed:false, message:"Item not in wantToBuyList"})
+                }else if( itemObject.status == 0 || (itemObject.status == 1 && !userObject._id.equals(itemObject.confirmedCounterParty))){
+                    var index = userObject.wantTobuyItemList.indexOf(itemObject._id);
+                    if(index > -1){ // found
+                        userObject.wantTobuyItemList.splice(index,1)
+                    }
+
+                    index = itemObject.wantToBuyUserList.indexOf(userObject._id);
+                    if(index > -1){ // found
+                        itemObject.wantToBuyUserList.splice(index,1)
+                    }
+
+                    itemObject.save(function(err){
+                        if(err) throw err
+                        userObject.save(function(err){
+                            if(err) throw err
+                            res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                        })
+                    })
+
+
+                }else{
+                    res.send({succeed:false, message:"Item not in valid status",targetUser:userObject,targetItem:itemObject})
+                }
+            })
+        })
     })
 
 
