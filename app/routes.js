@@ -394,12 +394,34 @@ module.exports = function(app, passport,upload) {
     })
 
 
-    app.get('/withDrawItem',isLoggedIn,function(req,res){
+    app.get('/toWithdrawItem',isLoggedIn,function(req,res){
 
         // get item id
         // check user id
+        var userID = req.user._id
+        var itemID = req.body.itemID
 
-        // update status
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(itemID,function(err,itemObject){
+                if(err) throw err
+                if(!itemObject._creator,equals(userObject._id)){
+                    res.send({succeed:false, message:"Item not belongs to you"})
+                }else if(itemObject.status != 0){
+                    res.send({succeed:false, message:"Item not in status 0"})
+                }else{
+                    itemObject.status == 3
+
+                    itemObject.save(function(err){
+                        if(err) throw err
+                        res.send({succeed:true})
+                    })
+
+                }
+            })
+        })
+        // check item belongs to user
+        // check withdraw condition: only when item in status 0, else reject
 
         // send back status
     });
@@ -427,7 +449,7 @@ module.exports = function(app, passport,upload) {
                     if(err) throw err
                     //console.log(itemObject._creator + " " + userObject._id)
                     //console.log(itemObject._creator.equals(userObject._id))
-                    if(itemObject._creator.equals(userObject._id)){
+                    if(itemObject._creator.equals(userObject._id) || itemObject.status == 3 || itemObject.status == 2){
                         console.log("Cannot buy own object!");
                         res.send({succeed:false, message:"Cannot buy own item!"})
                     }else{
@@ -536,10 +558,45 @@ module.exports = function(app, passport,upload) {
     
     // user want to cancel 
     //app.post('/cancelWantToBuy',isLoggedIn.function(req,res){
-    app.post('/cancelWantToBuy',function(req,res){
+    app.post('/toCancelWantToBuy',isLoggedIn,function(req,res){
 
-        // 
-        // for all pending confirmation operation 
+        var userID = req.user._id
+        var itemID = req.body.itemID
+
+        // check item is in user's wantTobuylist
+        // if item status == 1 &&item's confirmedCounterparty is not user, can cancel
+        // if item status == 0, can cancel
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(itemID,function(err,itemObject){
+                if(err) throw err
+                if(!include(userObject.wantTobuyItemList, itemObject._id)){
+                    res.send({succeed:false, message:"Item not in wantToBuyList"})
+                }else if( itemObject.status == 0 || (itemObject.status == 1 && !userObject._id.equals(itemObject.confirmedCounterParty))){
+                    var index = userObject.wantTobuyItemList.indexOf(itemObject._id);
+                    if(index > -1){ // found
+                        userObject.wantTobuyItemList.splice(index,1)
+                    }
+
+                    index = itemObject.wantToBuyUserList.indexOf(userObject._id);
+                    if(index > -1){ // found
+                        itemObject.wantToBuyUserList.splice(index,1)
+                    }
+
+                    itemObject.save(function(err){
+                        if(err) throw err
+                        userObject.save(function(err){
+                            if(err) throw err
+                            res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                        })
+                    })
+
+
+                }else{
+                    res.send({succeed:false, message:"Item not in valid status",targetUser:userObject,targetItem:itemObject})
+                }
+            })
+        })
     })
 
 
@@ -732,6 +789,31 @@ module.exports = function(app, passport,upload) {
         }
 
     });
+
+    // get recent post of target user 
+    app.post('/getUserRecentPosts',isLoggedIn,function(req,res){
+
+        console.log(req.body)
+        var userID = req.user._id
+        var targetUserID = req.body.targetUserID
+        var excludeItemID = req.body.excludeItemID
+
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+
+            Item.find({_creator:targetUserID,status:0,_id:{'$ne':excludeItemID}})
+            .limit(3)
+            .sort({updateDate: -1})
+            .exec(function(err,itemArray){
+                if(err) throw err
+                res.send(itemArray)
+            })
+
+
+        })
+
+
+    })
 
     /*
     app.post('/getUserInfo',isLoggedIn,function(req,res){
@@ -965,6 +1047,9 @@ module.exports = function(app, passport,upload) {
                             newNotification.type = 6
                             newNotification.user = userObject
                             newNotification.item = itemObject
+                            newNotification.title = "Confirmation Cancelled"
+                            newNotification.content =  "Oh! @" +"<span class='mention'>" +userObject.userName + "</span>" + " cancelled the confirmation  for the trade of " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
+                            newNotification.link = "/item/" + itemObject._id
 
                             newNotification.save(function(err){
                                 if(err) throw err
@@ -1111,6 +1196,9 @@ module.exports = function(app, passport,upload) {
                             newNotification.type = 7
                             newNotification.user = userObject
                             newNotification.item = itemObject
+                            newNotification.title = "New Comment"
+                            newNotification.content =  "Hey! @" +"<span class='mention'>" +userObject.userName + "</span>" + " commented your" + "<span class='hashtags'>" + itemObject.itemName+"</span>"
+                            newNotification.link = "/item/" + itemObject._id
                             newNotification.save(function(err){
                                 if(err) throw err
                                 ownerObject.notificationList.push(newNotification)
@@ -1638,16 +1726,47 @@ module.exports = function(app, passport,upload) {
     })
 
     // given 
-    app.post('/getAllNotification',function(req,res){
-        var userID = req.body.userID;
-        // var userID = req.user._id
-        User.find({"_id":userID})
-        .populate('notificationList')
-        .exec(function(err,userObject){
+    app.post('/getAllNotification',isLoggedIn,function(req,res){
+        //var userID = req.body.userID;
+        var userID = req.user._id
+        User.findById(userID,function(err,userObject){
             if(err) throw err
-            res.send(userObject)
+            //res.send(userObject.notificationList)
+            Notification.find({"_id":{$in:userObject.notificationList}})
+            .sort({'createTime': -1})
+            .limit(4)
+            .exec(function(err,result){
+                if(err) throw err
+                res.send(result)
+            })
         })
 
+    })
+
+    app.post("/readNotification",isLoggedIn,function(req,res){
+
+        var userID = req.user._id
+        var notificationID = req.body.notificationID
+
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Notification.findById(notificationID,function(err,notificationObject){
+                if(err) throw err
+                notificationObject.hasRead = true
+                notificationObject.save(function(err){
+                    if(err) throw err
+                    Notification.find({"_id":{$in:userObject.notificationList}})
+                    .sort({'createTime': -1})
+                    .limit(4)
+                    .exec(function(err,result){
+                        if(err) throw err
+                        res.send(result)
+                    })
+                })
+
+            })
+        })
+        
     })
 
 

@@ -182,7 +182,8 @@
                                 </p>
                                 <p class="price" id = "item-price" style="font-size:250%;"></p>
                                 <p class="text-center buttons">
-                                    <a style="display:none;"  class="btn btn-danger" id="itemTradedButton"><i class="fa fa-frown-o"></i>Traded</a>
+                                    <a   style="display:none;" class="btn btn-danger" id="itemWithdrawedButton"><i class="fa fa-ban"></i>Withdrawed</a>
+                                    <a  style="display:none;" class="btn btn-success" id="itemTradedButton"><i class="fa fa-thumbs-o-up"></i>Traded</a>
                                     <a style="display:none;"  class="btn btn-warning" id="itemReservedButton"><i class="fa fa-exclamation"></i>Reserved</a>
                                     <a style="display:none;"  class="btn btn-primary" id="wantToBuyButton"><i class="fa fa-shopping-cart"></i><span id="buyButtonText"></span></a>
                                     <a class="btn btn-default " id="addToWishlistButton"><i id="heartIcon"class="fa fa-heart" style="color:red"></i><span><font color="grey" id="wishedCount"></font></span></a>
@@ -239,7 +240,7 @@
                                     </div> <!-- / .comment -->
 
                                             
-                                </div> <!-- / .panel-body -->
+                                </div > <!-- / .panel-body -->
                                         <div class="panel-footer clearfix">
                                             <div class="article-comments-add" style="display:none;" id="add-comment-box">
                                                 <textarea id = "message-area" rows="1" class="form-control input-sm" placeholder="Say something here..." maxlength="50"></textarea>
@@ -253,88 +254,41 @@
 
                                             <!-- suggestion-->
 
-                                            <div class="row same-height-row">
+                                            <div class="row same-height-row" id="recommend_box" style="display:none;">
                                                 <div class="col-md-3 col-sm-6">
                                                     <div class="box same-height">
-                                                        <h3>You may also like these products</h3>
+                                                        <h3>You may also interet in</h3>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3 col-sm-6">
-                                                    <div class="product same-height">
-                                                        <div class="flip-container">
-                                                            <div class="flipper">
-                                                                <div class="front">
-                                                                    <a href="detail.html">
-                                                                        <img src="http://placehold.it/800x800" alt="" class="img-responsive">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="back">
-                                                                    <a href="detail.html">
-                                                                        <img src="http://placehold.it/800x800" alt="" class="img-responsive">
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <a href="detail.html" class="invisible">
-                                                            <img src="http://placehold.it/800x800" alt="" class="img-responsive">
-                                                        </a>
+                                                <div class="col-md-3 col-sm-6" id="recommend_post_1" style="display:none;">
+                                                    <a id="recommend_link_1"><div class="product same-height">
+                                                       <img alt="" class="img-responsive" id="recommend_pic_1">
                                                         <div class="text">
-                                                            <h3>Fur coat</h3>
-                                                            <p class="price">$143</p>
+                                                            <h3 id="recommend_title_1"></h3>
+                                                            <p class="price" id="recomment_price_1"></p>
                                                         </div>
-                                                    </div>
+                                                    </div></a>
                                                     <!-- /.product -->
                                                 </div>
-                                                <div class="col-md-3 col-sm-6">
-                                                    <div class="product same-height">
-                                                        <div class="flip-container">
-                                                            <div class="flipper">
-                                                                <div class="front">
-                                                                    <a href="detail.html">
-                                                                        <img src="http://placehold.it/800x800" alt="" class="img-responsive">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="back">
-                                                                    <a href="detail.html">
-                                                                        <img src="http://placehold.it/800x800" alt="" class="img-responsive">
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <a href="detail.html" class="invisible">
-                                                            <img src="http://placehold.it/800x800" alt="" class="img-responsive">
-                                                        </a>
+                                                <div class="col-md-3 col-sm-6" id="recommend_post_2" style="display:none;">
+                                                    <a  id="recommend_link_2"><div class="product same-height">
+                                                        <img alt="" class="img-responsive" id="recommend_pic_2">
                                                         <div class="text">
-                                                            <h3>Fur coat</h3>
-                                                            <p class="price">$143</p>
+                                                            <h3 id="recommend_title_2"></h3>
+                                                            <p class="price" id="recomment_price_2"></p>
                                                         </div>
-                                                    </div>
+                                                    </div></a>
                                                     <!-- /.product -->
                                                 </div>
-                                                <div class="col-md-3 col-sm-6">
-                                                    <div class="product same-height">
-                                                        <div class="flip-container">
-                                                            <div class="flipper">
-                                                                <div class="front">
-                                                                    <a href="detail.html">
-                                                                        <img src="http://placehold.it/800x800" alt="" class="img-responsive">
-                                                                    </a>
-                                                                </div>
-                                                                <div class="back">
-                                                                    <a href="detail.html">
-                                                                        <img src="http://placehold.it/800x800" alt="" class="img-responsive">
-                                                                    </a>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <a href="detail.html" class="invisible">
-                                                            <img src="http://placehold.it/800x800" alt="" class="img-responsive">
-                                                        </a>
+                                                <div class="col-md-3 col-sm-6" id="recommend_post_3" style="display:none;">
+                                                    <a  id="recommend_link_3"><div class="product same-height">
+                                                       
+                                                        <img  alt="" class="img-responsive" id="recommend_pic_1">
                                                         <div class="text">
-                                                            <h3>Fur coat</h3>
-                                                            <p class="price">$143</p>
+                                                            <h3 id="recommend_title_3"></h3>
+                                                            <p class="price" id="recomment_price_3"></p>
                                                         </div>
-                                                    </div>
+                                                    </div></a>
                                                     <!-- /.product -->
                                                 </div>
                                             </div>

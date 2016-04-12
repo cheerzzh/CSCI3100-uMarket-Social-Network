@@ -59,6 +59,48 @@ $(document).ready(function(){
   	processButton(window.targetUser,window.targetItem)
   	processItemImage(window.targetItem)
 
+  	// get related items
+  	$.ajax({
+          type: "POST",
+          url: "/getUserRecentPosts",
+          data: {targetUserID:window.targetItem._creator._id,excludeItemID:window.targetItem._id},
+          success: function(data) {
+          	
+          	//console.log(data)
+          	//console.log(data.length)
+
+          	if(data.length>0){
+
+          		$("#recommend_box").show()
+          		// attach post one bye one
+          		var index = 1
+          		data.forEach(function(itemObject){
+          			$("#recommend_post_" + index).show()
+          			var imageLink = "/images/no_image_1.png"
+          			if(itemObject.imageLinks.length > 0){
+          				imageLink = itemObject.imageLinks[index-1]
+          			}
+          			$("#recommend_pic_" + index).attr('src',imageLink)
+          			$("#recommend_link_" + index).attr('href','/item/' + itemObject._id)
+
+          			// name
+          			$("#recommend_title_" + index).text(itemObject.itemName)
+          			// price
+          			$("#recomment_price_" + index).text("$"+itemObject.price)
+
+          			index ++
+          		})
+          	}
+
+
+          	
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+    });
+
+
 })
 
 function processItemImage(itemObject){
@@ -66,14 +108,14 @@ function processItemImage(itemObject){
 	// if no image link: use default image
 	if(itemObject.imageLinks.length == 0){
 		
-		$("#item-image_1").attr("src","images/no-image.png");
+		$("#item-image_1").attr("src","images/no_image_1.png");
 	}else{
 
 		// attach default big image
 		$("#item-image_1").attr("src",window.targetItem.imageLinks[0]);
 		var index = 1;
 		itemObject.imageLinks.forEach(function(imageLink){
-			console.log(imageLink)
+			//console.log(imageLink)
 			// attach to small image
 			$("#item_image_block_"+index).show()
 			$("#item_image_"+index).attr("src",imageLink);
@@ -222,7 +264,25 @@ function processButton(userObject,itemObject){
 			        });
 				})
 			}else{
-				$("#buyButtonText").text('Buying Request Sent')
+				$("#buyButtonText").text('Cancel Buying Request')
+				$("#wantToBuyButton").click(function(){
+					$.ajax({
+			          type:"post",
+			          url: "/toCancelWantToBuy",
+			          data: {"itemID":itemObject},
+			          success: function(data) {
+			            console.log(data)
+			            
+			            window.targetUser = data.targetUser
+			            window.targetItem = data.targetItem
+				        processButton(window.targetUser, window.targetItem)
+			          },
+			          error: function(xhr) {
+			              //Do Something to handle error
+			          }
+			        });
+				})
+				
 			}
 		}else if(itemObject.status == 1){
 			console.log('Item is waiting for confirmation')
@@ -230,6 +290,9 @@ function processButton(userObject,itemObject){
 		}else if(itemObject.status == 2){
 			console.log('Item was traded')
 			$("#itemTradedButton").show()
+		}else if(itemObject.status ==3){
+			console.log('Item was withdrawed')
+			$("#itemWithdrawedButton").show()
 		}
 
 		// comment panel process

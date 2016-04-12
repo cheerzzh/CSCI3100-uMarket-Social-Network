@@ -1,6 +1,7 @@
 var timelinePostSource, timelinePostTemplate
 var itemPostTemplate, itemPostSource
 var messagePanelSource, messagePanelTemplate
+var notificationNavSource, notificationNavTemplate
 
 $(document).ready(function(){
 
@@ -53,9 +54,9 @@ $(document).ready(function(){
     ]
   };
 
-  source = $("#notifications-template").html();
-  template = Handlebars.compile(source);
-  $("#notifications").html(template(notifications));
+  notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  //$("#notifications").html(notificationNavTemplate(notifications));
 
  
 
@@ -85,11 +86,72 @@ $(document).ready(function(){
 
 
   // get notification
-  
+  fillNotificationNavBar(notificationNavTemplate)
+
 
 
 
 });
+
+function fillNotificationNavBar(template){
+  $.ajax({
+    type: "POST",
+    url: "/getAllNotification",
+    success: function(data) {
+      //console.log(data)
+      var notificationList = {}
+      notificationList.notifications = []
+      var newNotificationCount = 0
+      data.forEach(function(entry){
+        temp = {}
+        temp.link = entry.link
+        temp.title = entry.title
+        temp.content = entry.content
+        temp.notification_id = entry._id
+
+        if(!entry.hasRead){
+          temp.backgroundStyle = "background-color:#ECF5FF";
+          //temp.style1 = "<i class='fa fa-circle' style='color:red;'></i>"
+          newNotificationCount ++
+        }else{
+          temp.backgroundStyle = "";
+        }
+        notificationList.notifications.push(temp)
+      })
+      $("#notifications").html(template(notificationList));
+      if(newNotificationCount > 0){
+        //$("#notification_title").text(newNotificationCount + " New Notifications")
+        $("#notification_icon").css("color","#dd4b39")
+      }
+      else{
+        $("#notification_icon").css("color","")
+      }
+      
+
+      // attach function to label readed
+      $(".notification_post").click(function(){
+        var notificationID =  $(this).attr('value')
+        //console.log(notificationID)
+         $.ajax({
+          type:"post",
+          url: "/readNotification",
+          data: {"notificationID":notificationID},
+          success: function(data) {
+            //console.log(data)
+            fillNotificationNavBar(notificationNavTemplate)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+
+      })
+    },
+    error: function(xhr) {
+        //Do Something to handle error
+    }
+  });
+}
 
 function fillMessagePanel(){
 
@@ -159,7 +221,7 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
     else
     {
     //postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
-    postEntry.heartStyle = "color:red;"
+    postEntry.heartStyle = "color:#ff4444;"
 
     }
 
@@ -175,7 +237,7 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
     else
     {
     //postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
-    postEntry.buyStyle = "color:red;"
+    postEntry.buyStyle = "color:#ffa85a;"
     postEntry.buyDesciption ="Sent"
     }
 
@@ -188,7 +250,7 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
       postEntry.itemImageLink = item.imageLinks[0]
     }
     else{
-      postEntry.itemImageLink = '/images/no-image.png'
+      postEntry.itemImageLink = '/images/no_image_1.png'
     }
     postEntry.price = item.price
     postEntry.condition = item.condition
@@ -269,23 +331,24 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
         });
       }else{
 
-        /*
+        
         $.ajax({
-          url: "/removeFromWishList",
+          type:"post",
+          url: "/toCancelWantToBuy",
           data: {"itemID":itemID},
           success: function(data) {
+            console.log(data)
               //Do Something
-            console.log("remove from wishlist succeed")
+            console.log("remove from wantToBuy succeed")
             window.targetUser = data.targetUser
 
-            // refresh whole timeline?
-            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
           },
           error: function(xhr) {
               //Do Something to handle error
           }
         });
-        */
+        
 
       }
     });
@@ -294,6 +357,8 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
   })
 }
 
+
+// not used
 function fillTimeLinePanel(template,currentWishList){
   $.get('/getTimelinePost',1, function(data) {
 
