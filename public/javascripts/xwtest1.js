@@ -98,127 +98,7 @@ jQuery(document).ready(function() {
 })
 
 
-/*
-function fillUserSuggestionPanel(){
 
-
-    //console.log(data)
-    // create user suggestion array
-    var userSuggestion = {}
-    userSuggestion.suggestions = []
-    $("#userCount").text(window.searchResult.users.length)
-    window.searchResult.users.forEach(function(userEntry){
-
-      var suggestionEntry = {}
-      suggestionEntry.avatar = userEntry.avatarLink
-      suggestionEntry.name = userEntry.userName
-      suggestionEntry.userID = userEntry._id
-      suggestionEntry.university = '@' +userEntry.university
-      suggestionEntry.followButtonID = "followButton_" + userEntry._id
-      suggestionEntry.unfollowButtonID = "unfollowButton_" + userEntry._id
-      suggestionEntry.userSuggestionID = "userSuggestionID_" + userEntry._id
-      suggestionEntry.userLink = "/user/" + userEntry._id
-      console.log(include(window.targetUser.followingList, userEntry._id))
-      userSuggestion.suggestions.push(suggestionEntry)
-    })
-    //console.log(userSuggestion)
-    source = $("#suggestions-template").html();
-    template = Handlebars.compile(source);
-    $("#suggestions").html(template(userSuggestion));
-
-    // loop through all follow-related button
-    $(".followButton").each(function(){
-    	if(include(window.targetUser.followingList, $(this).attr('value'))){
-    		$(this).hide()
-    	}
-    	
-    })
-
-    $(".unfollowButton").each(function(){
-    	if(!include(window.targetUser.followingList, $(this).attr('value'))){
-    		$(this).hide()
-    	}
-    })
-
-    $('.followButton').click(function(){
-      var targetUserID = $(this).attr('value')
-      console.log(targetUserID)
-
-      // ajax get request
-      // request to follow user
-      $.ajax({
-        url: "/toFollowUser",
-        data: {"targetUserID":targetUserID},
-        success: function(response) {
-            //Do Something
-            console.log('Follow' + targetUserID + " success!")
-
-            // remove button
-            $("#followButton_"+targetUserID).remove()
-            // delete entry
-            $("#userSuggestionID_" + targetUserID).remove()
-        },
-        error: function(xhr) {
-            //Do Something to handle error
-        }
-      });
-
-    });
-
-	$('.unfollowButton').click(function(){
-		var targetUserID = $(this).attr('value')
-		console.log(targetUserID)
-
-		// ajax get request
-		// request to follow user
-		$.ajax({
-		url: "/toUnFollowUser",
-		data: {"targetUserID":targetUserID},
-		success: function(response) {
-		    //Do Something
-		    console.log('unFollow' + targetUserID + " success!")
-
-		    // remove button
-		    $("#unfollowButton_"+targetUserID).remove()
-		    // delete entry
-		     $("#userSuggestionID_" + targetUserID).remove()
-
-		},
-		error: function(xhr) {
-		    //Do Something to handle error
-		}
-		});
-	})
-
-
-}
-
-function fillconfirmlist1(WTBlist){
-	var userSuggestion = {}
-    userSuggestion.suggestions = []
-    //$("#userCount").text(window.searchResult.users.length)
-    WTBlist.forEach(function(wtbUser){
-    	var suggestionEntry = {}
-    	$.post('getUserInfo',{"userID": wtbUser},function(userEntry){
-		      suggestionEntry.avatar = userEntry.avatarLink
-		      suggestionEntry.name = userEntry.userName
-		      suggestionEntry.userID = userEntry._id
-		      suggestionEntry.university = '@' +userEntry.university
-		      suggestionEntry.followButtonID = "followButton_" + userEntry._id
-		      suggestionEntry.unfollowButtonID = "unfollowButton_" + userEntry._id
-		      suggestionEntry.userSuggestionID = "userSuggestionID_" + userEntry._id
-		      suggestionEntry.userLink = "/user/" + userEntry._id
-		      console.log(include(window.targetUser.followingList, userEntry._id))
-		      userSuggestion.suggestions.push(suggestionEntry)
-    	});
-    })
-    console.log(userSuggestion)
-    console.log(source)
-    console.log(template(userSuggestion))
-    console.log(userSuggestion)
-    $("#suggestions").html(template(userSuggestion));
-}
-*/
 
 function handleConfirmBtn(){
 	$(".wantconfirmedButton").click(function(){
@@ -254,7 +134,7 @@ function handleActions(){
           success: function(data) {
               //Do Something
             console.log("add to shopping cart succeed")
-            //window.targetUser = data.targetUser
+            window.targetUser = data.targetUser
 
             // refresh whole timeline?
             //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
@@ -268,23 +148,27 @@ function handleActions(){
         });
       }else{
 
-        /*
+        
         $.ajax({
-          url: "/removeFromWishList",
+          type:"post",
+          url: "/toCancelWantToBuy",
           data: {"itemID":itemID},
           success: function(data) {
+            console.log(data)
               //Do Something
-            console.log("remove from wishlist succeed")
+            console.log("remove from wantToBuy succeed")
             window.targetUser = data.targetUser
 
-            // refresh whole timeline?
-            fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList)
+            //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
+          	fillItemPanel(window.targetUser.wishList)
+			$("#confirmed-body").hide()
+          	
           },
           error: function(xhr) {
               //Do Something to handle error
           }
         });
-        */
+        
 
       }
     })
@@ -623,14 +507,16 @@ function handleItemWithdraw(){
 		console.log(targetItemID);
 		console.log(Itemstatus);
 		var statusID=String(Itemstatus) +'id'+targetItemID;
-		$('.itembody'+statusID).remove();
+		//$('.itembody'+statusID).remove();
 		$.ajax({
-			url :'/withDrawItem',
+			url :'/toWithdrawItem',
 			data : {"itemID" : targetItemID},
 			success : function(){
 				console.log('withdraw ' + targetItemID + ' success')
 				var statusID=String(Itemstatus) +'id'+targetItemID;
 				$('.itembody'+statusID).remove();
+				fillItemPanel(window.targetUser.wishList)
+				
 				
 			},
 			error: function(){
@@ -642,6 +528,8 @@ function handleItemWithdraw(){
 }
 
 function fillItemPanel(currentWishList){
+	console.log("refresh ")
+	$("#confirmed-body").hide()
     $.get('getMyItem',function(data){
         //console.log(data)
         descriptionLimit = 180
@@ -758,7 +646,6 @@ function fillItemPanel(currentWishList){
     })
     
     $.get('getwaitForMetoConfirmItemList',function(data){
-		console.log(data)
 		var itemAll = {}
 		itemAll.itemEntry = []
 		data.forEach(function(item,index){
@@ -824,7 +711,6 @@ function fillItemPanel(currentWishList){
 	})
 	
 	$.get('getboughtItemList',function(data){
-		console.log(data)
 		var itemsAll = {}
 		itemsAll.itemEntry = []
 		data.forEach(function(item,index){
@@ -933,26 +819,21 @@ function fillItemPanel(currentWishList){
 		postEntry.heartStyle = "color:red;"
 		}
 		// process buy button
-		if(window.targetUser.wantTobuyItemList.length){
-		    if(!include(window.targetUser.wantTobuyItemList, item._id)){
+		
+		if(!include(window.targetUser.wantTobuyItemList, item._id)){
 		
 		    // in wishlist, gray, add to wishlist
 		    //postEntry.wishlistLink = '/addToWishList?itemID=' + item._id
-		    postEntry.buyStyle = "color:grey;"
+		  	postEntry.buyStyle = "color:grey;"
 		    postEntry.buyDesciption ="Buy"
 		
-		    }
-		    else
-		    {
+		 }
+		 else
+		 {
 		    //postEntry.wishlistLink = '/removeFromWishList?itemID=' + item._id
-		    postEntry.buyStyle = "color:red;"
+		    postEntry.buyStyle = "color:#ffa85a;"
 		    postEntry.buyDesciption ="Sent"
-		    }
-		}
-		else{
-			postEntry.buyStyle = "color:grey;"
-		    postEntry.buyDesciption ="Buy"
-		}
+		 }
 		postEntry.wishedCount = item.wishedList.length
 		postEntry.heartID = "heart_" + item._id
 		postEntry.itemID = item._id
