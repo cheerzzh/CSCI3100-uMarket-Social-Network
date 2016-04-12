@@ -410,7 +410,7 @@ module.exports = function(app, passport,upload) {
                 }else if(itemObject.status != 0){
                     res.send({succeed:false, message:"Item not in status 0"})
                 }else{
-                    itemObject.status == 3
+                    itemObject.status = 3
 
                     itemObject.save(function(err){
                         if(err) throw err
