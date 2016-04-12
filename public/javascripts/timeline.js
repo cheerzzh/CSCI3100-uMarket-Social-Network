@@ -120,7 +120,7 @@ function fillNotificationNavBar(template){
       })
       $("#notifications").html(template(notificationList));
       if(newNotificationCount > 0){
-        $("#notification_title").text(newNotificationCount + " New Notifications")
+        //$("#notification_title").text(newNotificationCount + " New Notifications")
         $("#notification_icon").css("color","#dd4b39")
       }
       else{
@@ -356,6 +356,8 @@ function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
   })
 }
 
+
+// not used
 function fillTimeLinePanel(template,currentWishList){
   $.get('/getTimelinePost',1, function(data) {
 

@@ -230,6 +230,9 @@ function processButton(userObject,itemObject){
 		}else if(itemObject.status == 2){
 			console.log('Item was traded')
 			$("#itemTradedButton").show()
+		}else if(itemObject.status ==3){
+			console.log('Item was withdrawed')
+			$("#itemWithdrawedButton").show()
 		}
 
 		// comment panel process

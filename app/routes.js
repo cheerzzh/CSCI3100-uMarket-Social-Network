@@ -394,12 +394,34 @@ module.exports = function(app, passport,upload) {
     })
 
 
-    app.get('/withDrawItem',isLoggedIn,function(req,res){
+    app.get('/toWithdrawItem',isLoggedIn,function(req,res){
 
         // get item id
         // check user id
+        var userID = req.user._id
+        var itemID = req.body.itemID
 
-        // update status
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+            Item.findById(itemID,function(err,itemObject){
+                if(err) throw err
+                if(!itemObject._creator,equals(userObject._id)){
+                    res.send({succeed:false, message:"Item not belongs to you"})
+                }else if(itemObject.status != 0){
+                    res.send({succeed:false, message:"Item not in status 0"})
+                }else{
+                    itemObject.status == 3
+
+                    itemObject.save(function(err){
+                        if(err) throw err
+                        res.send({succeed:true})
+                    })
+
+                }
+            })
+        })
+        // check item belongs to user
+        // check withdraw condition: only when item in status 0, else reject
 
         // send back status
     });
@@ -427,7 +449,7 @@ module.exports = function(app, passport,upload) {
                     if(err) throw err
                     //console.log(itemObject._creator + " " + userObject._id)
                     //console.log(itemObject._creator.equals(userObject._id))
-                    if(itemObject._creator.equals(userObject._id)){
+                    if(itemObject._creator.equals(userObject._id) || itemObject.status == 3){
                         console.log("Cannot buy own object!");
                         res.send({succeed:false, message:"Cannot buy own item!"})
                     }else{
@@ -536,10 +558,13 @@ module.exports = function(app, passport,upload) {
     
     // user want to cancel 
     //app.post('/cancelWantToBuy',isLoggedIn.function(req,res){
-    app.post('/cancelWantToBuy',function(req,res){
+    app.post('/cancelWantToBuy',isLoggedIn,function(req,res){
 
-        // 
-        // for all pending confirmation operation 
+        var userID = req.user._id
+        var itemID = req.body.itemID
+
+        // check item is in user's wantTobuylist
+        // check item status, if 1
     })
 
 
