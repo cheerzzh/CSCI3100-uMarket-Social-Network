@@ -1,5 +1,7 @@
 var conversationListSource, conversationListTemplate
+var notificationListSource, notificationListTemplate
 var bimessageSource, bimessageTemplate
+var instantConversation
 
 bimessageSource = $("#bimessages-template").html();
 bimessageTemplate = Handlebars.compile(bimessageSource);
@@ -11,13 +13,16 @@ $(document).ready(function(){
     
 	conversationListSource = $("#contacts-template").html();
 	conversationListTemplate = Handlebars.compile(conversationListSource);
+	
+	notificationListSource = $("#notifications-template").html();
+	notificationListTemplate = Handlebars.compile(notificationListSource);
     /*
 	for notification
     */
 
 
 	fillConversationList(conversationListTemplate)
-
+    fillNotificationList(notificationListTemplate)
 
     var notifications = {
     notifications: [
@@ -75,6 +80,53 @@ $(document).ready(function(){
 
   
 });
+function fillNotificationList(template){
+    	$.ajax({
+        url: "/getAllNotification",
+        type:"get",
+        success: function(data) {
+            //Do Something
+            console.log(data)
+
+            
+            // attach to panel
+        var notifications = {}
+		    notifications.notification = []
+
+		    data.forEach(function(notificationEntry){
+
+		      var suggestionEntry = {}
+		      if(targetUser._id == conversationEntry.party1._id){
+		        suggestionEntry.user = conversationEntry.party2.userName
+		      }
+		      else{
+		        suggestionEntry.user = conversationEntry.party1.userName
+		      }
+		        suggestionEntry.conversationId = conversationEntry._id
+		        console.log(suggestionEntry.conversationId)
+		        var tempmessage = conversationEntry.messageList[conversationEntry.messageList.length-1]
+		        if(tempmessage.sender == conversationEntry.party1._id)
+		        {
+		          var sender = conversationEntry.party1.userName.concat(":")
+
+		          suggestionEntry.message = sender.concat(tempmessage.content)
+		        }
+		        else
+		        {
+		          var sender = conversationEntry.party2.userName.concat(":")
+		          suggestionEntry.message = sender.concat(tempmessage.content)
+		        }
+		         
+		      conversations.conversation.push(suggestionEntry)
+		    })
+		  $("#contacts").html(template(conversations));
+        },
+		          error: function(xhr) {
+            //Do Something to handle error
+        }
+    });
+}
+
 
 function fillConversationList(template){
 
@@ -116,14 +168,14 @@ function fillConversationList(template){
 		         
 		      conversations.conversation.push(suggestionEntry)
 		    })
-		   
-		    $("#contacts").html(template(conversations));
-		     
-		    $('.list-group-item').click(function(){
-		    
-            
-            var conversationId = $(this).attr('value')
-            
+		  $("#contacts").html(template(conversations));
+
+
+		
+		 $('.list-group-item').unbind()
+    	 $('.list-group-item').click(function(){
+        var conversationId = $(this).attr("value")
+        console.log(conversationId)
         $.ajax({
   
             url: "/getAllConversation",
@@ -132,14 +184,15 @@ function fillConversationList(template){
             //Do Something
             console.log(data)
           
-             var bimessages = {}
-		         bimessages.bimessage = []
+            var bimessages = {}
+		    bimessages.bimessage = []
             var temp
             var party1
             var party2
             data.forEach(function(conversationEntry){
              if(conversationId == conversationEntry._id)
              {
+               instantConversation = conversationEntry
                temp = conversationEntry.messageList
                party1 = conversationEntry.party1
                party2 = conversationEntry.party2
@@ -168,48 +221,196 @@ function fillConversationList(template){
 		   
 		    $("#bimessages").html(bimessageTemplate(bimessages));
 		    
-		    $('#send').click(function(){
-		      var sender, receiver,replyConversationID,isReply,content
+            },
+            error: function(xhr) {
+            //Do Something to handle error
+            }
+            });
+    })
+		  $('#send').unbind()
+		  $('#send').click(function(){
+		  if(!instantConversation){return;}
+		  content = $("textarea#mess").val()
+		  if(!content){return;}
+		  var sender, receiver,replyConversationID,isReply,content
           sender = targetUser._id
-          if(targetUser._id == party1._id)
+          if(targetUser._id == instantConversation.party1._id)
           {
-            receiver = party2._id
+            receiver = instantConversation.party2._id
           }
           else
           {
-            receiver = party1._id
+            receiver = instantConversation.party1._id
           }
-          replyConversationID = conversationId
+          replyConversationID = instantConversation._id
           isReply = 1
-          content = $("textarea#mess").val()
+          
+          console.log("123")
           $.ajax({
            url:"/sendMessage",
            type:"post",
            data:{"sender":sender,"receiver":receiver,"replyConversationID":replyConversationID,"isReply":isReply,"content":content},
            success: function(data1){
-            $("#send").val("")
+            $("textarea#mess").val("")
+            	
+            	$.ajax({
+                 url: "/getAllConversation",
+                 type:"get",
+                success: function(data2) {
+               //Do Something
             
+            // attach to panel
+            conversations = {}
+		    conversations.conversation = []
+
+		    data2.forEach(function(conversationEntry){
+
+		      var suggestionEntry = {}
+		      if(targetUser._id == conversationEntry.party1._id){
+		        suggestionEntry.user = conversationEntry.party2.userName
+		      }
+		      else{
+		        suggestionEntry.user = conversationEntry.party1.userName
+		      }
+		        suggestionEntry.conversationId = conversationEntry._id
+		        var tempmessage2 = conversationEntry.messageList[conversationEntry.messageList.length-1]
+		        if(tempmessage2.sender == conversationEntry.party1._id)
+		        {
+		          var sender2 = conversationEntry.party1.userName.concat(":")
+		          suggestionEntry.message = sender2.concat(tempmessage2.content)
+		        }
+		        else
+		        {
+		          var sender2 = conversationEntry.party2.userName.concat(":")
+		          suggestionEntry.message = sender2.concat(tempmessage2.content)
+		        }
+		         
+		      conversations.conversation.push(suggestionEntry)
+		    })
+		    $("#contacts").html(template(conversations));
+		    
+		     $.ajax({
+  
+            url: "/getAllConversation",
+            type:"get",
+            success: function(data) {
+            //Do Something
+            console.log(data)
+          
+            var bimessages = {}
+		    bimessages.bimessage = []
+            var temp
+            var party1
+            var party2
+            data.forEach(function(conversationEntry){
+             if(replyConversationID == conversationEntry._id)
+             {
+               instantConversation = conversationEntry
+               temp = conversationEntry.messageList
+               party1 = conversationEntry.party1
+               party2 = conversationEntry.party2
+              }
+            })
+            // attach to panel
+
+		      temp.forEach(function(bimessageEntry){
+
+		      var suggestionEntry = {}
+		      if(bimessageEntry.sender == party1._id){
+		        suggestionEntry.imgsource = party1.avatarLink
+		        suggestionEntry.sender = party1.userName
+		      }
+		      else{
+		        suggestionEntry.imgsource = party2.avatarLink
+		        suggestionEntry.sender = party2.userName
+		      }
+		        var date = bimessageEntry.createTime.slice(0,10)
+		        var concretetime = bimessageEntry.createTime.slice(15,19)
+		        suggestionEntry.time = date + " " + concretetime
+		        suggestionEntry.bimessage = bimessageEntry.content
+		         
+		      bimessages.bimessage.push(suggestionEntry)
+		    })
+		   
+		    $("#bimessages").html(bimessageTemplate(bimessages));
+		    
+		  $('.list-group-item').unbind()
+		  $('.list-group-item').click(function(){
+        var conversationId = $(this).attr("value")
+        console.log(conversationId)
+        $.ajax({
+  
+            url: "/getAllConversation",
+            type:"get",
+            success: function(data) {
+            //Do Something
+            console.log(data)
+          
+            var bimessages = {}
+		    bimessages.bimessage = []
+            var temp
+            var party1
+            var party2
+            data.forEach(function(conversationEntry){
+             if(conversationId == conversationEntry._id)
+             {
+               instantConversation = conversationEntry
+               temp = conversationEntry.messageList
+               party1 = conversationEntry.party1
+               party2 = conversationEntry.party2
+              }
+            })
+            // attach to panel
+
+		      temp.forEach(function(bimessageEntry){
+
+		      var suggestionEntry = {}
+		      if(bimessageEntry.sender == party1._id){
+		        suggestionEntry.imgsource = party1.avatarLink
+		        suggestionEntry.sender = party1.userName
+		      }
+		      else{
+		        suggestionEntry.imgsource = party2.avatarLink
+		        suggestionEntry.sender = party2.userName
+		      }
+		        var date = bimessageEntry.createTime.slice(0,10)
+		        var concretetime = bimessageEntry.createTime.slice(15,19)
+		        suggestionEntry.time = date + " " + concretetime
+		        suggestionEntry.bimessage = bimessageEntry.content
+		         
+		      bimessages.bimessage.push(suggestionEntry)
+		    })
+		   
+		    $("#bimessages").html(bimessageTemplate(bimessages));
+		    
+            },
+            error: function(xhr) {
+            //Do Something to handle error
+            }
+            });
+       })
+		    
+                },
+                error: function(xhr) {
+             //Do Something to handle error
+              }
+             });
           },
           error:function(xhr) {
             //Do Something to handle error
           }
         
-          })
-		 
-      })
-
-      },
-        error: function(xhr) {
-            //Do Something to handle error
-        }
-       });
-		       
-		  })
-		       
+          });
 
     },
         error: function(xhr) {
             //Do Something to handle error
         }
     });
+		  })
+        },
+        error:function(xhr){
+            
+        }
+    })
 }
