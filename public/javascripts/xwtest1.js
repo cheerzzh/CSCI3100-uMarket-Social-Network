@@ -44,6 +44,9 @@ jQuery(document).ready(function() {
 	//handleItemWithdraw();
 	fillItemPanel(window.targetUser.wishList)
 	//handleItemWithdraw()
+	$.get('getwanttobuyitems',function(data){
+		console.log(data)
+	})
 	
 })
 
@@ -799,7 +802,7 @@ function fillItemPanel(currentWishList){
 		handleActions()
 	})
 	
-	$.get('getwantTobuyItemList',function(data){
+	$.get('getwanttobuyitems',function(data){
 		console.log(data)
 		var descriptionLimit = 180
 		var allitems = {}

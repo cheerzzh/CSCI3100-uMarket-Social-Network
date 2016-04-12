@@ -740,28 +740,69 @@ module.exports = function(app, passport,upload) {
     
     // === user retrieve boughtItemList
     app.get('/getboughtItemList',isLoggedIn,function(req,res){
+       
 
-        // find user
+        // first just return first 5 items not belongs to users
+        //console.log(req.user._id)
+        // .select('displayName email profileImageURL') // choose fields
+        // _id:{'$nin':req.user.wishList}
+        // search for things 
+        // find user object and populate its following to get their wish list
+        var boughtItem = []
         User.findById(req.user._id)
-        .populate('boughtItemList')
-        .exec(function(err, user) {
+        .exec(function(err,user){
             if(err) throw err
-            res.send(user.boughtItemList)
+            boughtItem.extend(user.boughtItemList)
+
+            //console.log(itemID_infollowingWishList)
+            Item.find({_id:{'$in':boughtItem}})
+            //.and({_id:{'$nin':req.user.wishList}})
+            .populate('_creator')
+            .exec(function(err, items) {
+                if(err)
+                {
+                    throw err;
+                }
+
+                res.send(items)
+            });
+
         })
     });
     
     // === user retrieve wishlist
     app.get('/getwishList',isLoggedIn,function(req,res){
+       
 
-        // find user
+        // first just return first 5 items not belongs to users
+        //console.log(req.user._id)
+        // .select('displayName email profileImageURL') // choose fields
+        // _id:{'$nin':req.user.wishList}
+        // search for things 
+        // find user object and populate its following to get their wish list
+        var wishL = []
         User.findById(req.user._id)
-        .populate('wishList')
-        .exec(function(err, user) {
+        .exec(function(err,user){
             if(err) throw err
-            res.send(user.wishList)
+            wishL.extend(user.wishList)
+
+            //console.log(itemID_infollowingWishList)
+            Item.find({_id:{'$in':wishL}})
+            //.and({_id:{'$nin':req.user.wishList}})
+            .populate('_creator')
+            .exec(function(err, items) {
+                if(err)
+                {
+                    throw err;
+                }
+
+                res.send(items)
+            });
+
         })
     });
-    
+
+/*
     // === user retrieve wantTobuyItemList
     app.get('/getwantTobuyItemList',isLoggedIn,function(req,res){
 
@@ -771,6 +812,37 @@ module.exports = function(app, passport,upload) {
         .exec(function(err, user) {
             if(err) throw err
             res.send(user.wantTobuyItemList)
+        })
+    });
+*/   
+    app.get('/getwanttobuyitems',isLoggedIn,function(req,res){
+       
+
+        // first just return first 5 items not belongs to users
+        //console.log(req.user._id)
+        // .select('displayName email profileImageURL') // choose fields
+        // _id:{'$nin':req.user.wishList}
+        // search for things 
+        // find user object and populate its following to get their wish list
+        var wtbList = []
+        User.findById(req.user._id)
+        .exec(function(err,user){
+            if(err) throw err
+            wtbList.extend(user.wantTobuyItemList)
+
+            //console.log(itemID_infollowingWishList)
+            Item.find({_id:{'$in':wtbList}})
+            //.and({_id:{'$nin':req.user.wishList}})
+            .populate('_creator')
+            .exec(function(err, items) {
+                if(err)
+                {
+                    throw err;
+                }
+
+                res.send(items)
+            });
+
         })
     });
 
