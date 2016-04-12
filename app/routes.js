@@ -405,7 +405,7 @@ module.exports = function(app, passport,upload) {
             if(err) throw err
             Item.findById(itemID,function(err,itemObject){
                 if(err) throw err
-                if(!itemObject._creator,equals(userObject._id)){
+                if(!itemObject._creator.equals(userObject._id)){
                     res.send({succeed:false, message:"Item not belongs to you"})
                 }else if(itemObject.status != 0){
                     res.send({succeed:false, message:"Item not in status 0"})
