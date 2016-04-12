@@ -29,54 +29,6 @@ jQuery(document).ready(function() {
 
 function handleActions(){
     
-	$(".buyButton").click(function(){
-      var itemID = $(this).attr('value')
-      console.log("click buy: " + itemID)
-
-      if(!include(window.user.wantTobuyItemList, itemID)){
-        $.ajax({
-          type: "POST",
-          url: "/wantToBuy",
-          data: {itemID:itemID,message:"I want to buy your item"},
-          success: function(data) {
-              //Do Something
-            console.log("add to shopping cart succeed")
-            window.user = data.targetUser
-
-            // refresh whole timeline?
-            //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
-          	fillItems(window.targetUser,window.user.wishList)
-          	
-          },
-          error: function(xhr) {
-              //Do Something to handle error
-          }
-        });
-      }else{
-
-        
-        $.ajax({
-          type:"post",
-          url: "/toCancelWantToBuy",
-          data: {"itemID":itemID},
-          success: function(data) {
-            console.log(data)
-              //Do Something
-            console.log("remove from wantToBuy succeed")
-            window.user = data.targetUser
-
-            //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
-          	fillItems(window.targetUser,window.user.wishList)
-          	
-          },
-          error: function(xhr) {
-              //Do Something to handle error
-          }
-        });
-        
-
-      }
-    })
     $(".heartButton").click((function(){
       var itemID = $(this).attr('value')
       console.log("click heart: " + itemID)

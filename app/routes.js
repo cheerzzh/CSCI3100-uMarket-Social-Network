@@ -100,11 +100,11 @@ module.exports = function(app, passport,upload) {
 
     });
     
-    app.get('/xwtest1',isLoggedIn,function(req,res){
+    app.get('/itemManage',isLoggedIn,function(req,res){
 
         //res.send('Hey, you\'ve logged in, ' + req.user.local.email + '\nPlease fill more user info');
         req.flash()
-        res.render('xwtest1.ejs', {
+        res.render('itemManagement.ejs', {
             user : req.user // get the user out of session and pass to template
         });
     });
