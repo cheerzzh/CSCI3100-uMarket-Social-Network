@@ -414,7 +414,7 @@ module.exports = function(app, passport,upload) {
 
                     itemObject.save(function(err){
                         if(err) throw err
-                        res.send({succeed:true})
+                        res.send({succeed:true,targetUser:userObject})
                     })
 
                 }
