@@ -790,6 +790,31 @@ module.exports = function(app, passport,upload) {
 
     });
 
+    // get recent post of target user 
+    app.post('/getUserRecentPosts',isLoggedIn,function(req,res){
+
+        console.log(req.body)
+        var userID = req.user._id
+        var targetUserID = req.body.targetUserID
+        var excludeItemID = req.body.excludeItemID
+
+        User.findById(userID,function(err,userObject){
+            if(err) throw err
+
+            Item.find({_creator:targetUserID,status:0,_id:{'$ne':excludeItemID}})
+            .limit(3)
+            .sort({updateDate: -1})
+            .exec(function(err,itemArray){
+                if(err) throw err
+                res.send(itemArray)
+            })
+
+
+        })
+
+
+    })
+
     /*
     app.post('/getUserInfo',isLoggedIn,function(req,res){
 
