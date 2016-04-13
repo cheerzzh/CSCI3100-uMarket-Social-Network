@@ -1819,7 +1819,7 @@ module.exports = function(app, passport,upload) {
             Conversation.find({"_id":{$in:userObject.conversationList}})
             .sort({'updateTime': -1})
             .populate('messageList')
-            .populate('referenceItem')
+            .populate('referencedItem')
             .populate('party1')
             .populate('party2')
             .exec(function(err,result){
