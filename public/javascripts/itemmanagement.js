@@ -8,7 +8,7 @@ jQuery(document).ready(function() {
     $.backstretch('images/3.jpg', {speed: 1000});
     fillUserInfo_Navbar(window.targetUser)
     $("#confirmed-body").hide()
-    console.log(window.targetUser)
+    //console.log(window.targetUser)
 
     //console.log(window.targetUser)
     //console.log(window.searchResult)
@@ -59,17 +59,17 @@ function handleConfirmBtn(){
 		var itemID = $(this).attr('ID')
 		var choice = confirm("Sell "+itemID+" to "+userID +" ?\n")
 		if(choice == true){
-			console.log("you chose yes")
+			//console.log("you chose yes")
 			$.post('toInitiateConfirmation',{"counterPartyID" : userID,"itemID" : itemID},function(data){
 				if(data.succeed)
-					console.log("initializeConfirmation Successfully")
+					//console.log("initializeConfirmation Successfully")
 					window.targetUser = data.targetUser
 					fillItemPanel(window.targetUser.wishList)
 					$("#confirmed-body").hide()
 			})
 		}
 		else{
-			console.log("you chose cancel")
+			//console.log("you chose cancel")
 		}
 	})
 	
@@ -78,7 +78,7 @@ function handleConfirmBtn(){
 function handleActions(){
 	$(".buyButton").click(function(){
       var itemID = $(this).attr('value')
-      console.log("click buy: " + itemID)
+      //console.log("click buy: " + itemID)
 
       if(!include(window.targetUser.wantTobuyItemList, itemID)){
         $.ajax({
@@ -87,7 +87,7 @@ function handleActions(){
           data: {itemID:itemID,message:"I want to buy your item"},
           success: function(data) {
               //Do Something
-            console.log("add to shopping cart succeed")
+            //console.log("add to shopping cart succeed")
             window.targetUser = data.targetUser
 
             // refresh whole timeline?
@@ -108,9 +108,9 @@ function handleActions(){
           url: "/toCancelWantToBuy",
           data: {"itemID":itemID},
           success: function(data) {
-            console.log(data)
+            //console.log(data)
               //Do Something
-            console.log("remove from wantToBuy succeed")
+            //console.log("remove from wantToBuy succeed")
             window.targetUser = data.targetUser
 
             //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
@@ -128,7 +128,7 @@ function handleActions(){
     })
     $(".heartButton").click((function(){
       var itemID = $(this).attr('value')
-      console.log("click heart: " + itemID)
+      //console.log("click heart: " + itemID)
 
       if(!include(window.targetUser.wishList, itemID)){
         $.ajax({
@@ -136,7 +136,7 @@ function handleActions(){
           data: {"itemID":itemID},
           success: function(data) {
               //Do Something
-            console.log("add to wishlist succeed")
+            //console.log("add to wishlist succeed")
             //window.targetUser = data.targetUser
 
             // refresh whole timeline?
@@ -156,7 +156,7 @@ function handleActions(){
           data: {"itemID":itemID},
           success: function(data) {
               //Do Something
-            console.log("remove from wishlist succeed")
+            //console.log("remove from wishlist succeed")
             //window.targetUser = data.targetUser
 
             // refresh whole timeline?
@@ -180,10 +180,10 @@ function handleCancelbtn(){
 		var itemname = $(this).attr('id')
 		var choice = confirm("Do not confirmed "+itemname+" ?\n")
 		if(choice == true){
-			console.log("cancel confirming "+itemname)
+			//console.log("cancel confirming "+itemname)
 			$.post('toCancelConfirmation',{"itemID" : itemID},function(data){
 				if(data.succeed){
-					console.log("cancel confirm successfully")
+					//console.log("cancel confirm successfully")
 					fillItemPanel(window.targetUser.wishList)
 					$("#confirmed-body").hide()
 				}
@@ -201,10 +201,8 @@ function handleBuyconfirmed(){
 		var itemname = $(this).attr('id')
 		var choice = confirm("Are you sure that you want to buy "+itemname+" ?\n")
 		if(choice == true){
-			console.log("confirm "+itemname +" ...")
 			$.post('toAcceptConfirmation',{"itemID":itemID},function(data){
 				if(data.succeed){
-					console.log("confirmed "+itemname + " successfully!")
 					fillItemPanel(window.targetUser.wishList)
 					$("#confirmed-body").hide()
 				}
@@ -221,17 +219,14 @@ function handleRejection(){
 		var itemname = $(this).attr('id')
 		var choice = confirm("Reject to buy " + itemname +" ?\n")
 		if(choice == true){
-			console.log("you reject "+itemname)
 			$.post('toRejectConfirmation',{"itemID" : itemID},function(data){
 				if(data.succeed){
-					console.log("successfully reject " + itemname)
 					fillItemPanel(window.targetUser.wishList)
 					$("#confirmed-body").hide()
 				}
 			})
 		}
 		else{
-			console.log("you do not reject "+ itemname)
 		}
 		
 	})
@@ -252,7 +247,6 @@ function fillconfirmlistNew(clickItem){
 			wu.itemID = clickItem
 			wantUser.wanttobuyUser.push(wu)
 		})
-		console.log(wantUser)
 		$("#wanttobuyUser").html(templateWTB(wantUser))
 		handleConfirmBtn()
 	})
@@ -306,7 +300,6 @@ function fillconfirmlist(WTBlist){
 	var wantUsers = {}
     wantUsers.wanttobuyUser = []
     //$("#userCount").text(window.searchResult.users.length)
-    console.log(WTBlist)
     //console.log(WTBlist.length)
     singleuser2 = {}
     var counts = 1
@@ -348,7 +341,6 @@ function fillconfirmlist(WTBlist){
 			wantUserEntry1.wantuserLink = "/user/" 
 	  	wantUsers.wanttobuyUser.push(wantUserEntry1)
 	  	wantUsers.wanttobuyUser.push(wantUserEntry)
-	  	console.log(userWant)
 	  	wantUserEntry.wantUseravatar = userWant.avatarLink
 	      	wantUserEntry.wantusername = userWant.userName
 	      	wantUserEntry.wantuserID = userWant._id
@@ -366,8 +358,6 @@ function fillconfirmlist(WTBlist){
 			wantUserEntry.wantBodyID = "wantBody_"
 			wantUserEntry.wantuserLink = "/user/" 
 	wantUsers.wanttobuyUser.push(wantUserEntry)
-    console.log(templateWTB)
-    console.log(wantUsers)
     //console.log(wantUsers.wanttobuyUser)
     //console.log(userSuggestion)
     //var source1 = $("#wantToBuylist-template").html();
@@ -380,8 +370,6 @@ function fillconfirmlist(WTBlist){
     $("#wanttobuyUser").html(templateWTB(wantUsers));
     $(".wantconfirmedButton").click(function(){
     	var wantusersID = $(this).attr('value')
-    	console.log("successfully click confirmed")
-    	console.log(wantusersID)
     });
 /*
     // loop through all follow-related button
@@ -457,12 +445,8 @@ function handleItemWithdraw(){
 	$('.withrawbtn').click(function(){
 		var targetItemID = $(this).attr('value');
 		var Itemstatus = $(this).attr('id');
-		console.log("successfully click withdraw");
-		console.log(targetItemID);
-		console.log(Itemstatus);
 		var statusID=String(Itemstatus) +'id'+targetItemID;
 		$.post('toWithdrawItem',{"itemID" : targetItemID},function(data){
-			console.log("successfully withdraw" + targetItemID)
 			window.targetUser = data.targetUser
 			fillItemPanel(window.targetUser.wishList)
 		})
@@ -470,7 +454,6 @@ function handleItemWithdraw(){
 }
 
 function fillItemPanel(currentWishList){
-	console.log("refresh ")
 	$("#confirmed-body").hide()
     $.get('getMyItem',function(data){
         //console.log(data)
@@ -568,7 +551,6 @@ function fillItemPanel(currentWishList){
 	    $("#itemSearchResults3").html(itemPostTemplate3(itemPosts[3]));
 	    
 		$(".confirmedBtn").click(function(){
-			console.log('successfully click confirm');
 			$("#confirmed-body").show();
 			var WTBlist = $(this).attr('value')
 			var thisitemID = $(this).attr('id')
@@ -591,9 +573,7 @@ function fillItemPanel(currentWishList){
 		var itemAll = {}
 		itemAll.itemEntry = []
 		data.forEach(function(item,index){
-		//console.log(item)
 		var index=item.status
-		//console.log(index)
 		var postEntry = {}
 		postEntry.avatar = item._creator.avatarLink
 		postEntry.creatorName = item._creator.userName
@@ -644,7 +624,6 @@ function fillItemPanel(currentWishList){
 		var postDate = new Date(item.updateDate)
 		postEntry.updateDate = postDate.toISOString().slice(0,10)// adjust time format
 		postEntry.updateTime = postDate.toISOString().slice(12,19)
-		//console.log(Date(item.updateDate))
 		itemAll.itemEntry.push(postEntry)
 		})
 		$("#itemSearchResults5").html(itemPostTemplate5(itemAll));
@@ -657,9 +636,7 @@ function fillItemPanel(currentWishList){
 		itemsAll.itemEntry = []
 		data.forEach(function(item,index){
 			
-		//console.log(item)
 		var index=item.status
-		//console.log(index)
 		var postEntry = {}
 		postEntry.avatar = item._creator.avatarLink
 		postEntry.creatorName = item._creator.userName
@@ -719,7 +696,6 @@ function fillItemPanel(currentWishList){
 	})
 	
 	$.get('getwishList',function(data){
-		console.log(data)
 		var descriptionLimit = 180
 		var allitems = {}
 		allitems.itemEntry = []
@@ -733,6 +709,7 @@ function fillItemPanel(currentWishList){
 		postEntry.creatorName = item._creator.userName
 		postEntry.itemName = item.itemName
 		postEntry.buyID = "buy_" + item._id
+		postEntry.itemStatus = item.status
 		postEntry.confirmedbtnId="confirmed"+item._id
 		if(item.description.length > descriptionLimit)
 		{
@@ -745,7 +722,7 @@ function fillItemPanel(currentWishList){
 
 		postEntry.userLink = '/user/' + item._creator._id
 		postEntry.itemLink = '/item/' + item._id
-		postEntry.itemstatus = item.status;
+		postEntry.itemstatus = "itemStatus" + String(item.status);
 		// depends on whether in list
 
 		if(!include(currentWishList, item._id)){
@@ -799,11 +776,13 @@ function fillItemPanel(currentWishList){
 		allitems.itemEntry.push(postEntry)
 		})
 		$("#itemSearchResults6").html(itemPostTemplate6(allitems));
+		$(".buyButton").hide()
+		$("#itemStatus0").show()
 		handleActions()
+		
 	})
 	
 	$.get('getwanttobuyitems',function(data){
-		console.log(data)
 		var descriptionLimit = 180
 		var allitems = {}
 		allitems.itemEntry = []
