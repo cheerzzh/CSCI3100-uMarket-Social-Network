@@ -106,7 +106,7 @@
       <script id="contacts-template" type="text/x-handlebars-template">
           <div class="list-group">
               {{#each conversation}}
-                  <a href="#" class="list-group-item" value={{conversationId}} style={{backgroundStyle}}>
+                  <a href="#" class="conversationlist list-group-item" value={{conversationId}} style={{backgroundStyle}}>
                     <h6><b>{{user}}</b></h6>
                     {{{message}}}
               </a>
@@ -160,7 +160,7 @@
     <script id="wholenotifications-template" type="text/x-handlebars-template">
           <div class="list-group" >
               {{#each wholenotifications}}
-                  <a target="_blank" href={{link}}  id="wholename" class="list-group-item"  value={{wholenotification_id}} style={{backgroundStyle}}>
+                  <a target="_blank" href={{link}} class="wholename list-group-item"  value={{wholenotification_id}} style={{backgroundStyle}}>
                     <h6><b>{{title}}</b></h6>
                     {{{content}}}
                   </a>

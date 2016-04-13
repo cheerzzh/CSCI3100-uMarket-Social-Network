@@ -89,7 +89,7 @@ function fillNotificationList(template){
 		  $("#wholenotifications").html(template(notificationList));
 		  console.log(template(notificationList))
 		  
-		 $("#wholename").click(function(){
+		 $(".wholename").click(function(){
         var notificationID =  $(this).attr('value')
         //console.log(notificationID)
          $.ajax({
@@ -172,8 +172,8 @@ function fillConversationList(template){
 
 
 		
-		 $('.list-group-item').unbind()
-    	 $('.list-group-item').click(function(){
+		 $('.conversationlist').unbind()
+    	 $('.conversationlist').click(function(){
         var conversationId = $(this).attr("value")
         console.log(conversationId)
         $.ajax({
