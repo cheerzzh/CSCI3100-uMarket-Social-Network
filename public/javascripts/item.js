@@ -30,7 +30,9 @@ $(document).ready(function(){
 
   	processButton(window.targetUser,window.targetItem)
   	processItemImage(window.targetItem)
-  	processFollowButton(window.targetUser, window.targetItem._creator._id)
+  	if(window.targetUser._id != window.targetItem._creator._id){
+  		processFollowButton(window.targetUser, window.targetItem._creator._id)
+  	}
   	// get related items
   	$.ajax({
           type: "POST",
