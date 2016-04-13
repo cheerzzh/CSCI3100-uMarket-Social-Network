@@ -1,4 +1,5 @@
 var itemPostTemplate, itemPostSource,sourceWTB,templateWTB;
+var descriptionLimit = 180;
 
 jQuery(document).ready(function() {
 	
