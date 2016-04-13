@@ -17,34 +17,6 @@ $(document).ready(function(){
   	commentBoxSource = $("#commentBox-template").html();
  	commentBoxTemplate = Handlebars.compile(commentBoxSource);
  	
- 	var notifications = {
-    notifications: [
-    {
-      title: 'New Post',
-      post: '<span class="mention">@rails_freak</span> shared a new micropost<br>' +
-      'Ruby on Rails is Awesome! <span class="link">p.co/RoRawsme</span>' +
-      '<span class="hashtags">#Rails</span>'
-    },
-    {
-      title: '@Mention',
-      post: '<span class="mention">@rails_freak</span> mentioned you in a micropost'
-    },
-    {
-      title: 'Trends',
-      post: '<span class="hashtags">#Rails</span> - Topic you are following is trending!'
-    },
-    {
-      title: 'Followers',
-      post: 'Yay! <span class="mention">@rails_freak</span> and '+
-      '<span class="mention">@Dev</span>' +
-      'followed you'
-    }
-    ]
-  };
-
-  source = $("#notifications-template").html();
-  template = Handlebars.compile(source);
-  $("#notifications").html(template(notifications));
 
   	// fillin item info
   	$("#item-description").text(window.targetItem.description)
@@ -58,7 +30,9 @@ $(document).ready(function(){
 
   	processButton(window.targetUser,window.targetItem)
   	processItemImage(window.targetItem)
-  	processFollowButton(window.targetUser, window.targetItem._creator._id)
+  	if(window.targetUser._id != window.targetItem._creator._id){
+  		processFollowButton(window.targetUser, window.targetItem._creator._id)
+  	}
   	// get related items
   	$.ajax({
           type: "POST",
@@ -100,6 +74,7 @@ $(document).ready(function(){
           }
     });
 
+  	$("#user_panel").attr("href","/user/" + window.targetItem._creator._id)
 
 })
 
@@ -239,6 +214,32 @@ function processButton(userObject,itemObject){
 
 	}else {
 		
+		// can send message
+		$("#send_message_area").unbind()
+		$("#send_message_area").show()
+		$("#send_message_area").keydown(function(e){
+			if(e.which == 13){
+				var messageContent = $("#send_message_area").val()
+				console.log('sned message: ' + messageContent)
+				if(messageContent!=""){
+					$.ajax({
+						type: "POST",
+						url: "/sendMessage",
+						data: {sender:userObject._id,receiver:itemObject._creator._id,isReply:false,content:messageContent},
+						success: function(data) {
+						
+						console.log("send message succeed")
+						$("#send_message_area").val("")
+
+						},
+						error: function(xhr) {
+						  //Do Something to handle error
+						}
+				    });
+				}
+			}
+
+		})
 		
 		// check item status
 		// item is active

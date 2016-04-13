@@ -491,7 +491,8 @@ module.exports = function(app, passport,upload) {
                                         newConversation.messageList.push(newMessage._id)
                                         newConversation.updateTime = Date()
                                         newConversation.referencedItem = itemObject
-                                        newConversation.hasNewMessage = true
+                                        newConversation.hasNewMessage1 = true
+                                        newConversation.hasNewMessage2 = true
 
                                         newConversation.save(function(err){
                                             if(err) throw err
@@ -1710,8 +1711,14 @@ module.exports = function(app, passport,upload) {
 
                             replyConversation.messageList.push(newMessage._id)
                             replyConversation.updateTime = Date()
-                            replyConversation.hasNewMessage1 = true;
-                            replyConversation.hasNewMessage2 = true;
+                            if(sender._id.equals(replyConversation.party1)){
+                                replyConversation.hasNewMessage1 = false;
+                                replyConversation.hasNewMessage2 = true;
+                            }else{
+                                replyConversation.hasNewMessage1 = true;
+                                replyConversation.hasNewMessage2 = false;
+                            }
+                            
                             replyConversation.save(function(err){
                             if(err) throw err
                             console.log('update existing conversation with ID ' + replyConversation._id)
@@ -1813,7 +1820,7 @@ module.exports = function(app, passport,upload) {
             Conversation.find({"_id":{$in:userObject.conversationList}})
             .sort({'updateTime': -1})
             .populate('messageList')
-            .populate('referenceItem')
+            .populate('referencedItem')
             .populate('party1')
             .populate('party2')
             .exec(function(err,result){
