@@ -36,6 +36,7 @@ var userSchema = mongoose.Schema({
     verified:Boolean,
     age:Number,
     birthDate : Date,
+    isMale: Boolean,  
     
 
     admin: Boolean,
