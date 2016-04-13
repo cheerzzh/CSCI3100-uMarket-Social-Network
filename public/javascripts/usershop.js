@@ -5,12 +5,10 @@ jQuery(document).ready(function() {
         Fullscreen background
     */
     $.backstretch('images/3.jpg', {speed: 1000});
-    console.log(window.user);
 
     fillUserInfo_Navbar(window.targetUser)
     //fillUserInfo_cover(window.targetUser)
     
-    console.log(window.targetUser)
     $('#avatar-profile').attr('src',window.targetUser.avatarLink)
     $('#username-profile').text(window.targetUser.userName)
     $('#email-profile').text("email: " + window.targetUser.local.email)
@@ -19,7 +17,6 @@ jQuery(document).ready(function() {
     $('#followingNumber').text(window.targetUser.followingList.length)
     $('#itemNumber').text(window.targetUser.itemList.length)
     followerlength = window.targetUser.followerList.length;
-    //console.log(addAction().html())
     //$.get('/getUserItem',{targetuser : window.targetUser})
     itemPostSource = $("#item-template").html();
 	itemPostTemplate = Handlebars.compile(itemPostSource);
@@ -39,7 +36,6 @@ function handleActions(){
     $(".buyButton").click(function(){
         
       var itemID = $(this).attr('value')
-      console.log("click buy: " + itemID)
 
       if(!include(window.user.wantTobuyItemList, itemID)){
         $.ajax({
@@ -72,7 +68,6 @@ function handleActions(){
           url: "/toCancelWantToBuy",
           data: {"itemID":itemID},
           success: function(data) {
-            console.log(data)
               //Do Something
             console.log("remove from wantToBuy succeed")
             //window.targetUser = data.targetUser
@@ -97,7 +92,6 @@ function handleActions(){
     
     $(".heartButton").click((function(){
       var itemID = $(this).attr('value')
-      console.log("click heart: " + itemID)
 
       if(!include(window.user.wishList, itemID)){
         $.ajax({
@@ -152,7 +146,6 @@ function followButton(){
 	
 	$('.followButton').click(function(){
       var targetUserID = window.targetUser._id
-      console.log(targetUserID)
 
       // ajax get request
       // request to follow user
@@ -180,7 +173,6 @@ function followButton(){
 
 	$('.unfollowButton').click(function(){
 		var targetUserID = window.targetUser._id
-		console.log(targetUserID)
 
 		// ajax get request
 		// request to follow user
@@ -237,7 +229,6 @@ function fillItems(user,currentWishList){
              success:function(data){
         data.forEach(function(item,index){
             index=item.status
-            console.log(index)
             var postEntry={}
             postEntry.itemname=item.itemName
             postEntry.itemStatus=item.condition
