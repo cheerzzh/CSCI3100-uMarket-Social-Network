@@ -61,9 +61,15 @@ jQuery(document).ready(function() {
 
 function handleConfirmBtn(){
 	$(".wantconfirmedButton").click(function(){
-		var userID = $(this).attr('value')
-		var itemID = $(this).attr('ID')
-		var choice = confirm("Sell "+itemID+" to "+userID +" ?\n")
+		var id = $(this).attr('value')
+		var name = $(this).attr('ID')
+		var tmpid = id.split("/")
+		var tmpname = name.split("/")
+		var userID = tmpid[0]
+		var userName = tmpname[0]
+		var itemID = tmpid[1]
+		var itemName = tmpname[1]
+		var choice = confirm("Sell "+itemName+" to "+userName +" ?\n")
 		if(choice == true){
 			//console.log("you chose yes")
 			$.post('toInitiateConfirmation',{"counterPartyID" : userID,"itemID" : itemID},function(data){
@@ -271,7 +277,10 @@ function handleRejection(){
 function fillconfirmlistNew(clickItem){
 	var wantUser = {}
 	wantUser.wanttobuyUser = []
-	$.post('getWantToBuyUserListDetail',{"itemID" : clickItem},function(userlist){
+	var tmp = clickItem.split("/")
+	var itemID = tmp[0]
+	var itemName = tmp[1]
+	$.post('getWantToBuyUserListDetail',{"itemID" : itemID},function(userlist){
 		userlist.forEach(function(suser){
 			var wu = {}
 			wu.wantBodyID = "wantBody_" + suser._id
@@ -280,7 +289,9 @@ function fillconfirmlistNew(clickItem){
 			wu.wantusername = suser.userName
 			wu.wantuseruniversity = suser.university
 			wu.wantuserID = suser._id
-			wu.itemID = clickItem
+			wu.itemID = itemID
+			wu.wantuserItemID = suser._id + "/" + itemID
+			wu.UseritemName = suser.userName + "/" + itemName
 			wantUser.wanttobuyUser.push(wu)
 		})
 		$("#wanttobuyUser").html(templateWTB(wantUser))
@@ -539,6 +550,7 @@ function fillItemPanel(currentWishList){
 		postEntry.creatorName = item._creator.userName
 		postEntry.itemName = item.itemName
 		postEntry.confirmedbtnId="confirmed"+item._id
+		postEntry.itemIDName = item._id + "/" + item.itemName
 		if(index == 2){
 		postEntry.CounterParty = item.confirmedCounterParty.userName
 		postEntry.counterPartyLink = '/user/' + item.confirmedCounterParty._id
@@ -599,13 +611,13 @@ function fillItemPanel(currentWishList){
 		$(".confirmedBtn").click(function(){
 			$("#confirmed-body").show();
 			var WTBlist = $(this).attr('value')
-			var thisitemID = $(this).attr('id')
+			var thisitemIDName = $(this).attr('id')
 			if(WTBlist.length){
 				WTBlist = WTBlist.split(',')
 				//console.log(WTBlist)
 				//fillconfirmlistGet(WTBlist);
 				//fillconfirmlist1(WTBlist);
-				fillconfirmlistNew(thisitemID);
+				fillconfirmlistNew(thisitemIDName);
 			}
 		});
 		handleItemWithdraw();
