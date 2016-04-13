@@ -11,7 +11,7 @@ bimessageTemplate = Handlebars.compile(bimessageSource);
 
 $(document).ready(function(){
   
-    $.backstretch('images/2.jpg', {speed: 1000});
+    $.backstretch('images/3.jpg', {speed: 1000});
     var source, template;
 
     /*
