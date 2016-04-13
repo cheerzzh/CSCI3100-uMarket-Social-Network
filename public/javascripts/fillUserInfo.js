@@ -11,4 +11,7 @@ function fillUserInfo_cover(targetUser){
 	$("#email-cover").text(targetUser.local.email)
 	$("#statement-cover").text(targetUser.statement)
 	$("#university-cover").append(targetUser.university)
+	$("#followerNumber").text(targetUser.followerList.length);	
+	$("#followingNumber").text(targetUser.followingList.length);	
+	$("#itemNumber").text(targetUser.itemList.length);	
 }

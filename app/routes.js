@@ -1472,7 +1472,7 @@ module.exports = function(app, passport,upload) {
                             
                             targetUser.save(function(err){
                                 if (err) throw err;
-                                    res.send(true)
+                                    res.send({succeed:true,targetUser:user})
                             })
                         })
                             
@@ -1521,7 +1521,7 @@ module.exports = function(app, passport,upload) {
                     }
                     targetUser.save(function(err){
                         if (err) throw err;
-                        res.send(true)
+                        res.send({succeed:true,targetUser:user})
                     })
                 })
             })

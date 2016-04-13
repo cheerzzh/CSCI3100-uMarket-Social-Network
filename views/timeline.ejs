@@ -118,14 +118,18 @@
             </div>
           </div> <!-- / .panel-heading -->
           <div class="widget-profile-counters">
-            <div class="col-xs-4"><span>131</span><br>Items</div>
-            <div class="col-xs-4"><span>230</span><br>Followers</div>
-            <div class="col-xs-4"><span>56</span><br>Followings</div>
+            <div class="col-xs-4"><span id="itemNumber"></span><br>Items</div>
+            <div class="col-xs-4"><span id="followerNumber"></span><br>Followers</div>
+            <div class="col-xs-4"><span id="followingNumber"></span><br>Followings</div>
           </div>
           <input type="text" placeholder="Want to Chat?" class="form-control input-lg widget-profile-input">
           <div class="widget-profile-text" id="statement-cover">
           
           </div>
+          <!--
+           <a href="#" class="btn btn-block btn-success">Follow</a>
+            <a href="#" class="btn btn-block btn-warning">Follow</a>
+          -->
         </div> <!-- / .panel -->
 
         <div class="panel panel-default">
@@ -164,7 +168,7 @@
           <br>
         </div>
         
-        <div class="col-lg-9 col-md-5">
+        <div class="col-lg-9 col-md-9">
 
               <div class="panel panel-default">
             <div id="new-micropost" class="panel-body">
