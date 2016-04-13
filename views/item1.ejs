@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
         <link rel="stylesheet" href="stylesheets/timeline.css">
         <link rel="stylesheet" href="stylesheets/search.css">
-       
+       <link href="stylesheets/pixel-admin.min.css" rel="stylesheet" type="text/css">
         <link href="stylesheets/owl.carousel.css" rel="stylesheet">
         <link href="stylesheets/owl.theme.css" rel="stylesheet">
         
@@ -125,37 +125,29 @@
                 <div class="container">
                     
                     <div class="col-lg-3 col-md-3">
-                        <div class="card">
-                            <div class="cover" data-fade="1500" data-duration="2500">
-                                <ul class="cover-pics">
-                                    <li><img src="images/img-1.jpg"></li>
-                                    <li><img src="images/img-2.jpg"></li>
-                                    <li><img src="images/img-3.jpg"></li>
-                                    <li><img src="images/img-4.jpg"></li>
-                                </ul>
-                                <img src="#" alt="" class="avatar" id="avatar-cover">
-                            </div>
-                            <div class="about">
-                                <h3 class="name" id="username-cover"></h3>
-                                <h5 class="username" id="email-cover"></h5>
-                                <span class="content" id="statement-cover"></span><br>
-                                <label class="location" id="university-cover"><i class="fa fa-map-marker"></i></label>
-                            </div>
-                        </div><br>
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title"><b>Trends</b></h3>
-                            </div>
-                            <div class="panel-body">
-                                <ul id="trends" class="panel-list">
-                                    <script id="trends-template" type="text/x-handlebars-template">
-                                    {{#each trends}}
-                                    <li><a href="#">{{trend}}</a></li>
-                                    {{/each}}
-                                    </script>
-                                </ul>
-                            </div>
+                        <div class="panel  panel-dark widget-profile" id="gender_panel">
+          <div class="panel-heading">
+            <div class="widget-profile-bg-icon" id="gender_cover"><i class="fa fa-female"></i></div>
+                        <img id="avatar-cover" alt="" class="widget-profile-avatar">
+                        <div class="widget-profile-header">
+                          <span id="username-cover"></span><br>
+                          <label class="location" id="university-cover"><i class="fa fa-map-marker"></i></label>
                         </div>
+                      </div> <!-- / .panel-heading -->
+                      <div class="widget-profile-counters">
+                        <div class="col-xs-4"><span id="itemNumber"></span><br>Items</div>
+                        <div class="col-xs-4"><span id="followerNumber"></span><br>Followers</div>
+                        <div class="col-xs-4"><span id="followingNumber"></span><br>Followings</div>
+                      </div>
+                      <input type="text" placeholder="Want to Chat?" class="form-control input-lg widget-profile-input">
+                      <div class="widget-profile-text" id="statement-cover">
+                      
+                      </div>
+                      
+                       <a  style="display:none;" class="btn btn-block btn-success" id="toFollowButton">Follow</a>
+                        <a  style="display:none;" class="btn btn-block btn-warning" id="toUnfollowButton">Unfollow</a>
+                      
+                    </div> <!-- / .panel -->
                     </div>
                     
                     <div class="col-md-9">
@@ -174,22 +166,8 @@
                                     <div class="ribbon-background"></div>
                                 </div>
                                 -->
-                                </div>
-                            <div class="col-sm-6">
-                                <div class="box">
-                                    <h1 class="text-center" id="item-name"></h1>
-                                    <p class="goToDescription" style="font-size:150%;"><a href="#" class="scroll-to" id="item-condition"></a>
-                                </p>
-                                <p class="price" id = "item-price" style="font-size:250%;"></p>
-                                <p class="text-center buttons">
-                                    <a   style="display:none;" class="btn btn-danger" id="itemWithdrawedButton"><i class="fa fa-ban"></i>Withdrawed</a>
-                                    <a  style="display:none;" class="btn btn-success" id="itemTradedButton"><i class="fa fa-thumbs-o-up"></i>Traded</a>
-                                    <a style="display:none;"  class="btn btn-warning" id="itemReservedButton"><i class="fa fa-exclamation"></i>Reserved</a>
-                                    <a style="display:none;"  class="btn btn-primary" id="wantToBuyButton"><i class="fa fa-shopping-cart"></i><span id="buyButtonText"></span></a>
-                                    <a class="btn btn-default " id="addToWishlistButton"><i id="heartIcon"class="fa fa-heart" style="color:red"></i><span><font color="grey" id="wishedCount"></font></span></a>
-                                </p>
-                            </div>
-                            <div class="row" id="thumbs">
+                                <br>
+                                <div class="row" id="thumbs">
                                 <div class="col-xs-4" style="display:none;" id="item_image_block_1">
                                     <a class="thumb">
                                         <img src="" alt="" class="img-responsive" id="item_image_1">
@@ -206,6 +184,22 @@
                                     </a>
                                 </div>
                             </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="box">
+                                    <h1 class="text-center" id="item-name"></h1>
+                                    <p class="goToDescription" style="font-size:150%;"><a href="#" class="scroll-to" id="item-condition"></a>
+                                </p>
+                                <p class="price" id = "item-price" style="font-size:250%;"></p>
+                                <p class="text-center buttons">
+                                    <a   style="display:none;" class="btn btn-danger" id="itemWithdrawedButton"><i class="fa fa-ban"></i>Withdrawed</a>
+                                    <a  style="display:none;" class="btn btn-success" id="itemTradedButton"><i class="fa fa-thumbs-o-up"></i>Traded</a>
+                                    <a style="display:none;"  class="btn btn-warning" id="itemReservedButton"><i class="fa fa-exclamation"></i>Reserved</a>
+                                    <a style="display:none;"  class="btn btn-success" id="wantToBuyButton"><i class="fa fa-shopping-cart"></i><span id="buyButtonText"></span></a>
+                                    <a class="btn btn-default " id="addToWishlistButton"><i id="heartIcon"class="fa fa-heart" style="color:red"></i><span><font color="grey" id="wishedCount"></font></span></a>
+                                </p>
+                            </div>
+
                         </div>
                     </div>
                     <div class="box" id="details">
@@ -244,9 +238,10 @@
                                         <div class="panel-footer clearfix">
                                             <div class="article-comments-add" style="display:none;" id="add-comment-box">
                                                 <textarea id = "message-area" rows="1" class="form-control input-sm" placeholder="Say something here..." maxlength="50"></textarea>
-                                                <div class="expanding-input-hidden" style="margin-top: 10px;">
-                                                    <button id="message-submit-button" class="btn btn-sm btn-primary pull-right">Post comment</button>
-                                                </div>
+                                               
+                                                    <button id="message-submit-button" class="btn  btn-sm btn-success pull-right">Post comment</button>
+                                                   
+                                                
                                             </div>
                                         </div> <!-- / .panel-footer -->
                                         </div>

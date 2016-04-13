@@ -100,11 +100,11 @@ module.exports = function(app, passport,upload) {
 
     });
     
-    app.get('/xwtest1',isLoggedIn,function(req,res){
+    app.get('/itemManage',isLoggedIn,function(req,res){
 
         //res.send('Hey, you\'ve logged in, ' + req.user.local.email + '\nPlease fill more user info');
         req.flash()
-        res.render('xwtest1.ejs', {
+        res.render('itemManagement.ejs', {
             user : req.user // get the user out of session and pass to template
         });
     });
@@ -132,11 +132,17 @@ module.exports = function(app, passport,upload) {
             }
 
             // update field
+            console.log(req.body)
             user.updateDate = Date()
             user.statement = req.body.statement
             user.userName = req.body.userName
             user.university = req.body.university
             user.birthDate = req.body.birthDate
+            if(req.body.gender == "1"){
+                user.isMale = true
+            }else{
+                user.isMale = false
+            }
 
             //console.log(req.file)
             //imageLinks.push('uplaods/' + fileEntry.filename)
@@ -740,25 +746,109 @@ module.exports = function(app, passport,upload) {
     
     // === user retrieve boughtItemList
     app.get('/getboughtItemList',isLoggedIn,function(req,res){
+       
 
-        // find user
+        // first just return first 5 items not belongs to users
+        //console.log(req.user._id)
+        // .select('displayName email profileImageURL') // choose fields
+        // _id:{'$nin':req.user.wishList}
+        // search for things 
+        // find user object and populate its following to get their wish list
+        var boughtItem = []
         User.findById(req.user._id)
-        .populate('boughtItemList')
-        .exec(function(err, user) {
+        .exec(function(err,user){
             if(err) throw err
-            res.send(user.boughtItemList)
+            boughtItem.extend(user.boughtItemList)
+
+            //console.log(itemID_infollowingWishList)
+            Item.find({_id:{'$in':boughtItem}})
+            //.and({_id:{'$nin':req.user.wishList}})
+            .populate('_creator')
+            .exec(function(err, items) {
+                if(err)
+                {
+                    throw err;
+                }
+
+                res.send(items)
+            });
+
         })
     });
     
     // === user retrieve wishlist
     app.get('/getwishList',isLoggedIn,function(req,res){
+       
+
+        // first just return first 5 items not belongs to users
+        //console.log(req.user._id)
+        // .select('displayName email profileImageURL') // choose fields
+        // _id:{'$nin':req.user.wishList}
+        // search for things 
+        // find user object and populate its following to get their wish list
+        var wishL = []
+        User.findById(req.user._id)
+        .exec(function(err,user){
+            if(err) throw err
+            wishL.extend(user.wishList)
+
+            //console.log(itemID_infollowingWishList)
+            Item.find({_id:{'$in':wishL}})
+            //.and({_id:{'$nin':req.user.wishList}})
+            .populate('_creator')
+            .exec(function(err, items) {
+                if(err)
+                {
+                    throw err;
+                }
+
+                res.send(items)
+            });
+
+        })
+    });
+
+/*
+    // === user retrieve wantTobuyItemList
+    app.get('/getwantTobuyItemList',isLoggedIn,function(req,res){
 
         // find user
         User.findById(req.user._id)
-        .populate('wishList')
+        .populate('wantTobuyItemList')
         .exec(function(err, user) {
             if(err) throw err
-            res.send(user.wishList)
+            res.send(user.wantTobuyItemList)
+        })
+    });
+*/   
+    app.get('/getwanttobuyitems',isLoggedIn,function(req,res){
+       
+
+        // first just return first 5 items not belongs to users
+        //console.log(req.user._id)
+        // .select('displayName email profileImageURL') // choose fields
+        // _id:{'$nin':req.user.wishList}
+        // search for things 
+        // find user object and populate its following to get their wish list
+        var wtbList = []
+        User.findById(req.user._id)
+        .exec(function(err,user){
+            if(err) throw err
+            wtbList.extend(user.wantTobuyItemList)
+
+            //console.log(itemID_infollowingWishList)
+            Item.find({_id:{'$in':wtbList}})
+            //.and({_id:{'$nin':req.user.wishList}})
+            .populate('_creator')
+            .exec(function(err, items) {
+                if(err)
+                {
+                    throw err;
+                }
+
+                res.send(items)
+            });
+
         })
     });
 
@@ -919,7 +1009,7 @@ module.exports = function(app, passport,upload) {
                                             if(err) throw err
                                             counterpartyObject.save(function(err){
                                                 if(err) throw err
-                                                res.send({succeed:true})
+                                                res.send({succeed:true,targetUser : userObject})
                                             })
                                        })
                                    })
@@ -1388,7 +1478,7 @@ module.exports = function(app, passport,upload) {
                             
                             targetUser.save(function(err){
                                 if (err) throw err;
-                                    res.send(true)
+                                    res.send({succeed:true,targetUser:user})
                             })
                         })
                             
@@ -1437,7 +1527,7 @@ module.exports = function(app, passport,upload) {
                     }
                     targetUser.save(function(err){
                         if (err) throw err;
-                        res.send(true)
+                        res.send({succeed:true,targetUser:user})
                     })
                 })
             })

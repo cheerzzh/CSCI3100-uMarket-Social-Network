@@ -58,7 +58,7 @@ $(document).ready(function(){
 
   	processButton(window.targetUser,window.targetItem)
   	processItemImage(window.targetItem)
-
+  	processFollowButton(window.targetUser, window.targetItem._creator._id)
   	// get related items
   	$.ajax({
           type: "POST",
@@ -103,6 +103,55 @@ $(document).ready(function(){
 
 })
 
+// when item owner is not current user itself, this function will be called
+function processFollowButton(userObject,itemOwnerID){
+	// follow and unfollow 
+	$("#toUnfollowButton").hide()
+	$("#toFollowButton").hide()
+  	if(include(userObject.followingList, itemOwnerID)){
+  		console.log('Has followed owner')
+  		$("#toUnfollowButton").show()
+  		$("#toUnfollowButton").unbind()
+  		// ajax to unfollow 
+  		$("#toUnfollowButton").click(function(){
+  			$.ajax({
+				url: "/toUnFollowUser",
+				data: {"targetUserID":itemOwnerID},
+				success: function(response) {
+				    //Do Something
+				    console.log('unFollow success!')
+				    processFollowButton(response.targetUser, itemOwnerID)
+				},
+				error: function(xhr) {
+				    //Do Something to handle error
+
+				}
+			});
+  		})
+
+  	}else{
+  		console.log('Not follow owner yet')
+  		$("#toFollowButton").show()
+  		$("#toFollowButton").unbind()
+  		// ajax to follow
+  		$("#toFollowButton").click(function(){
+  			$.ajax({
+				url: "/toFollowUser",
+				data: {"targetUserID":itemOwnerID},
+				success: function(response) {
+				    //Do Something
+				    console.log('Follow success!')
+				     processFollowButton(response.targetUser, itemOwnerID)
+
+				},
+				error: function(xhr) {
+				    //Do Something to handle error
+				}
+			});
+  		})
+  		
+  	}
+}
 function processItemImage(itemObject){
 
 	// if no image link: use default image
@@ -189,6 +238,7 @@ function processButton(userObject,itemObject){
         });
 
 	}else {
+		
 		
 		// check item status
 		// item is active
