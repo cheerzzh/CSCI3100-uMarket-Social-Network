@@ -1709,7 +1709,8 @@ module.exports = function(app, passport,upload) {
 
                             replyConversation.messageList.push(newMessage._id)
                             replyConversation.updateTime = Date()
-                            replyConversation.hasNewMessage = true;
+                            replyConversation.hasNewMessage1 = true;
+                            replyConversation.hasNewMessage2 = true;
                             replyConversation.save(function(err){
                             if(err) throw err
                             console.log('update existing conversation with ID ' + replyConversation._id)
@@ -1739,7 +1740,8 @@ module.exports = function(app, passport,upload) {
                         newConversation.party1 = sender._id
                         newConversation.party2 = receiver._id
                         newConversation.messageList.push(newMessage._id)
-                        newConversation.hasNewMessage = true;
+                        newConversation.hasNewMessage1 = true;
+                        newConversation.hasNewMessage2 = true;
                         newConversation.updateTime = Date()
 
                         newConversation.save(function(err){
@@ -1779,7 +1781,12 @@ module.exports = function(app, passport,upload) {
         // assume the conversation belongs to user
         Conversation.findById(conversationID,function(err,conversationObject){
             if(err) throw err
-                conversationObject.hasNewMessage = false;
+                if(conversationObject.party1.equals(userID)){
+                    conversationObject.hasNewMessage1 = false;
+                }else {
+                    conversationObject.hasNewMessage2 = false;
+                }
+                
 
                 conversationObject.save(function(err){
                     if(err) throw err
