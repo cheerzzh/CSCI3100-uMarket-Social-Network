@@ -2,7 +2,10 @@ var conversationListSource, conversationListTemplate
 var notificationListSource, notificationListTemplate
 var bimessageSource, bimessageTemplate
 var instantConversation
-
+conversationListSource = $("#contacts-template").html();
+conversationListTemplate = Handlebars.compile(conversationListSource);
+notificationListSource = $("#wholenotifications-template").html();
+notificationListTemplate = Handlebars.compile(notificationListSource);
 bimessageSource = $("#bimessages-template").html();
 bimessageTemplate = Handlebars.compile(bimessageSource);
 
@@ -10,17 +13,10 @@ $(document).ready(function(){
   
     $.backstretch('images/2.jpg', {speed: 1000});
     var source, template;
-    
-	conversationListSource = $("#contacts-template").html();
-	conversationListTemplate = Handlebars.compile(conversationListSource);
-	
-	notificationListSource = $("#notifications-template").html();
-	notificationListTemplate = Handlebars.compile(notificationListSource);
+
     /*
 	for notification
     */
-
-
 	fillConversationList(conversationListTemplate)
     fillNotificationList(notificationListTemplate)
 
@@ -80,47 +76,61 @@ $(document).ready(function(){
 
   
 });
+
 function fillNotificationList(template){
+        console.log("1")
     	$.ajax({
         url: "/getAllNotification",
-        type:"get",
+        type:"POST",
         success: function(data) {
             //Do Something
             console.log(data)
 
             
             // attach to panel
-        var notifications = {}
-		    notifications.notification = []
+        var notificationList = {}
+		    notificationList.wholenotifications = []
+		  var newNotificationCount = 0
 
 		    data.forEach(function(notificationEntry){
 
 		      var suggestionEntry = {}
-		      if(targetUser._id == conversationEntry.party1._id){
-		        suggestionEntry.user = conversationEntry.party2.userName
-		      }
-		      else{
-		        suggestionEntry.user = conversationEntry.party1.userName
-		      }
-		        suggestionEntry.conversationId = conversationEntry._id
-		        console.log(suggestionEntry.conversationId)
-		        var tempmessage = conversationEntry.messageList[conversationEntry.messageList.length-1]
-		        if(tempmessage.sender == conversationEntry.party1._id)
-		        {
-		          var sender = conversationEntry.party1.userName.concat(":")
+		        suggestionEntry.title = notificationEntry.title
+		        suggestionEntry.content = notificationEntry.content
+		        suggestionEntry.link = notificationEntry.link
+                suggestionEntry.wholenotification_id = notificationEntry._id
 
-		          suggestionEntry.message = sender.concat(tempmessage.content)
-		        }
-		        else
-		        {
-		          var sender = conversationEntry.party2.userName.concat(":")
-		          suggestionEntry.message = sender.concat(tempmessage.content)
-		        }
-		         
-		      conversations.conversation.push(suggestionEntry)
+            if(!notificationEntry.hasRead){
+            suggestionEntry.backgroundStyle = "background-color:#ECF5FF";
+          //temp.style1 = "<i class='fa fa-circle' style='color:red;'></i>"
+             newNotificationCount ++
+             }else{
+             suggestionEntry.backgroundStyle = "";
+             }
+		      notificationList.wholenotifications.push(suggestionEntry)
 		    })
-		  $("#contacts").html(template(conversations));
-        },
+		  $("#wholenotifications").html(template(notificationList));
+		  console.log(template(notificationList))
+		  
+		 $("#wholename").click(function(){
+        var notificationID =  $(this).attr('value')
+        //console.log(notificationID)
+         $.ajax({
+          type:"post",
+          url: "/readNotification",
+          data: {"notificationID":notificationID},
+
+          success: function(data) {
+            console.log(data)
+            fillNotificationList(notificationListTemplate)
+          },
+          error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
+
+      })
+      },
 		          error: function(xhr) {
             //Do Something to handle error
         }

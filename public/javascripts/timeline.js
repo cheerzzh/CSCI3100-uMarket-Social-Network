@@ -29,31 +29,7 @@ $(document).ready(function(){
   $('#new-micropost textarea').autosize();
 
   // fetch notification
-  var notifications = {
-    notifications: [
-    {
-      title: 'New Post',
-      post: '<span class="mention">@rails_freak</span> shared a new micropost<br>' +
-      'Ruby on Rails is Awesome! <span class="link">p.co/RoRawsme</span>' +
-      '<span class="hashtags">#Rails</span>'
-    },
-    {
-      title: '@Mention',
-      post: '<span class="mention">@rails_freak</span> mentioned you in a micropost'
-    },
-    {
-      title: 'Trends',
-      post: '<span class="hashtags">#Rails</span> - Topic you are following is trending!'
-    },
-    {
-      title: 'Followers',
-      post: 'Yay! <span class="mention">@rails_freak</span> and '+
-      '<span class="mention">@Dev</span>' +
-      'followed you'
-    }
-    ]
-  };
-
+  
   notificationNavSource = $("#notifications-template").html();
   notificationNavTemplate = Handlebars.compile(notificationNavSource);
   //$("#notifications").html(notificationNavTemplate(notifications));

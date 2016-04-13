@@ -111,6 +111,7 @@
                     {{{message}}}
               </a>
                 {{/each}}
+                </div>
         </script>
  </div>
  </div>
@@ -154,16 +155,17 @@
  <div class="col-lg-3 col-md-3">
   <div class="panel panel-default">
   <div class="panel-heading">Notifications</div>
-  <div id="notification">
-  <div class="panel-body">
-    <script id="notifications-template" type="text/x-handlebars-template">
-          <div class="list-group">
-              {{#each notification}}
-                  <a href="#"  class="list-group-item">
+   <div class="panel-body">
+    <div id="wholenotifications">
+    <script id="wholenotifications-template" type="text/x-handlebars-template">
+          <div class="list-group" >
+              {{#each wholenotifications}}
+                  <a target="_blank" href={{link}}  id="wholename" class="list-group-item"  value={{wholenotification_id}} style={{backgroundStyle}}>
                     <h6><b>{{title}}</b></h6>
                     {{{content}}}
-              </a>
+                  </a>
               {{/each}}
+            </div>
     </script>
       </div>
     </div>
