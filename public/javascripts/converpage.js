@@ -134,7 +134,7 @@ function fillConversationList(template){
 		      var suggestionEntry = {}
 		      if(targetUser._id == conversationEntry.party1._id){
 		        suggestionEntry.user = conversationEntry.party2.userName
-		        if(suggestionEntry.hasNewMessage1){
+		        if(conversationEntry.hasNewMessage1){
                 suggestionEntry.backgroundStyle = "background-color:#ECF5FF";
                 }
                 else{
@@ -143,7 +143,7 @@ function fillConversationList(template){
 		      }
 		      else{
 		        suggestionEntry.user = conversationEntry.party1.userName
-		        if(suggestionEntry.hasNewMessage2){
+		        if(conversationEntry.hasNewMessage2){
                 suggestionEntry.backgroundStyle = "background-color:#ECF5FF";
                 }
                 else{
