@@ -9,7 +9,7 @@ var conversationListSchema = mongoose.Schema({
     referencedItem : { type: mongoose.Schema.Types.ObjectId, ref: 'Item' }, // optional field: related item entry for this conversation
     updateTime : Date,
     hasNewMessage1 : Boolean,
-    hasNewMessage1 : Boolean,
+    hasNewMessage2 : Boolean,
 
 });
 
