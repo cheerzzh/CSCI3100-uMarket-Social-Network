@@ -1312,7 +1312,10 @@ module.exports = function(app, passport,upload) {
                                     if(err) throw err
                                     ownerObject.save(function(err){
                                         if(err) throw err
-                                        res.send({succeed:true,message:"Commented",targetUser:userObject,targetItem:itemObject})
+                                            itemObject.populate('_creator', function(err) {
+                                                 res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                                                });
+                                        //res.send({succeed:true,message:"Commented",targetUser:userObject,targetItem:itemObject})
                                     })
                                 })
                             })
