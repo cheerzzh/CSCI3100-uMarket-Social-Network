@@ -116,10 +116,10 @@
                 <li class="active"><a href="#home" data-toggle="tab">
                   In progress
                 </a></li>
-                <li><a href="#ios" data-toggle="tab">Wait For Confirm</a></li>
+                <li><a href="#ios" data-toggle="tab">To be Confirmed</a></li>
                 <li><a href="#wtb" data-toggle="tab">Shopping Cart</a></li> 
-                <li><a href="#wished" data-toggle="tab">Like</a></li>
-                <li><a href="#confirmedWTB" data-toggle="tab">Buy Confirmed</a></li>
+                <li><a href="#wished" data-toggle="tab">Wished</a></li>
+                <li><a href="#confirmedWTB" data-toggle="tab">Wait for me to Confirm</a></li>
                 <li class="dropdown">
                   <a class="dropdown-toggle" data-toggle="dropdown" href="#">History<span class="caret"></span></a>
                   <ul class="dropdown-menu">
@@ -139,24 +139,24 @@
                 {{#each itemEntry}}
                 <li class = {{itembodyID}}>
                 <article class="search-result row">
-                  <div class="col-xs-12 col-sm-12 col-md-3">
+                  <div class="col-xs-3 col-sm-12 col-md-3">
                     <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
                   </div>
-                  <div class="col-xs-4 col-sm-6 col-md-2">
+                  <div class="col-xs-3 col-sm-6 col-md-2">
                     <ul class="meta-search">
                       <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
                       <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
                     </ul>
                   </div>
-                  <div class="col-xs-8 col-sm-6 col-md-7">
+                  <div class="col-xs-6 col-sm-6 col-md-7">
                     <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
                     <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
                     <p>{{description}}</p>
                     <button type="button" class="btn btn-primary btn-xs withrawbtn" value={{itemID}} id={{itemstatus}}>
-                    Withdraw
+                    Withdraw Item
                     </button>
                     <button type="button" class="btn btn-default btn-xs confirmedBtn" id={{itemID}} value={{itemWTBlist}}>
-                    confirmed
+                    Initiate confirmation
                     </button>
                   </div>
                   <span class="clearfix borda"></span>
@@ -193,7 +193,7 @@
                     <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
                     <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
                     <p>{{description}}</p>
-                    <button type="button" class="btn btn-info btn-xs cancelbtn" value={{itemID}} id={{itemName}}>cancel</button>
+                    <button type="button" class="btn btn-info btn-xs cancelbtn" value={{itemID}} id={{itemName}}>Cancel Confirmation Request</button>
               
                   </div>
                   <span class="clearfix borda"></span>
@@ -305,7 +305,7 @@
                     <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
                     <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
                     <p>{{description}}</p>
-                    <button type="button" class="btn btn-primary btn-xs confirmedBuybtn" value={{itemID}} id={{itemName}}>confirmed</button>
+                    <button type="button" class="btn btn-primary btn-xs confirmedBuybtn" value={{itemID}} id={{itemName}}>Accept</button>
                     <button type="button" class="btn btn-danger btn-xs confirmedRejectbtn" value={{itemID}} id={{itemName}}>Reject</button>
               
                   </div>
@@ -326,10 +326,10 @@
                 {{#each itemEntry}}
                 <li class = {{itembodyID}}>
                 <article class="search-result row">
-                  <div class="col-xs-12 col-sm-12 col-md-3">
+                  <div class="col-xs-6 col-sm-3 col-md-3">
                     <a href={{itemLink}} title="Lorem ipsum" class="thumbnail"><img src={{itemImageLink}} style="max-height:120px;"></a>
                   </div>
-                  <div class="col-xs-12 col-sm-12 col-md-2">
+                  <div class="col-xs-6 col-sm-3 col-md-2">
                     <ul class="meta-search">
                       <li style="font-size:50%;"><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
                       <li  style="font-size:50%;"><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
@@ -340,7 +340,7 @@
                       <font color="grey" >{{buyDesciption}}</font></span></li>
                     </ul>
                   </div>
-                  <div class="col-xs-12 col-sm-12 col-md-7">
+                  <div class="col-xs-12 col-sm-6 col-md-7">
                     <h4><a href={{itemLink}} title="">{{itemName}}</a></h4>
                     <h5 style="color:#5D5B5B;"><span style="color:#d4482f;font-size:130%;">{{price}}</span> HKD, <span style="color:#d4482f;font-size:130%;">{{condition}}%</span> New</h5>
                     <p>{{description}}</p>
