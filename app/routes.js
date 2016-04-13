@@ -1000,7 +1000,7 @@ module.exports = function(app, passport,upload) {
                                    newNotification.item = itemObject._id
                                     newNotification.title = "New Confirmation Invitation"
                                     newNotification.content = "Bravo! @" +"<span class='mention'>" +userObject.userName + "</span>" + " inivites you to confirm the trade of " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
-                                    newNotification.link = "/manage"
+                                    newNotification.link = "/item/" + itemObject._id
 
                                    newNotification.save(function(err){
                                         if(err) throw err
@@ -1216,7 +1216,7 @@ module.exports = function(app, passport,upload) {
                             newNotification.item = itemObject
                             newNotification.title = "Confirmation got rejected"
                             newNotification.content =  "Oops! @" +"<span class='mention'>" +userObject.userName + "</span>" + " rejected to confirm the trade of " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
-                            newNotification.link = "/manage"
+                            newNotification.link = "/item/" + itemObject._id
 
 
                             newNotification.save(function(err){
@@ -1468,7 +1468,7 @@ module.exports = function(app, passport,upload) {
                     newNotification.createTime = Date()
                     newNotification.title = "New Following"
                     newNotification.content = "Yeah! @" +"<span class='mention'>" +user.userName + "</span>" + " follows you"
-                    newNotification.link = "/profile/" + user._id
+                    newNotification.link = "/user/" + user._id
                     // no item 
                     //save
                     newNotification.save(function(err){

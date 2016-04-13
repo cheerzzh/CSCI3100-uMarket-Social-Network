@@ -48,7 +48,10 @@ jQuery(document).ready(function() {
 		console.log(data)
 	})
 
-	
+	  notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
+  fillNotificationNavBar(notificationNavTemplate)
 	
 })
 

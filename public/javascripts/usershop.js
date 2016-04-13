@@ -29,6 +29,10 @@ jQuery(document).ready(function() {
 	followButton()
     fillItems(window.targetUser,window.user.wishList)
     
+    notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
+  fillNotificationNavBar(notificationNavTemplate)
     
 })
 
