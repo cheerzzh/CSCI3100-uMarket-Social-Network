@@ -58,32 +58,8 @@
                 </script>
               </ul>
             </li>
-            <li class="dropdown">
-              <a id="inbox" href="#" class="dropdown-toggle navbar-icons" data-toggle="dropdown">
-                <i class="fa fa-inbox" id="message_icon"  style="color:#dd4b39"></i>
-              </a>
-              <ul id="messages" class="dropdown-menu" role="menu">
-                <script id="messages-template" type="text/x-handlebars-template">
-                <li class="dropdown-title">
-                  <h5><b>Messages</b></h5>
-                </li>
-                {{#each messages}}
-                <li>
-                  <a href="#">
-                    <h6><b>{{user}}</b></h6>
-                    {{{message}}}
-                  </a>
-                </li>
-                {{/each}}
-                <li>
-                  <a href="/conversation" class="text-center">
-                    <span><b><i class="fa fa-bars"></i> More</b></span>
-                  </a>
-                </li>
-                </script>
-              </ul>
-            </li>
-            
+           
+            <li><a href="/conversation" class="navbar-icons"><i class="fa fa-inbox" id="conversation_icon"></i></a></li>
             <li><a href="/uploadItem" class="navbar-icons"><i class="fa fa-upload"></i></a></li>
             <li><a href="/wishList" class="navbar-icons"><i class="fa fa-heart"></i></a></li>
             <li><a href="/itemManage" class="navbar-icons"><i class="fa fa-cog"></i></a></li>

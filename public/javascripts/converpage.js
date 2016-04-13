@@ -20,30 +20,7 @@ $(document).ready(function(){
 	fillConversationList(conversationListTemplate)
     fillNotificationList(notificationListTemplate)
 
-    var notifications = {
-    notifications: [
-    { 
-      title: 'New Post',
-      post: '<span class="mention">@rails_freak</span> shared a new micropost<br>' +
-      'Ruby on Rails is Awesome! <span class="link">p.co/RoRawsme</span>' +
-      '<span class="hashtags">#Rails</span>'
-    },
-    {
-      title: '@Mention',
-      post: '<span class="mention">@rails_freak</span> mentioned you in a micropost'
-    },
-    {
-      title: 'Trends',
-      post: '<span class="hashtags">#Rails</span> - Topic you are following is trending!'
-    },
-    {
-      title: 'Followers',
-      post: 'Yay! <span class="mention">@rails_freak</span> and '+
-      '<span class="mention">@Dev</span>' +
-      'followed you'
-    }
-    ]
-  };
+
   
   source = $("#notifications-template").html();
   template = Handlebars.compile(source);
@@ -175,6 +152,13 @@ function fillConversationList(template){
 		          var sender = conversationEntry.party2.userName.concat(":")
 		          suggestionEntry.message = sender.concat(tempmessage.content)
 		        }
+		        
+		        if(suggestionEntry.hasNewMessage){
+                suggestionEntry.backgroundStyle = "background-color:#ECF5FF";
+                }
+                else{
+                 suggestionEntry.backgroundStyle = "";
+                }
 		         
 		      conversations.conversation.push(suggestionEntry)
 		    })
@@ -193,7 +177,7 @@ function fillConversationList(template){
             success: function(data) {
             //Do Something
             console.log(data)
-          
+            
             var bimessages = {}
 		    bimessages.bimessage = []
             var temp
@@ -209,7 +193,7 @@ function fillConversationList(template){
               }
             })
             // attach to panel
-
+              console.log(temp)
 		      temp.forEach(function(bimessageEntry){
 
 		      var suggestionEntry = {}
@@ -230,6 +214,19 @@ function fillConversationList(template){
 		    })
 		   
 		    $("#bimessages").html(bimessageTemplate(bimessages));
+		    
+                 $.ajax({
+                 type:"get",
+                 url: "/readConversation",
+                 data: {"conversationID":conversationId},
+                  success: function(data) {
+                    //console.log(data)
+                    fillConversationList(conversationListTemplate)
+                  },
+               error: function(xhr) {
+              //Do Something to handle error
+          }
+        });
 		    
             },
             error: function(xhr) {

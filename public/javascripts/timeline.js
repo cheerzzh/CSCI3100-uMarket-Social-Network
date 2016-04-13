@@ -34,16 +34,11 @@ $(document).ready(function(){
   notificationNavTemplate = Handlebars.compile(notificationNavSource);
   //$("#notifications").html(notificationNavTemplate(notifications));
 
- 
-
-  messagePanelSource = $("#messages-template").html();
-  messagePanelTemplate = Handlebars.compile(messagePanelSource);
-
+  checkConversationNavBar()
 
   fillUserSuggestionPanel()
   //fillTimeLinePanel(timelinePostTemplate,window.targetUser.wishList)
   fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList,window.targetUser.wantTobuyItemList)
-  fillMessagePanel()
 
 
   // get notification
@@ -53,6 +48,31 @@ $(document).ready(function(){
 
 
 });
+
+function checkConversationNavBar(){
+  $.ajax({
+    type:"GET",
+    url:"/getAllConversation",
+    
+    success:function(data){
+      console.log(data)
+      var newConversionCount = 0
+      data.forEach(function(entry){
+        if(entry.hasNewMessage){
+          console.log(entry.hasNewMessage)
+          newConversionCount ++
+        }
+      })
+      console.log(newConversionCount)
+      if(newConversionCount != 0){
+       $("#conversation_icon").css("color","#dd4b39")
+      }
+    },
+    error: function(xhr) {
+        //Do Something to handle error
+    }
+  })
+}
 
 function fillNotificationNavBar(template){
   $.ajax({
@@ -114,33 +134,6 @@ function fillNotificationNavBar(template){
   });
 }
 
-function fillMessagePanel(){
-
-  // get messages
-   var messages = {
-    messages: [
-    {
-      user: '@rails_freak',
-      message: 'Hey! Checkout my new post. Thanks! <span class="link">p.co/RoRawsme</span>'
-    },
-    {
-      user: '@blogaholic',
-      message: 'Hey man! Wassup?'
-    },
-    {
-      user: '@uiux_',
-      message: 'Medium\'s UI is f***ing awesome'
-    },
-    {
-      user: '@Dev',
-      message: 'What\'s your view on Websockets? Let me know'
-    }
-    ]
-  };
-
-    $("#messages").html(messagePanelTemplate(messages));
-
-}
 
 function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
 
