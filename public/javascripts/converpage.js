@@ -201,7 +201,8 @@ function fillConversationList(template){
               if(!instantConversation.referencedItem){}
               else{
                 $("#relatedItem").attr("href","/item/"+instantConversation.referencedItem._id)
-                $("#relatedItem").text(instantConversation.referencedItem.itemName)
+                $("#relatedItem").text(" (item: "+instantConversation.referencedItem.itemName+")")
+                $("#relatedItem").attr("style","color:#5AE1B5")
               }
             // attach to panel
               console.log(temp)
