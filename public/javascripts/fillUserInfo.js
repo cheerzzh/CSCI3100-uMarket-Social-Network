@@ -14,4 +14,11 @@ function fillUserInfo_cover(targetUser){
 	$("#followerNumber").text(targetUser.followerList.length);	
 	$("#followingNumber").text(targetUser.followingList.length);	
 	$("#itemNumber").text(targetUser.itemList.length);	
+	if(targetUser.isMale){
+		$('#gender_cover').html("<i class='fa fa-male'></i>")
+		$("#gender_panel").addClass("panel-info")
+	}else{
+		$('#gender_cover').html("<i class='fa fa-female'></i>")
+		$("#gender_panel").addClass("panel-danger")
+	}
 }

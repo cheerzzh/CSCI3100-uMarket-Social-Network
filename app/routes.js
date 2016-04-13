@@ -132,11 +132,17 @@ module.exports = function(app, passport,upload) {
             }
 
             // update field
+            console.log(req.body)
             user.updateDate = Date()
             user.statement = req.body.statement
             user.userName = req.body.userName
             user.university = req.body.university
             user.birthDate = req.body.birthDate
+            if(req.body.gender == "1"){
+                user.isMale = true
+            }else{
+                user.isMale = false
+            }
 
             //console.log(req.file)
             //imageLinks.push('uplaods/' + fileEntry.filename)
