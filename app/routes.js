@@ -521,7 +521,10 @@ module.exports = function(app, passport,upload) {
                                                     itemOwnerObject.save(function(err){
                                                         if(err) throw err
                                                         console.log('/wantToBuy done!')
-                                                        res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                                                    itemObject.populate('_creator', function(err) {
+                                                         res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                                                        });
+                                                        //res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
                                                     })
                                                 })
                                             })
@@ -594,7 +597,10 @@ module.exports = function(app, passport,upload) {
                         if(err) throw err
                         userObject.save(function(err){
                             if(err) throw err
-                            res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                            itemObject.populate('_creator', function(err) {
+                             res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                            });
+                            //res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
                         })
                     })
 
@@ -655,7 +661,12 @@ module.exports = function(app, passport,upload) {
                         item.save(function(err){
                             if(err) throw err
                             ownerObject.save(function(err){
-                                res.send({targetUser:user,targetItem:item})
+                        
+
+                                item.populate('_creator', function(err) {
+                                 res.send({targetUser:user,targetItem:item})
+                                });
+                                
                             })
                             
                         })
@@ -703,7 +714,10 @@ module.exports = function(app, passport,upload) {
                     }
                     item.save(function(err){
                         if (err) throw err;
-                        res.send({targetUser:user,targetItem:item})
+                        item.populate('_creator', function(err) {
+                                 res.send({targetUser:user,targetItem:item})
+                                });
+                        
                     })
                 })
             })

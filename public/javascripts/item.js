@@ -227,6 +227,7 @@ function processButton(userObject,itemObject){
 				var messageContent = $("#send_message_area").val()
 				console.log('sned message: ' + messageContent)
 				if(messageContent!=""){
+					
 					$.ajax({
 						type: "POST",
 						url: "/sendMessage",
