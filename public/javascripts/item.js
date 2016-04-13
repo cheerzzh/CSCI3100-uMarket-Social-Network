@@ -58,6 +58,7 @@ $(document).ready(function(){
 
   	processButton(window.targetUser,window.targetItem)
   	processItemImage(window.targetItem)
+  	processFollowButton(window.targetUser, window.targetItem._creator._id)
   	// get related items
   	$.ajax({
           type: "POST",
@@ -238,7 +239,7 @@ function processButton(userObject,itemObject){
 
 	}else {
 		
-		processFollowButton(userObject, itemObject._creator._id)
+		
 		// check item status
 		// item is active
 		if(itemObject.status == 0){
