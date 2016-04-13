@@ -134,9 +134,21 @@ function fillConversationList(template){
 		      var suggestionEntry = {}
 		      if(targetUser._id == conversationEntry.party1._id){
 		        suggestionEntry.user = conversationEntry.party2.userName
+		        if(suggestionEntry.hasNewMessage1){
+                suggestionEntry.backgroundStyle = "background-color:#ECF5FF";
+                }
+                else{
+                 suggestionEntry.backgroundStyle = "";
+                }
 		      }
 		      else{
 		        suggestionEntry.user = conversationEntry.party1.userName
+		        if(suggestionEntry.hasNewMessage2){
+                suggestionEntry.backgroundStyle = "background-color:#ECF5FF";
+                }
+                else{
+                 suggestionEntry.backgroundStyle = "";
+                }
 		      }
 		        suggestionEntry.conversationId = conversationEntry._id
 		        console.log(suggestionEntry.conversationId)
@@ -153,12 +165,6 @@ function fillConversationList(template){
 		          suggestionEntry.message = sender.concat(tempmessage.content)
 		        }
 		        
-		        if(suggestionEntry.hasNewMessage){
-                suggestionEntry.backgroundStyle = "background-color:#ECF5FF";
-                }
-                else{
-                 suggestionEntry.backgroundStyle = "";
-                }
 		         
 		      conversations.conversation.push(suggestionEntry)
 		    })
@@ -192,6 +198,10 @@ function fillConversationList(template){
                party2 = conversationEntry.party2
               }
             })
+              if(instantConversation.referencedItem){
+                $("#relatedItem").attr("href","/item/"+instantConversation.referencedItem._id)
+                $("#relatedItem").text(instantConversation.referencedItem.itemName)
+              }
             // attach to panel
               console.log(temp)
 		      temp.forEach(function(bimessageEntry){
@@ -218,7 +228,7 @@ function fillConversationList(template){
                  $.ajax({
                  type:"get",
                  url: "/readConversation",
-                 data: {"conversationID":conversationId},
+                 data: {"conversationID":conversationId, "userID":targetUser._id},
                   success: function(data) {
                     //console.log(data)
                     fillConversationList(conversationListTemplate)

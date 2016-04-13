@@ -58,8 +58,10 @@ function checkConversationNavBar(){
       console.log(data)
       var newConversionCount = 0
       data.forEach(function(entry){
-        if(entry.hasNewMessage){
-          console.log(entry.hasNewMessage)
+        if((entry.party1._id == targetUser._id) && (entry.hasNewMessage1)){
+          newConversionCount ++
+        }
+        if((entry.party2._id == targetUser._id) && (entry.hasNewMessage2)){
           newConversionCount ++
         }
       })
