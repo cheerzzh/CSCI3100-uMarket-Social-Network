@@ -1710,8 +1710,14 @@ module.exports = function(app, passport,upload) {
 
                             replyConversation.messageList.push(newMessage._id)
                             replyConversation.updateTime = Date()
-                            replyConversation.hasNewMessage1 = true;
-                            replyConversation.hasNewMessage2 = true;
+                            if(sender._id.equals(replyConversation.party1)){
+                                replyConversation.hasNewMessage1 = false;
+                                replyConversation.hasNewMessage2 = true;
+                            }else{
+                                replyConversation.hasNewMessage1 = true;
+                                replyConversation.hasNewMessage2 = false;
+                            }
+                            
                             replyConversation.save(function(err){
                             if(err) throw err
                             console.log('update existing conversation with ID ' + replyConversation._id)
