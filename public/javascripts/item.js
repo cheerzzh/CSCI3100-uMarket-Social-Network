@@ -74,7 +74,7 @@ $(document).ready(function(){
           }
     });
 
-
+  	$("#user_panel").attr("href","/user/" + window.targetItem._creator._id)
 
 })
 

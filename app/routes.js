@@ -491,7 +491,8 @@ module.exports = function(app, passport,upload) {
                                         newConversation.messageList.push(newMessage._id)
                                         newConversation.updateTime = Date()
                                         newConversation.referencedItem = itemObject
-                                        newConversation.hasNewMessage = true
+                                        newConversation.hasNewMessage1 = true
+                                        newConversation.hasNewMessage2 = true
 
                                         newConversation.save(function(err){
                                             if(err) throw err
