@@ -478,9 +478,15 @@ function handleItemWithdraw(){
 		var targetItemID = $(this).attr('value');
 		var Itemstatus = $(this).attr('id');
 		var statusID=String(Itemstatus) +'id'+targetItemID;
+		console.log("successfully clicked withdraw")
 		$.post('toWithdrawItem',{"itemID" : targetItemID},function(data){
+			if(data.succeed){
 			window.targetUser = data.targetUser
 			fillItemPanel(window.targetUser.wishList)
+			}
+			else{
+				console.log("fail to withdraw "+ targetItemID)
+			}
 		})
 	});	
 }
