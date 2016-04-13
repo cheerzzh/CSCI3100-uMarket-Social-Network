@@ -866,6 +866,7 @@ module.exports = function(app, passport,upload) {
         {
             Item.find({'userID':req.user._id})
             .populate('_creator')
+            .populate('confirmedCounterParty')
             .exec(function(err, items) {
               if (err) throw err;
 

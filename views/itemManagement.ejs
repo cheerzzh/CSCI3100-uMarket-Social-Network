@@ -219,7 +219,7 @@
                     <ul class="meta-search">
                       <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
                       <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
-                      <li>Sell To:</li>
+                      <li>Sell To: <a href={{counterPartyLink}}><span>{{CounterParty}}</span></a></li>
                       <!--
                       <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
                       <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
@@ -336,7 +336,7 @@
                       <li  style="font-size:50%;">By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
                       <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:120%;" ></i>
                       <font color="grey" >{{wishedCount}}</font></span></li>
-                      <li class={{itemtatus}}><span class="buyButton" id = {{itemstatus}} value={{itemID}}><i class="fa fa-shopping-cart" style="{{buyStyle}};font-size:120%;" ></i>
+                      <li id="buyButton"><span class="buyButton" id = {{itemstatus}} value={{itemID}}><i class="fa fa-shopping-cart" style="{{buyStyle}};font-size:120%;" ></i>
                       <font color="grey" >{{buyDesciption}}</font></span></li>
                     </ul>
                   </div>
@@ -411,11 +411,11 @@
                       <li><i class="glyphicon glyphicon-calendar"></i> <span>{{updateDate}}</span></li>
                       <li><i class="glyphicon glyphicon-time"></i> <span>{{updateTime}}</span></li>
                       <li  style="font-size:50%;">By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
-                      <!--
-                      <li>By: <a href={{userLink}}><span>{{creatorName}}</span></a></li>
-                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:140%;" ></i> 
-                      -->
-                      <!--<font color="grey">{{wishedCount}} wished</font>--></span></li>
+                      <li><span class="heartButton" id = {{heartID}} value={{itemID}}><i class="fa fa-heart" style="{{heartStyle}};font-size:120%;" ></i>
+                      <font color="grey" >{{wishedCount}}</font></span></li>
+                      <li><span class="buyButton" value={{itemID}}><i class="fa fa-shopping-cart" style="{{buyStyle}};font-size:120%;" ></i>
+                      <font color="grey" >{{buyDesciption}}</font></span></li>
+                      
                     </ul>
                   </div>
                   <div class="col-xs-12 col-sm-12 col-md-7">

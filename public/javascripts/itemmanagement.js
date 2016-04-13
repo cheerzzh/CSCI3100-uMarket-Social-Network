@@ -137,7 +137,7 @@ function handleActions(){
           success: function(data) {
               //Do Something
             //console.log("add to wishlist succeed")
-            //window.targetUser = data.targetUser
+            window.targetUser = data.targetUser
 
             // refresh whole timeline?
             //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
@@ -157,7 +157,7 @@ function handleActions(){
           success: function(data) {
               //Do Something
             //console.log("remove from wishlist succeed")
-            //window.targetUser = data.targetUser
+            window.targetUser = data.targetUser
 
             // refresh whole timeline?
             //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
@@ -172,6 +172,36 @@ function handleActions(){
 
       }
     }))
+}
+
+function handleCancelWanttoBuy(){
+	$('cancelwtbbtn').click(function(){
+		var itemID = $(this).attr('value')
+		var itemname = $(this).attr('id')
+		console.log("successfully click cancel" + itemName)
+		var choice = confirm ("Remove "+itemname+" from shopping cart?\n")
+		if (choice == true){
+				$.ajax({
+			          type:"post",
+			          url: "/toCancelWantToBuy",
+			          data: {"itemID":itemID},
+			          success: function(data) {
+			            //console.log(data)
+			              //Do Something
+			            //console.log("remove from wantToBuy succeed")
+			            window.targetUser = data.targetUser
+			
+			            //fillItemSearchPanel(itemPostTemplate,data.targetUser.wishList,data.targetUser.wantTobuyItemList)
+			          	fillItemPanel(window.targetUser.wishList)
+						
+			          	
+			          },
+			          error: function(xhr) {
+			              //Do Something to handle error
+			          }
+	        });
+		}
+	})
 }
 
 function handleCancelbtn(){
@@ -456,7 +486,7 @@ function handleItemWithdraw(){
 function fillItemPanel(currentWishList){
 	$("#confirmed-body").hide()
     $.get('getMyItem',function(data){
-        //console.log(data)
+    	console.log(data)
         descriptionLimit = 180
         /*
         var itemPosts = {}
@@ -497,6 +527,10 @@ function fillItemPanel(currentWishList){
 		postEntry.creatorName = item._creator.userName
 		postEntry.itemName = item.itemName
 		postEntry.confirmedbtnId="confirmed"+item._id
+		if(index == 2){
+		postEntry.CounterParty = item.confirmedCounterParty.userName
+		postEntry.counterPartyLink = '/user/' + item.confirmedCounterParty._id
+		}
 		if(item.description.length > descriptionLimit)
 		{
 		postEntry.description = item.description.substr(1, descriptionLimit) + " ...";
@@ -776,7 +810,7 @@ function fillItemPanel(currentWishList){
 		allitems.itemEntry.push(postEntry)
 		})
 		$("#itemSearchResults6").html(itemPostTemplate6(allitems));
-		$(".buyButton").hide()
+		$("#buyButton").hide()
 		$("#itemStatus0").show()
 		handleActions()
 		
@@ -792,6 +826,7 @@ function fillItemPanel(currentWishList){
 		//console.log(item)
 		var index=item.status
 		//console.log(index)
+		if(index == 0){
 		var postEntry = {}
 		postEntry.avatar = item._creator.avatarLink
 		postEntry.creatorName = item._creator.userName
@@ -861,8 +896,10 @@ function fillItemPanel(currentWishList){
 		postEntry.updateTime = postDate.toISOString().slice(12,19)
 		//console.log(Date(item.updateDate))
 		allitems.itemEntry.push(postEntry)
+		}
 		})
 		$("#itemSearchResults8").html(itemPostTemplate8(allitems));
+		handleActions()
 	})
 	
 }
