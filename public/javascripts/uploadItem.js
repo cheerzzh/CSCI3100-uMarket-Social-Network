@@ -26,16 +26,16 @@ $(document).ready(function(){
 
 
 	$.get( '/userInfo',1, function(data) { 
-		console.log(data)
+		//console.log(data)
 		//$('#userInfo').html(data.local.email); 
 	});
 
 	$.get( '/getMyItem',1, function(data) { 
-		console.log(data)
+		//console.log(data)
 		//$('#userInfo').html(data.local.email); 
 
 		data.forEach( function(element, index) {
-			console.log(element)
+			//console.log(element)
 			$('#userItemList').append('<li><a href='+'/updateItem/'+ element._id+'>'+element.itemName+'</a></li>')
 		});
 	});
