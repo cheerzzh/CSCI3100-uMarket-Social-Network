@@ -198,7 +198,8 @@ function fillConversationList(template){
                party2 = conversationEntry.party2
               }
             })
-              if(instantConversation.referencedItem){
+              if(!instantConversation.referencedItem){}
+              else{
                 $("#relatedItem").attr("href","/item/"+instantConversation.referencedItem._id)
                 $("#relatedItem").text(instantConversation.referencedItem.itemName)
               }
