@@ -64,21 +64,6 @@ $(document).ready(function(){
   messagePanelTemplate = Handlebars.compile(messagePanelSource);
 
 
-
-  var trends = {
-    trends: [
-    { trend: '#Theme' },
-    { trend: '#Bootstrap' },
-    { trend: '#Rails' },
-    { trend: '#Blog' },
-    { trend: '#Javascript' },
-    ]
-  };
-
-  source = $("#trends-template").html();
-  template = Handlebars.compile(source);
-  $("#trends").html(template(trends));
-
   fillUserSuggestionPanel()
   //fillTimeLinePanel(timelinePostTemplate,window.targetUser.wishList)
   fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList,window.targetUser.wantTobuyItemList)
