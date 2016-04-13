@@ -47,6 +47,8 @@ jQuery(document).ready(function() {
 	$.get('getwanttobuyitems',function(data){
 		console.log(data)
 	})
+
+	
 	
 })
 
