@@ -10,7 +10,7 @@ jQuery(document).ready(function() {
     fillUserInfo_Navbar(window.targetUser)
 
     //console.log(window.targetUser)
-    console.log(window.searchResult)
+    //console.log(window.searchResult)
 
     var itemSearchResults = {
 
@@ -35,6 +35,10 @@ jQuery(document).ready(function() {
 	fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList)
 	fillUserSuggestionPanel()
 	//$("#itemSearchResults").children()[0]	
+    notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
+  fillNotificationNavBar(notificationNavTemplate)
 
 })
 
@@ -166,7 +170,7 @@ function fillUserSuggestionPanel(){
       suggestionEntry.unfollowButtonID = "unfollowButton_" + userEntry._id
       suggestionEntry.userSuggestionID = "userSuggestionID_" + userEntry._id
       suggestionEntry.userLink = "/user/" + userEntry._id
-      console.log(include(window.targetUser.followingList, userEntry._id))
+      //console.log(include(window.targetUser.followingList, userEntry._id))
       userSuggestion.suggestions.push(suggestionEntry)
     })
     //console.log(userSuggestion)

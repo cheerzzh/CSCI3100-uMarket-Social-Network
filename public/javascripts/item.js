@@ -76,6 +76,11 @@ $(document).ready(function(){
 
   	$("#user_panel").attr("href","/user/" + window.targetItem._creator._id)
 
+  	  notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
+  fillNotificationNavBar(notificationNavTemplate)
+
 })
 
 // when item owner is not current user itself, this function will be called
@@ -222,6 +227,7 @@ function processButton(userObject,itemObject){
 				var messageContent = $("#send_message_area").val()
 				console.log('sned message: ' + messageContent)
 				if(messageContent!=""){
+					
 					$.ajax({
 						type: "POST",
 						url: "/sendMessage",

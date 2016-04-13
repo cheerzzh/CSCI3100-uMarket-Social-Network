@@ -1,4 +1,5 @@
 var itemPostTemplate, itemPostSource,sourceWTB,templateWTB;
+var descriptionLimit = 180;
 
 jQuery(document).ready(function() {
 	
@@ -47,6 +48,11 @@ jQuery(document).ready(function() {
 	$.get('getwanttobuyitems',function(data){
 		console.log(data)
 	})
+
+	  notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
+  fillNotificationNavBar(notificationNavTemplate)
 	
 })
 
@@ -476,9 +482,15 @@ function handleItemWithdraw(){
 		var targetItemID = $(this).attr('value');
 		var Itemstatus = $(this).attr('id');
 		var statusID=String(Itemstatus) +'id'+targetItemID;
+		console.log("successfully clicked withdraw")
 		$.post('toWithdrawItem',{"itemID" : targetItemID},function(data){
+			if(data.succeed){
 			window.targetUser = data.targetUser
 			fillItemPanel(window.targetUser.wishList)
+			}
+			else{
+				console.log("fail to withdraw "+ targetItemID)
+			}
 		})
 	});	
 }

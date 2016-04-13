@@ -521,7 +521,10 @@ module.exports = function(app, passport,upload) {
                                                     itemOwnerObject.save(function(err){
                                                         if(err) throw err
                                                         console.log('/wantToBuy done!')
-                                                        res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                                                    itemObject.populate('_creator', function(err) {
+                                                         res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                                                        });
+                                                        //res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
                                                     })
                                                 })
                                             })
@@ -594,7 +597,10 @@ module.exports = function(app, passport,upload) {
                         if(err) throw err
                         userObject.save(function(err){
                             if(err) throw err
-                            res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                            itemObject.populate('_creator', function(err) {
+                             res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                            });
+                            //res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
                         })
                     })
 
@@ -655,7 +661,12 @@ module.exports = function(app, passport,upload) {
                         item.save(function(err){
                             if(err) throw err
                             ownerObject.save(function(err){
-                                res.send({targetUser:user,targetItem:item})
+                        
+
+                                item.populate('_creator', function(err) {
+                                 res.send({targetUser:user,targetItem:item})
+                                });
+                                
                             })
                             
                         })
@@ -703,7 +714,10 @@ module.exports = function(app, passport,upload) {
                     }
                     item.save(function(err){
                         if (err) throw err;
-                        res.send({targetUser:user,targetItem:item})
+                        item.populate('_creator', function(err) {
+                                 res.send({targetUser:user,targetItem:item})
+                                });
+                        
                     })
                 })
             })
@@ -1000,7 +1014,7 @@ module.exports = function(app, passport,upload) {
                                    newNotification.item = itemObject._id
                                     newNotification.title = "New Confirmation Invitation"
                                     newNotification.content = "Bravo! @" +"<span class='mention'>" +userObject.userName + "</span>" + " inivites you to confirm the trade of " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
-                                    newNotification.link = "/manage"
+                                    newNotification.link = "/item/" + itemObject._id
 
                                    newNotification.save(function(err){
                                         if(err) throw err
@@ -1216,7 +1230,7 @@ module.exports = function(app, passport,upload) {
                             newNotification.item = itemObject
                             newNotification.title = "Confirmation got rejected"
                             newNotification.content =  "Oops! @" +"<span class='mention'>" +userObject.userName + "</span>" + " rejected to confirm the trade of " + "<span class='hashtags'>" + itemObject.itemName+"</span>"
-                            newNotification.link = "/manage"
+                            newNotification.link = "/item/" + itemObject._id
 
 
                             newNotification.save(function(err){
@@ -1298,7 +1312,10 @@ module.exports = function(app, passport,upload) {
                                     if(err) throw err
                                     ownerObject.save(function(err){
                                         if(err) throw err
-                                        res.send({succeed:true,message:"Commented",targetUser:userObject,targetItem:itemObject})
+                                            itemObject.populate('_creator', function(err) {
+                                                 res.send({succeed:true,targetUser:userObject,targetItem:itemObject})
+                                                });
+                                        //res.send({succeed:true,message:"Commented",targetUser:userObject,targetItem:itemObject})
                                     })
                                 })
                             })
@@ -1468,7 +1485,7 @@ module.exports = function(app, passport,upload) {
                     newNotification.createTime = Date()
                     newNotification.title = "New Following"
                     newNotification.content = "Yeah! @" +"<span class='mention'>" +user.userName + "</span>" + " follows you"
-                    newNotification.link = "/profile/" + user._id
+                    newNotification.link = "/user/" + user._id
                     // no item 
                     //save
                     newNotification.save(function(err){

@@ -5,8 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Timeline - uMarket</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700,300,100' rel='stylesheet' type='text/css'>
-    <link href="http://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,400,600,700,300&subset=latin" rel="stylesheet" type="text/css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
     <link rel="stylesheet" href="stylesheets/include/paper.min.css">
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css">
@@ -57,11 +55,11 @@
                 </script>
               </ul>
             </li>
-           
+            
             <li><a href="/conversation" class="navbar-icons"><i class="fa fa-inbox" id="conversation_icon"></i></a></li>
             <li><a href="/uploadItem" class="navbar-icons"><i class="fa fa-upload"></i></a></li>
-            <li><a href="/wishList" class="navbar-icons"><i class="fa fa-heart"></i></a></li>
-            <li><a href="/itemManage" class="navbar-icons"><i class="fa fa-cog"></i></a></li>
+            
+            <li><a href="/itemManage" class="navbar-icons"><i class="fa fa-list"></i></a></li>
             <li><a href="/logout" class="navbar-icons"><i class="fa fa-sign-out"></i></a></li>
             
             <!-- name and pic get from ajax call-->
@@ -97,7 +95,7 @@
                 <div class="col-xs-4"><span id="followerNumber"></span><br>Followers</div>
                 <div class="col-xs-4"><span id="followingNumber"></span><br>Followings</div>
               </div>
-             
+              
               <div class="widget-profile-text text-center" id="statement-cover">
                 
               </div>
@@ -108,7 +106,7 @@
               </div> <!-- / .panel -->
               <div class="panel panel-default">
                 <div class="panel-heading">
-                  <h3 class="panel-title"><b>People you may interest</b></h3>
+                  <h3 class="panel-title"><b>People may interest you</b></h3>
                 </div>
                 <div class="panel-body">
                   <ul id="suggestions" class="panel-list">
@@ -178,7 +176,7 @@
           </div>
         </div>
         
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
         <script type="text/javascript" src="javascripts/include/paper.min.js"></script>
         <script type="text/javascript" src="javascripts/include/handlebars-v2.0.0.js"></script>
         <script type="text/javascript" src="javascripts/include/jquery.autosize.min.js"></script>
@@ -187,6 +185,8 @@
         // console.log(item)
         </script>
         <script src="javascripts/fillUserInfo.js"></script>
+        <script src="javascripts/checkConversation.js"></script>
+        <script src="javascripts/fillNotification.js"></script>
         <script type="text/javascript" src="javascripts/timeline.js"></script>
       </body>
     </html>

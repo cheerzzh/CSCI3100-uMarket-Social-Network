@@ -10,7 +10,7 @@ jQuery(document).ready(function() {
 
     fillUserInfo_Navbar(targetUser)
 	fillUserInfo_cover(targetUser)
-	console.log(targetUser)
+	//console.log(targetUser)
 	$("#avatar-profile").attr("src",targetUser.avatarLink);
 	$("#username-profile").text(targetUser.userName);
 	$("#email-profile").text(targetUser.local.email);
@@ -23,6 +23,10 @@ jQuery(document).ready(function() {
 
 	// for handlebar template
 
+	notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
+  fillNotificationNavBar(notificationNavTemplate)
 
 	followingListSource = $("#followingUser-template").html();
 	followingListTemplate = Handlebars.compile(followingListSource);
@@ -54,6 +58,8 @@ jQuery(document).ready(function() {
 			$('#userItemList').append('<li><a href='+'/updateItem/'+ element._id+'>'+element.itemName+'</a></li>')
 		});
 	});
+
+
     
     
 });
@@ -68,7 +74,7 @@ function fillFollwerList(template){
 
             
             followerList = data.followerList
-            console.log(followerList)
+            //console.log(followerList)
 
             
             // attach to panel

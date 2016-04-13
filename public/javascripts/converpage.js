@@ -11,7 +11,7 @@ bimessageTemplate = Handlebars.compile(bimessageSource);
 
 $(document).ready(function(){
   
-    $.backstretch('images/2.jpg', {speed: 1000});
+    $.backstretch('images/3.jpg', {speed: 1000});
     var source, template;
 
     /*
@@ -20,48 +20,28 @@ $(document).ready(function(){
 	fillConversationList(conversationListTemplate)
     fillNotificationList(notificationListTemplate)
 
+  fillUserInfo_Navbar(targetUser)
+  fillUserInfo_cover(targetUser)
 
+    notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
+  fillNotificationNavBar(notificationNavTemplate)
   
-  source = $("#notifications-template").html();
-  template = Handlebars.compile(source);
-  $("#notifications").html(template(notifications));
+ 
   
-   var messages = {
-    messages: [
-    {
-      user: '@rails_freak',
-      message: 'Hey! Checkout my new post. Thanks! <span class="link">p.co/RoRawsme</span>'
-    },
-    {
-      user: '@blogaholic',
-      message: 'Hey man! Wassup?'
-    },
-    {
-      user: '@uiux_',
-      message: 'Medium\'s UI is f***ing awesome'
-    },
-    {
-      user: '@Dev',
-      message: 'What\'s your view on Websockets? Let me know'
-    }
-    ]
-  };
-
-  source = $("#messages-template").html();
-  template = Handlebars.compile(source); 
-  $("#messages").html(template(messages));
 
   
 });
 
 function fillNotificationList(template){
-        console.log("1")
+        //console.log("1")
     	$.ajax({
         url: "/getAllNotification",
         type:"POST",
         success: function(data) {
             //Do Something
-            console.log(data)
+            //console.log(data)
 
             
             // attach to panel
@@ -87,7 +67,7 @@ function fillNotificationList(template){
 		      notificationList.wholenotifications.push(suggestionEntry)
 		    })
 		  $("#wholenotifications").html(template(notificationList));
-		  console.log(template(notificationList))
+		  //console.log(template(notificationList))
 		  
 		 $(".wholename").click(function(){
         var notificationID =  $(this).attr('value')
@@ -122,7 +102,7 @@ function fillConversationList(template){
         type:"get",
         success: function(data) {
             //Do Something
-            console.log(data)
+            //console.log(data)
 
             
             // attach to panel
@@ -151,7 +131,7 @@ function fillConversationList(template){
                 }
 		      }
 		        suggestionEntry.conversationId = conversationEntry._id
-		        console.log(suggestionEntry.conversationId)
+		        //console.log(suggestionEntry.conversationId)
 		        var tempmessage = conversationEntry.messageList[conversationEntry.messageList.length-1]
 		        if(tempmessage.sender == conversationEntry.party1._id)
 		        {
@@ -175,14 +155,14 @@ function fillConversationList(template){
 		 $('.conversationlist').unbind()
     	 $('.conversationlist').click(function(){
         var conversationId = $(this).attr("value")
-        console.log(conversationId)
+        //console.log(conversationId)
         $.ajax({
   
             url: "/getAllConversation",
             type:"get",
             success: function(data) {
             //Do Something
-            console.log(data)
+           // console.log(data)
             
             var bimessages = {}
 		    bimessages.bimessage = []
@@ -205,7 +185,7 @@ function fillConversationList(template){
                 $("#relatedItem").attr("style","color:#5AE1B5")
               }
             // attach to panel
-              console.log(temp)
+              //console.log(temp)
 		      temp.forEach(function(bimessageEntry){
 
 		      var suggestionEntry = {}
@@ -264,7 +244,7 @@ function fillConversationList(template){
           replyConversationID = instantConversation._id
           isReply = 1
           
-          console.log("123")
+          //console.log("123")
           $.ajax({
            url:"/sendMessage",
            type:"post",
@@ -314,7 +294,7 @@ function fillConversationList(template){
             type:"get",
             success: function(data) {
             //Do Something
-            console.log(data)
+            //console.log(data)
           
             var bimessages = {}
 		    bimessages.bimessage = []
@@ -356,14 +336,14 @@ function fillConversationList(template){
 		  $('.list-group-item').unbind()
 		  $('.list-group-item').click(function(){
         var conversationId = $(this).attr("value")
-        console.log(conversationId)
+       // console.log(conversationId)
         $.ajax({
   
             url: "/getAllConversation",
             type:"get",
             success: function(data) {
             //Do Something
-            console.log(data)
+            //console.log(data)
           
             var bimessages = {}
 		    bimessages.bimessage = []

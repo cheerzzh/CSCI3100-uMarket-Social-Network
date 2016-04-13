@@ -32,6 +32,10 @@ $(document).ready(function(){
 	$("#refLink").val(targetItem.refLink)
 	$("#itemID").val(targetItem._id)	
 
+	  notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
+  fillNotificationNavBar(notificationNavTemplate)
 	// append images for target item
 	targetItem.imageLinks.forEach(function(link){
 

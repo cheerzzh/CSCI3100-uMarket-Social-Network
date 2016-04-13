@@ -1,7 +1,7 @@
 var timelinePostSource, timelinePostTemplate
 var itemPostTemplate, itemPostSource
 var messagePanelSource, messagePanelTemplate
-var notificationNavSource, notificationNavTemplate
+
 
 $(document).ready(function(){
 
@@ -30,11 +30,10 @@ $(document).ready(function(){
 
   // fetch notification
   
-  notificationNavSource = $("#notifications-template").html();
-  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  
   //$("#notifications").html(notificationNavTemplate(notifications));
 
-  checkConversationNavBar()
+  
 
   fillUserSuggestionPanel()
   //fillTimeLinePanel(timelinePostTemplate,window.targetUser.wishList)
@@ -42,6 +41,10 @@ $(document).ready(function(){
 
 
   // get notification
+  
+  notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
   fillNotificationNavBar(notificationNavTemplate)
 
 
@@ -49,92 +52,9 @@ $(document).ready(function(){
 
 });
 
-function checkConversationNavBar(){
-  $.ajax({
-    type:"GET",
-    url:"/getAllConversation",
-    
-    success:function(data){
-      console.log(data)
-      var newConversionCount = 0
-      data.forEach(function(entry){
-        if((entry.party1._id == targetUser._id) && (entry.hasNewMessage1)){
-          newConversionCount ++
-        }
-        if((entry.party2._id == targetUser._id) && (entry.hasNewMessage2)){
-          newConversionCount ++
-        }
-      })
-      console.log(newConversionCount)
-      if(newConversionCount != 0){
-       $("#conversation_icon").css("color","#dd4b39")
-      }
-    },
-    error: function(xhr) {
-        //Do Something to handle error
-    }
-  })
-}
 
-function fillNotificationNavBar(template){
-  $.ajax({
-    type: "POST",
-    url: "/getAllNotification",
-    success: function(data) {
-      //console.log(data)
-      var notificationList = {}
-      notificationList.notifications = []
-      var newNotificationCount = 0
-      data.forEach(function(entry){
-        temp = {}
-        temp.link = entry.link
-        temp.title = entry.title
-        temp.content = entry.content
-        temp.notification_id = entry._id
 
-        if(!entry.hasRead){
-          temp.backgroundStyle = "background-color:#ECF5FF";
-          //temp.style1 = "<i class='fa fa-circle' style='color:red;'></i>"
-          newNotificationCount ++
-        }else{
-          temp.backgroundStyle = "";
-        }
-        notificationList.notifications.push(temp)
-      })
-      $("#notifications").html(template(notificationList));
-      if(newNotificationCount > 0){
-        //$("#notification_title").text(newNotificationCount + " New Notifications")
-        $("#notification_icon").css("color","#dd4b39")
-      }
-      else{
-        $("#notification_icon").css("color","")
-      }
-      
 
-      // attach function to label readed
-      $(".notification_post").click(function(){
-        var notificationID =  $(this).attr('value')
-        //console.log(notificationID)
-         $.ajax({
-          type:"post",
-          url: "/readNotification",
-          data: {"notificationID":notificationID},
-          success: function(data) {
-            //console.log(data)
-            fillNotificationNavBar(notificationNavTemplate)
-          },
-          error: function(xhr) {
-              //Do Something to handle error
-          }
-        });
-
-      })
-    },
-    error: function(xhr) {
-        //Do Something to handle error
-    }
-  });
-}
 
 
 function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){

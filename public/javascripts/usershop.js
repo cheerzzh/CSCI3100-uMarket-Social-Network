@@ -6,7 +6,7 @@ jQuery(document).ready(function() {
     */
     $.backstretch('images/3.jpg', {speed: 1000});
 
-    fillUserInfo_Navbar(window.targetUser)
+    fillUserInfo_Navbar(window.user)
     //fillUserInfo_cover(window.targetUser)
     
     $('#avatar-profile').attr('src',window.targetUser.avatarLink)
@@ -29,6 +29,10 @@ jQuery(document).ready(function() {
 	followButton()
     fillItems(window.targetUser,window.user.wishList)
     
+    notificationNavSource = $("#notifications-template").html();
+  notificationNavTemplate = Handlebars.compile(notificationNavSource);
+  checkConversationNavBar()
+  fillNotificationNavBar(notificationNavTemplate)
     
 })
 
