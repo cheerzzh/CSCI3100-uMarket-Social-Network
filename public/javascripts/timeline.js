@@ -29,45 +29,16 @@ $(document).ready(function(){
   $('#new-micropost textarea').autosize();
 
   // fetch notification
-  var notifications = {
-    notifications: [
-    {
-      title: 'New Post',
-      post: '<span class="mention">@rails_freak</span> shared a new micropost<br>' +
-      'Ruby on Rails is Awesome! <span class="link">p.co/RoRawsme</span>' +
-      '<span class="hashtags">#Rails</span>'
-    },
-    {
-      title: '@Mention',
-      post: '<span class="mention">@rails_freak</span> mentioned you in a micropost'
-    },
-    {
-      title: 'Trends',
-      post: '<span class="hashtags">#Rails</span> - Topic you are following is trending!'
-    },
-    {
-      title: 'Followers',
-      post: 'Yay! <span class="mention">@rails_freak</span> and '+
-      '<span class="mention">@Dev</span>' +
-      'followed you'
-    }
-    ]
-  };
-
+  
   notificationNavSource = $("#notifications-template").html();
   notificationNavTemplate = Handlebars.compile(notificationNavSource);
   //$("#notifications").html(notificationNavTemplate(notifications));
 
- 
-
-  messagePanelSource = $("#messages-template").html();
-  messagePanelTemplate = Handlebars.compile(messagePanelSource);
-
+  checkConversationNavBar()
 
   fillUserSuggestionPanel()
   //fillTimeLinePanel(timelinePostTemplate,window.targetUser.wishList)
   fillItemSearchPanel(itemPostTemplate,window.targetUser.wishList,window.targetUser.wantTobuyItemList)
-  fillMessagePanel()
 
 
   // get notification
@@ -77,6 +48,33 @@ $(document).ready(function(){
 
 
 });
+
+function checkConversationNavBar(){
+  $.ajax({
+    type:"GET",
+    url:"/getAllConversation",
+    
+    success:function(data){
+      console.log(data)
+      var newConversionCount = 0
+      data.forEach(function(entry){
+        if((entry.party1._id == targetUser._id) && (entry.hasNewMessage1)){
+          newConversionCount ++
+        }
+        if((entry.party2._id == targetUser._id) && (entry.hasNewMessage2)){
+          newConversionCount ++
+        }
+      })
+      console.log(newConversionCount)
+      if(newConversionCount != 0){
+       $("#conversation_icon").css("color","#dd4b39")
+      }
+    },
+    error: function(xhr) {
+        //Do Something to handle error
+    }
+  })
+}
 
 function fillNotificationNavBar(template){
   $.ajax({
@@ -138,33 +136,6 @@ function fillNotificationNavBar(template){
   });
 }
 
-function fillMessagePanel(){
-
-  // get messages
-   var messages = {
-    messages: [
-    {
-      user: '@rails_freak',
-      message: 'Hey! Checkout my new post. Thanks! <span class="link">p.co/RoRawsme</span>'
-    },
-    {
-      user: '@blogaholic',
-      message: 'Hey man! Wassup?'
-    },
-    {
-      user: '@uiux_',
-      message: 'Medium\'s UI is f***ing awesome'
-    },
-    {
-      user: '@Dev',
-      message: 'What\'s your view on Websockets? Let me know'
-    }
-    ]
-  };
-
-    $("#messages").html(messagePanelTemplate(messages));
-
-}
 
 function fillItemSearchPanel(template,currentWishList,currentWantTobuyItemList){
 

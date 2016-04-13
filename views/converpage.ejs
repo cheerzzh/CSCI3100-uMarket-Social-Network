@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css">
   <link rel="stylesheet" href="stylesheets/demo.css">
   <link rel="stylesheet" href="stylesheets/converpage.css">
-
+<body style="overflow:scroll">
 <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
     <div class="container">
       <div class="navbar-header">
@@ -97,27 +97,29 @@
     </div>
   </nav>
   
-  
-  <div class="contacts-head">
-     <b>Conversations</b>
-  </div>
+  <div class="container">
+  <div class="row">
+  <div class="col-lg-3 col-md-3">
+  <p class="contacts-head">conversation
+  </p>
   <div id="contacts">
       <script id="contacts-template" type="text/x-handlebars-template">
           <div class="list-group">
               {{#each conversation}}
-                  <a href="#" class="list-group-item" value={{conversationId}}>
+                  <a href="#" class="list-group-item" value={{conversationId}} style={{backgroundStyle}}>
                     <h6><b>{{user}}</b></h6>
                     {{{message}}}
               </a>
                 {{/each}}
+                </div>
         </script>
-</div>
+ </div>
+ </div>
 
-
-<div class="chat-window">
+  <div class="col-lg-6 col-md-6">
   <div class="panel widget-chat">
 					<div class="panel-heading">
-						<span class="panel-title"><i class="panel-title-icon fa fa-comments-o"></i>Messages</span>
+						<span class="panel-title"><i class="panel-title-icon fa fa-comments-o"></i>Messages<a id="relatedItem"></a></span>
 					</div> <!-- / .panel-heading -->
 					<div id="panel-body">
 						
@@ -139,7 +141,7 @@
               {{/each}}
         </script>
         </div>
-      </div>
+	</div>
         
 				<div class="panel-footer chat-controls">
 						<div class="chat-controls-input">
@@ -147,9 +149,31 @@
 						</div>
 						<button  id="send" class="btn btn-primary chat-controls-btn" required>Send</button>
 					</div> <!-- / .panel-footer -->
-				</div> <!-- / .panel -->
-</div>
+				</div>
+		</div>
 
+ <div class="col-lg-3 col-md-3">
+  <div class="panel panel-default">
+  <div class="panel-heading">Notifications</div>
+   <div class="panel-body">
+    <div id="wholenotifications">
+    <script id="wholenotifications-template" type="text/x-handlebars-template">
+          <div class="list-group" >
+              {{#each wholenotifications}}
+                  <a target="_blank" href={{link}}  id="wholename" class="list-group-item"  value={{wholenotification_id}} style={{backgroundStyle}}>
+                    <h6><b>{{title}}</b></h6>
+                    {{{content}}}
+                  </a>
+              {{/each}}
+            </div>
+    </script>
+      </div>
+    </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-beta1/jquery.min.js"></script>
   <script type="text/javascript" src="javascripts/include/paper.min.js"></script>
@@ -161,5 +185,5 @@
     console.log(targetUser)
     </script>
   <script type="text/javascript" src="javascripts/converpage.js"></script>
-  
+  </body>
  </html>
