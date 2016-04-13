@@ -733,6 +733,7 @@ function fillItemPanel(currentWishList){
 		postEntry.creatorName = item._creator.userName
 		postEntry.itemName = item.itemName
 		postEntry.buyID = "buy_" + item._id
+		postEntry.itemStatus = item.status
 		postEntry.confirmedbtnId="confirmed"+item._id
 		if(item.description.length > descriptionLimit)
 		{
@@ -745,7 +746,7 @@ function fillItemPanel(currentWishList){
 
 		postEntry.userLink = '/user/' + item._creator._id
 		postEntry.itemLink = '/item/' + item._id
-		postEntry.itemstatus = item.status;
+		postEntry.itemstatus = "itemStatus" + String(item.status);
 		// depends on whether in list
 
 		if(!include(currentWishList, item._id)){
@@ -799,7 +800,10 @@ function fillItemPanel(currentWishList){
 		allitems.itemEntry.push(postEntry)
 		})
 		$("#itemSearchResults6").html(itemPostTemplate6(allitems));
+		$(".buyButton").hide()
+		$("#itemStatus0").show()
 		handleActions()
+		
 	})
 	
 	$.get('getwanttobuyitems',function(data){
